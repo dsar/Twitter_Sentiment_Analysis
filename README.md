@@ -1,2 +1,7 @@
-# text_classification
-EPFL ML Text Classification
+# EPFL ML Text Classification
+
+### Contributors
+
+- Dimitrios Sarigiannis
+- Panayiotis Smeros
+
