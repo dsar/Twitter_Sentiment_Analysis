@@ -1,4 +1,4 @@
-# EPFL ML Text Classification
+# Twitter Sentiment Analysis
 
 ### Contributors
 
