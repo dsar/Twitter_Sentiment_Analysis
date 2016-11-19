@@ -1,0 +1,23 @@
+~Tweets Preprocessing steps~
+
+-	step1
+
+
+~Arbitrary Notes~
+
+-	might need to have equal number of pos/neg tweets
+
+-	(Jaggi paper)
+	Nothing radically new seems to have emerged
+	with respect to text preprocessing; as in previous
+	editions of this task, participants use a mix of by
+	now obvious techniques, such as negation scope de-
+	tection, elongation normalization, detection of am-
+	plifiers and diminishers, plus the usual extraction
+	of word n-grams, character n-grams, and POS n-
+	grams. The use of sentiment lexicons (alone or
+	in combination with each other; general-purpose or
+	Twitter-specific) is obviously still frequent.
+-	(preprocessing paper)
+	online text cleaning, white space removal, expanding abbreviation, stemming,
+	stop words removal, negation handling and finally feature selection

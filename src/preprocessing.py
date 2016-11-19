@@ -20,3 +20,10 @@ def pos_tag(tweet):
 
 def filter_repeated_chars_on_tweet(tweet):
 	return re.sub(r'(.)\1+', r'\1\1', tweet)
+
+def remove_tweet_id(tweet):
+    return tweet.split(',', 1)[-1]
+
+def convert_to_lowercase(tweets):
+	"""tweets: Series"""
+	return tweets.str.lower()
