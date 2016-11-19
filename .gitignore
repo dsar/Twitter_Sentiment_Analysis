@@ -1,4 +1,6 @@
 # Other
+data/train_neg_full.txt
+data/train_pos_full.txt
 data/pred_submission.csv
 notes.txt
 .ipynb_checkpoints
