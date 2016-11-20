@@ -7,5 +7,8 @@ def create_csv_submission(y_pred, name):
         writer.writeheader()
         r1 = 1
         for r2 in y_pred:
-            writer.writerow({'Id':int(r1),'Prediction':r2})
+            if r2 == 'pos':
+                writer.writerow({'Id':int(r1),'Prediction':1})
+            elif r2 == 'neg':
+                writer.writerow({'Id':int(r1),'Prediction':-1})
             r1+=1
