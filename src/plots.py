@@ -6,7 +6,7 @@ from sklearn.cluster import KMeans
 from sklearn import metrics
 import matplotlib.cm as cm
 
-def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None, n_jobs=1, train_sizes=np.linspace(.1, 1.0, 10)):
+def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None, n_jobs=-1, train_sizes=np.linspace(.6, 1.0, 10)):
 	"""
 	Generate a simple plot of the test and training learning curve.
 

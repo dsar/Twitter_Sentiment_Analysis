@@ -1,14 +1,23 @@
+# This python file contains functions that help us deal with raw tweets preprocessing
+
+#Import libraries
 import nltk
 import re
+import pandas as pd
 import numpy as np
 from nltk.stem.lancaster import LancasterStemmer
 from nltk.tokenize import RegexpTokenizer
+from nltk.corpus import stopwords
+from nltk.probability import FreqDist
+from sklearn.feature_extraction import text
 
 
 # Initialization
 lancaster_stemmer = LancasterStemmer()
 lmt = nltk.stem.WordNetLemmatizer()
-tokenizer = RegexpTokenizer(r'\w+')
+punc_tokenizer = RegexpTokenizer(r'\w+')
+
+CACHING_PATH = '../data/preprocessed_training_set.csv'
 
 def filter_user(tweets):
 	"""tweets: Series"""
@@ -21,10 +30,6 @@ def filter_hashtag(tweets):
 	return tweets.str.replace('^#', '', case=False)
 
 def filter_digits(tweet):
-	# t = []
-	# for w in tweet.split():
-	# 	t.append(''.join([i for i in w if not i.isdigit()]))
-	# return " ".join(t)
 	from string import digits
 	import re
 	remove_digits = str.maketrans('', '', digits)
@@ -86,4 +91,91 @@ def stemming(tweet):
     return " ".join(x)
 
 def filter_punctuation(tweet):
-	return " ".join(tokenizer.tokenize(tweet))
+	return " ".join(punc_tokenizer.tokenize(tweet))
+
+from nltk import word_tokenize          
+from nltk.stem import WordNetLemmatizer
+class LemmaTokenizer(object):
+    def __init__(self):
+        self.wnl = WordNetLemmatizer()
+    def __call__(self, doc):
+        return [self.wnl.lemmatize(t) for t in word_tokenize(doc)]
+
+def cache_preprocessing(tweets):
+    tweets.to_csv(path_or_buf=CACHING_PATH, sep=',', encoding='utf-8' ,index=False)
+
+def load_preprocessed_tweets():
+    from pathlib import Path
+    my_file = Path(CACHING_PATH)
+    if my_file.is_file():
+        return pd.read_csv(CACHING_PATH,sep=',',encoding='utf-8'), True
+    print('\nThere is no cached file for preprocessed tweets\n')
+    return None, False
+
+def preprocessing(tweets, train=True, fduplicates=True, frepeated_chars=True, fpunctuation=True, 
+                            fuser=True, furl=True, fhashtag=True, fdigits=True, fsmall_words=True, save=True):
+    """
+    -Duplicates are removed to avoid putting extra weight on any particular tweet.
+    -We use preprocessing so that any letter occurring more than two times in a row is replaced with two occurrences.
+     As an example, the words haaaaaaaaappy and haaaaappy should be converted to haappy
+    """
+    print('Tweets Preprocessing for the Training set started\n')
+    
+    stored_tweets, read = load_preprocessed_tweets()
+    if train==True and read == True:
+        print('\nTweets have been successfully loaded!')
+        stored_tweets['tweet'] = stored_tweets['tweet'].fillna('the')  #!!!!!!! under discussion
+        return stored_tweets
+
+    if train:
+        if fduplicates:
+            print('Number of tweets before duplicates removal:\t', tweets.shape[0])
+            tweets = tweets.drop_duplicates(subset='tweet')
+            print('Number of tweets after duplicates removal:\t', tweets.shape[0])
+            print('Duplicates removal DONE')
+
+    if frepeated_chars:
+        tweets['tweet'] = tweets.apply(lambda tweet: filter_repeated_chars_on_tweet(tweet['tweet']), axis=1)
+        print('Repeated characters filtering DONE')
+    
+    if fpunctuation:
+        tweets['tweet'] = tweets.apply(lambda tweet: filter_punctuation(tweet['tweet']), axis=1)
+        print('Punctuation filtering DONE')
+
+    if fuser:
+        tweets['tweet'] = filter_user(tweets['tweet'])
+        print('User filtering DONE')
+    
+    if furl:
+        tweets['tweet'] = filter_url(tweets['tweet'])
+        print('Url filtering DONE')
+    
+    if fhashtag:
+        tweets['tweet'] = filter_hashtag(tweets['tweet'])
+        print('Hashtag filtering DONE')
+    
+    if fdigits:
+        tweets['tweet'] = tweets.apply(lambda tweet: filter_digits(tweet['tweet']), axis=1)
+        print('Digits DONE')
+    
+    if fsmall_words:
+        tweets['tweet'] = tweets.apply(lambda tweet: filter_small_words(tweet['tweet']), axis=1)
+        print('Small words filtering DONE')
+        
+    if train and save:
+        print('\nSaving preprocessed tweets...')
+        cache_preprocessing(tweets)
+        print('DONE')
+
+    print('\nTweets Preprocessing have been successfully finished!')
+
+    return tweets
+
+def find_stopwords(number_of_stopwords=1000):
+    stoplist = stopwords.words('english')
+    fdist = FreqDist(stoplist)
+    top = fdist.most_common(number_of_stopwords)
+    top = [x[0] for x in top] 
+    stop_words = set(top)
+    my_stop_words = text.ENGLISH_STOP_WORDS.union(stop_words)
+    return my_stop_words
