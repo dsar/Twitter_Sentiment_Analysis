@@ -10,6 +10,7 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
 from sklearn.feature_extraction import text
+from options import preprocessing_params, print_dict_settings
 
 
 # Initialization
@@ -112,13 +113,30 @@ def load_preprocessed_tweets():
     print('\nThere is no cached file for preprocessed tweets\n')
     return None, False
 
-def preprocessing(tweets, train=True, fduplicates=True, frepeated_chars=True, fpunctuation=True, 
-                            fuser=True, furl=True, fhashtag=True, fdigits=True, fsmall_words=True, save=True):
+def preprocessing(tweets, train=True, params=None):
     """
     -Duplicates are removed to avoid putting extra weight on any particular tweet.
     -We use preprocessing so that any letter occurring more than two times in a row is replaced with two occurrences.
      As an example, the words haaaaaaaaappy and haaaaappy should be converted to haappy
     """
+
+    if params == None:
+        print('set default parameters')
+        fduplicates = frepeated_chars = fpunctuation = fuser = furl = fhashtag = fdigits = fsmall_words = save = True
+    else:
+        fduplicates = params['fduplicates']
+        frepeated_chars = params['frepeated_chars']
+        fpunctuation = params['fpunctuation']
+        fuser = params['fuser']
+        furl = params['furl']
+        fhashtag = params['fhashtag']
+        fdigits = params['fdigits']
+        fsmall_words = params['fsmall_words']
+        save = params['save']
+
+        print_dict_settings(params,msg='Preprocessing Settings:\n')
+
+        
     print('Tweets Preprocessing for the Training set started\n')
     
     stored_tweets, read = load_preprocessed_tweets()
@@ -166,12 +184,14 @@ def preprocessing(tweets, train=True, fduplicates=True, frepeated_chars=True, fp
         print('\nSaving preprocessed tweets...')
         cache_preprocessing(tweets)
         print('DONE')
+    else:
+        print('\n Preprocessed tweets did not saved...')
 
     print('\nTweets Preprocessing have been successfully finished!')
 
     return tweets
 
-def find_stopwords(number_of_stopwords=1000):
+def find_stopwords(number_of_stopwords=100):
     stoplist = stopwords.words('english')
     fdist = FreqDist(stoplist)
     top = fdist.most_common(number_of_stopwords)
