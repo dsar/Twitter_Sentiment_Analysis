@@ -195,7 +195,9 @@ def find_stopwords(number_of_stopwords=100):
     stoplist = stopwords.words('english')
     fdist = FreqDist(stoplist)
     top = fdist.most_common(number_of_stopwords)
-    top = [x[0] for x in top] 
+    top = [x[0] for x in top]
+    # In Python, searching a set is much faster than searching
+    #   a list, so convert the stop words to a set
     stop_words = set(top)
     my_stop_words = text.ENGLISH_STOP_WORDS.union(stop_words)
     return my_stop_words

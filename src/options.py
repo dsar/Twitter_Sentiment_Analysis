@@ -21,10 +21,10 @@ vectorizer_params = {
     'max_df' : 0.8,
     'sublinear_tf' : True,
     'use_idf' : True,
-    'number_of_stopwords' : 10, # None or Int
-    'tokenizer' : True, # None or anything else (e.g. True)
+    'number_of_stopwords' : 153, # None or Int (max=153)
+    'tokenizer' : True, # None or anything else (e.g. True) for lemmatization
     'ngram_range' : (1,1), # (1,2) for bigrams
-    'max_features' : None # int
+    'max_features' : 5000 # None or Int
 }
 
 kfold = {
