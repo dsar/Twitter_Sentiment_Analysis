@@ -32,7 +32,7 @@ def baseline(tweets, test_tweets):
 
 
 	print('tweets_test')
-	we_test_tweets = np.zeros((test_tweets.shape[0],20))
+	we_test_tweets = np.zeros((test_tweets.shape[0],WE_params['we_features']))
 	i = 0
 	for tweet in test_tweets['tweet']:
 	    split_tweet = tweet.split()
