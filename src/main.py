@@ -7,13 +7,13 @@ if options['warnings'] == False:
 	pd.options.mode.chained_assignment = None
 
 from utils import *
-from plots import *
 from preprocessing import *
 from baseline import *
 from cross_validation import cross_validation
 
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
+from sklearn import linear_model
 
 # Initialization phase
 # 5 words elim problem!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -53,13 +53,18 @@ if options['ml_algorithm'] == 'RF':
 	clf = RandomForestClassifier(n_estimators=20,max_depth=25,n_jobs=-1,random_state=4)
 elif options['ml_algorithm'] == 'SVM':
 	print('init SVM')
-	clf = svm.SVC(kernel='linear')
+	clf = svm.LinearSVC(max_iter=500)
+elif options['ml_algorithm'] == 'LR':
+	print('init Logistic Regression')
+	# clf = linear_model.LogisticRegression(C=1e5)
 
+# perform cv
 if options['cv']:
 	print('CV')
 	avg_test_accuracy, cv = cross_validation(clf, tweets.shape[0], we_tweets, tweets['sentiment'], n_folds=options['k_fold'])
 	print('cv avg score: ',avg_test_accuracy)
 
+# train selected model
 print('training')
 clf.fit(we_tweets, tweets['sentiment'])
 pred = clf.predict(we_test_tweets)

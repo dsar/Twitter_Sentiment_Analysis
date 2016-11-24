@@ -1,4 +1,5 @@
 DATA_PATH = '../data/'
+#remove data/train_preproc_set.csv before starting with a new dataset
 POS_TWEETS_FILE = 'train_pos.txt'
 NEG_TWEETS_FILE = 'train_neg.txt'
 TEST_TWEETS_FILE = 'test_data.txt'
