@@ -1,7 +1,8 @@
 import csv
+from options import *
 
-def create_csv_submission(y_pred, name):
-    with open(name, 'w') as csvfile:
+def create_csv_submission(y_pred):
+    with open(DATA_PATH+PRED_SUBMISSION_FILE, 'w') as csvfile:
         fieldnames = ['Id', 'Prediction']
         writer = csv.DictWriter(csvfile, delimiter=",", fieldnames=fieldnames)
         writer.writeheader()

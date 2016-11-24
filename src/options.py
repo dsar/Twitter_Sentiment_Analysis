@@ -4,7 +4,12 @@ NEG_TWEETS_FILE = 'train_neg.txt'
 TEST_TWEETS_FILE = 'test_data.txt'
 PRED_SUBMISSION_FILE = 'pred_submission.csv'
 
+init_params = {
+    'init' : False
+}
+
 preprocessing_params = {
+    'preprocess' : False,
     'fduplicates': True,
     'frepeated_chars': True,
     'fpunctuation': True,
@@ -36,6 +41,10 @@ kfold = {
 split_params = {
     'test_size' : 0.10,
     'random_state': 4
+}
+
+WE_params = {
+    'we_features' : 20
 }
 
 def print_dict_settings(dict_, msg='settings\n'):
