@@ -10,6 +10,7 @@ from utils import *
 from plots import *
 from preprocessing import *
 from baseline import *
+from cross_validation import cross_validation
 
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
@@ -48,18 +49,24 @@ we_tweets, we_test_tweets = baseline(tweets, test_tweets)
 
 # Apply ML algorithm
 if options['ml_algorithm'] == 'RF':
-	print('Random Forest')
-	forest = RandomForestClassifier(n_estimators=20,max_depth=25,n_jobs=-1,random_state=4)
-	forest.fit(we_tweets, tweets['sentiment'])
-	#we_test_tweets = np.nan_to_num(we_test_tweets)  #!!!!!!! under discussion
-	pred = forest.predict(we_test_tweets)
+	print('init Random Forest')
+	clf = RandomForestClassifier(n_estimators=20,max_depth=25,n_jobs=-1,random_state=4)
 elif options['ml_algorithm'] == 'SVM':
-	print('SVM')
-	classifier_linear = svm.SVC(kernel='linear')
-	classifier_linear.fit(we_tweets, tweets['sentiment'])
-	pred = classifier_linear.predict(we_test_tweets)
+	print('init SVM')
+	clf = svm.SVC(kernel='linear')
+
+if options['cv']:
+	print('CV')
+	avg_test_accuracy, cv = cross_validation(clf, tweets.shape[0], we_tweets, tweets['sentiment'], n_folds=options['k_fold'])
+	print('cv avg score: ',avg_test_accuracy)
+
+print('training')
+clf.fit(we_tweets, tweets['sentiment'])
+pred = clf.predict(we_test_tweets)
+
+# CAUTION with tweets ids(!)
 print('pred shape: ',pred.shape)
-print('pred values: ',pred)
+print('pred values: ',pred[0:20])
 
 # Write predictions to file
 print('create final csv submission file')

@@ -16,7 +16,7 @@ def baseline(tweets, test_tweets):
 
     print('vocab size:', line_index)
 	
-    print('tweets20')
+    print('building tweets WE')
     we_tweets = np.zeros((tweets.shape[0],WE_params['we_features']))
     i = 0
     for tweet in tweets['tweet']:
@@ -31,7 +31,7 @@ def baseline(tweets, test_tweets):
         i+=1
 
 
-    print('tweets_test')
+    print('building test tweets WE')
     we_test_tweets = np.zeros((test_tweets.shape[0],WE_params['we_features']))
     i = 0
     for tweet in test_tweets['tweet']:

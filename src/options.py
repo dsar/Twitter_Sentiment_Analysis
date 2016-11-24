@@ -1,6 +1,6 @@
 DATA_PATH = '../data/'
-POS_TWEETS_FILE = 'train_pos_small.txt'
-NEG_TWEETS_FILE = 'train_neg_small.txt'
+POS_TWEETS_FILE = 'train_pos.txt'
+NEG_TWEETS_FILE = 'train_neg.txt'
 TEST_TWEETS_FILE = 'test_data.txt'
 PRED_SUBMISSION_FILE = 'pred_submission.csv'
 TRAIN_PREPROC_CACHING_PATH = 'train_preproc_set.csv'
@@ -8,8 +8,10 @@ TEST_PREPROC_CACHING_PATH = 'test_preproc_set.csv'
 
 options = {
     'preprocess' : True,
-    'init' : True,
+    'init' : False,
     'ml_algorithm' : 'SVM', # {SVM, LR, RF}
+    'cv' : True,
+    'k_fold' : 5,
     'warnings' : False
 }
 
@@ -39,12 +41,6 @@ vectorizer_params = {
     'tokenizer' : True, # None or anything else (e.g. True) for lemmatization
     'ngram_range' : (1,1), # (1,2) for bigrams
     'max_features' : 5000 # None or Int
-}
-
-kfold = {
-    'naive_bayes' : 5,
-    'random_forest' : 5,
-    'svm' : 5
 }
 
 split_params = {

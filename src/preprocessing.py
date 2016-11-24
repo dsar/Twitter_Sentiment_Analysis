@@ -136,9 +136,11 @@ def preprocessing(tweets, train=True, params=None):
 
         print_dict_settings(params,msg='Preprocessing Settings:\n')
 
-        
-    print('Tweets Preprocessing for the Training set started\n')
-    
+    if train:    
+        print('Tweets Preprocessing for the Training set started\n')
+    else:
+        print('Tweets Preprocessing for the Testing set started\n')
+
     stored_tweets, read = load_preprocessed_tweets()
     if train==True and read == True:
         print('\nTweets have been successfully loaded!')
@@ -185,9 +187,9 @@ def preprocessing(tweets, train=True, params=None):
         cache_preprocessing(tweets)
         print('DONE')
     else:
-        print('\n Preprocessed tweets did not saved...')
+        print('\nPreprocessed tweets did not saved...')
 
-    print('\nTweets Preprocessing have been successfully finished!')
+    print('Tweets Preprocessing have been successfully finished!\n')
 
     return tweets
 
