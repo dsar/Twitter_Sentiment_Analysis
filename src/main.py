@@ -51,12 +51,12 @@ we_tweets, we_test_tweets = baseline(tweets, test_tweets)
 
 # Apply algorithm
 print('Random Forest')
-forest = RandomForestClassifier(n_estimators=10,max_depth=10,n_jobs=-1,random_state=4)
+forest = RandomForestClassifier(n_estimators=200,max_depth=100,n_jobs=-1,random_state=4)
 forest.fit(we_tweets, tweets['sentiment'])
-we_test_tweets = np.nan_to_num(we_test_tweets)  #!!!!!!! under discussion
+#we_test_tweets = np.nan_to_num(we_test_tweets)  #!!!!!!! under discussion
 pred = forest.predict(we_test_tweets)
 print('pred shape: ',pred.shape)
-print('pred values: ',pred)
+print('pred values: ',pred[0:100])
 
 # Write predictions to file
 print('create final csv submission file')

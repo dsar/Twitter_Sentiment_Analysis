@@ -6,7 +6,7 @@ PRED_SUBMISSION_FILE = 'pred_submission.csv'
 
 options = {
     'preprocess' : True,
-    'init' : True,
+    'init' : False,
     'warnings' : False
 }
 
