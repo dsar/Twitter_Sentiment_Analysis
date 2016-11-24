@@ -1,20 +1,20 @@
 DATA_PATH = '../data/'
-POS_TWEETS_FILE = 'train_pos_full.txt'
-NEG_TWEETS_FILE = 'train_neg_full.txt'
+POS_TWEETS_FILE = 'train_pos_small.txt'
+NEG_TWEETS_FILE = 'train_neg_small.txt'
 TEST_TWEETS_FILE = 'test_data.txt'
 PRED_SUBMISSION_FILE = 'pred_submission.csv'
 
 options = {
+    'preprocess' : True,
+    'init' : True,
     'warnings' : False
 }
 
 WE_params = {
-    'init' : True,
     'we_features' : 50
 }
 
 preprocessing_params = {
-    'preprocess' : True,
     'fduplicates': True,
     'frepeated_chars': True,
     'fpunctuation': True,

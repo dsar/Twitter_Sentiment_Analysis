@@ -19,7 +19,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 # Initialization phase
 # 5 words elim problem!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-if WE_params['init']:
+if options['init']:
 	print('start init.sh')
 	os.system('bash init.sh')
 
@@ -42,7 +42,7 @@ test_tweets['tweet'] = test_tweets.apply(lambda tweet: remove_tweet_id(tweet['tw
 print('test data shape:', test_tweets.shape)
 
 #Tweets Preprocessing
-if preprocessing_params['preprocess']:
+if options['preprocess']:
 	tweets = preprocessing(tweets,train=True, params=preprocessing_params)
 	test_tweets = preprocessing(test_tweets,train=False, params=preprocessing_params)
 
