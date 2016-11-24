@@ -1,4 +1,5 @@
 # Other
+data/embeddings.npy
 data/vocab.pkl
 data/embedding.npy
 data/cooc.pkl

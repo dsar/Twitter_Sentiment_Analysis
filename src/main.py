@@ -1,21 +1,24 @@
+import numpy as np
+import pandas as pd
+import os
+
 from options import *
+if options['warnings'] == False:
+	pd.options.mode.chained_assignment = None
 from utils import *
 from plots import *
 from preprocessing import *
 from cross_validation import *
 from baseline import *
 
-import numpy as np
-import pandas as pd
-import os
 
 from sklearn.naive_bayes import MultinomialNB, GaussianNB, BernoulliNB
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 
 # Initialization phase
-# 5 words elim problem
-if init_params['init']:
+# 5 words elim problem!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+if WE_params['init']:
 	print('start init.sh')
 	os.system('bash init.sh')
 
@@ -41,7 +44,6 @@ print('test data shape:', test_tweets.shape)
 if preprocessing_params['preprocess']:
 	tweets = preprocessing(tweets,train=True, params=preprocessing_params)
 	test_tweets = preprocessing(test_tweets,train=False, params=preprocessing_params)
-
 
 # Features extraction
 we_tweets, we_test_tweets = baseline(tweets, test_tweets)
