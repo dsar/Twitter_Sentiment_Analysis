@@ -1,6 +1,6 @@
 DATA_PATH = '../data/'
-POS_TWEETS_FILE = 'train_pos_small.txt'
-NEG_TWEETS_FILE = 'train_neg_small.txt'
+POS_TWEETS_FILE = 'train_pos.txt'
+NEG_TWEETS_FILE = 'train_neg.txt'
 TEST_TWEETS_FILE = 'test_data.txt'
 PRED_SUBMISSION_FILE = 'pred_submission.csv'
 
@@ -13,7 +13,7 @@ preprocessing_params = {
     'fhashtag': True,
     'fdigits': True,
     'fsmall_words': True,
-    'save': False
+    'save': True
 }
 
 vectorizer_params = {
