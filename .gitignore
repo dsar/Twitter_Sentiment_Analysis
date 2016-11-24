@@ -1,9 +1,13 @@
 # Other
+data/vocab.pkl
+data/embedding.npy
+data/cooc.pkl
+data/vocab.txt
+data/vocab_cut.txt
 data/train_neg_full.txt
 data/train_pos_full.txt
 data/pred_submission.csv
 data/preprocessed_training_set.csv
-preprocessing_steps.txt
 notes.txt
 .ipynb_checkpoints
 .dropbox
