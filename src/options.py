@@ -3,15 +3,19 @@ POS_TWEETS_FILE = 'train_pos_small.txt'
 NEG_TWEETS_FILE = 'train_neg_small.txt'
 TEST_TWEETS_FILE = 'test_data.txt'
 PRED_SUBMISSION_FILE = 'pred_submission.csv'
+TRAIN_PREPROC_CACHING_PATH = 'train_preproc_set.csv'
+TEST_PREPROC_CACHING_PATH = 'test_preproc_set.csv'
 
 options = {
     'preprocess' : True,
-    'init' : False,
+    'init' : True,
+    'ml_algorithm' : 'SVM', # {SVM, LR, RF}
     'warnings' : False
 }
 
 WE_params = {
-    'we_features' : 50
+    'we_features' : 20,
+    'epochs' : 10
 }
 
 preprocessing_params = {

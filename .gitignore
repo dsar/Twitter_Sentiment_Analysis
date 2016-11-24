@@ -8,7 +8,8 @@ data/vocab_cut.txt
 data/train_neg_full.txt
 data/train_pos_full.txt
 data/pred_submission.csv
-data/preprocessed_training_set.csv
+data/train_preproc_set.csv
+data/test_preproc_set.csv
 notes.txt
 .ipynb_checkpoints
 .dropbox

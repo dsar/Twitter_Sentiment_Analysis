@@ -10,15 +10,15 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
 from sklearn.feature_extraction import text
-from options import preprocessing_params, print_dict_settings
+from options import preprocessing_params, print_dict_settings, \
+                    DATA_PATH, \
+                    TRAIN_PREPROC_CACHING_PATH, TEST_PREPROC_CACHING_PATH
 
 
 # Initialization
 lancaster_stemmer = LancasterStemmer()
 lmt = nltk.stem.WordNetLemmatizer()
 punc_tokenizer = RegexpTokenizer(r'\w+')
-
-CACHING_PATH = '../data/preprocessed_training_set.csv'
 
 def filter_user(tweets):
 	"""tweets: Series"""
@@ -103,13 +103,13 @@ class LemmaTokenizer(object):
         return [self.wnl.lemmatize(t) for t in word_tokenize(doc)]
 
 def cache_preprocessing(tweets):
-    tweets.to_csv(path_or_buf=CACHING_PATH, sep=',', encoding='utf-8' ,index=False)
+    tweets.to_csv(path_or_buf=DATA_PATH+TRAIN_PREPROC_CACHING_PATH, sep=',', encoding='utf-8' ,index=False)
 
 def load_preprocessed_tweets():
     from pathlib import Path
-    my_file = Path(CACHING_PATH)
+    my_file = Path(DATA_PATH+TRAIN_PREPROC_CACHING_PATH)
     if my_file.is_file():
-        return pd.read_csv(CACHING_PATH,sep=',',encoding='utf-8'), True
+        return pd.read_csv(DATA_PATH+TRAIN_PREPROC_CACHING_PATH,sep=',',encoding='utf-8'), True
     print('\nThere is no cached file for preprocessed tweets\n')
     return None, False
 

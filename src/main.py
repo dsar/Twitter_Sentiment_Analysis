@@ -9,11 +9,8 @@ if options['warnings'] == False:
 from utils import *
 from plots import *
 from preprocessing import *
-from cross_validation import *
 from baseline import *
 
-
-from sklearn.naive_bayes import MultinomialNB, GaussianNB, BernoulliNB
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 
@@ -28,9 +25,9 @@ if options['init']:
 #Train Data
 print('loading data')
 pos_tweets = pd.read_table(DATA_PATH+POS_TWEETS_FILE, names=['tweet','sentiment'])
-pos_tweets['sentiment'] = 'pos'
+pos_tweets['sentiment'] = 1
 neg_tweets = pd.read_table(DATA_PATH+NEG_TWEETS_FILE ,names=['tweet','sentiment'])
-neg_tweets['sentiment'] = 'neg'
+neg_tweets['sentiment'] = -1
 print('positive tweets shape: ',pos_tweets.shape)
 print('negative tweets shape: ',neg_tweets.shape)
 tweets = pd.concat([pos_tweets, neg_tweets], axis=0)
@@ -49,14 +46,20 @@ if options['preprocess']:
 # Features extraction
 we_tweets, we_test_tweets = baseline(tweets, test_tweets)
 
-# Apply algorithm
-print('Random Forest')
-forest = RandomForestClassifier(n_estimators=200,max_depth=100,n_jobs=-1,random_state=4)
-forest.fit(we_tweets, tweets['sentiment'])
-#we_test_tweets = np.nan_to_num(we_test_tweets)  #!!!!!!! under discussion
-pred = forest.predict(we_test_tweets)
+# Apply ML algorithm
+if options['ml_algorithm'] == 'RF':
+	print('Random Forest')
+	forest = RandomForestClassifier(n_estimators=20,max_depth=25,n_jobs=-1,random_state=4)
+	forest.fit(we_tweets, tweets['sentiment'])
+	#we_test_tweets = np.nan_to_num(we_test_tweets)  #!!!!!!! under discussion
+	pred = forest.predict(we_test_tweets)
+elif options['ml_algorithm'] == 'SVM':
+	print('SVM')
+	classifier_linear = svm.SVC(kernel='linear')
+	classifier_linear.fit(we_tweets, tweets['sentiment'])
+	pred = classifier_linear.predict(we_test_tweets)
 print('pred shape: ',pred.shape)
-print('pred values: ',pred[0:100])
+print('pred values: ',pred)
 
 # Write predictions to file
 print('create final csv submission file')
