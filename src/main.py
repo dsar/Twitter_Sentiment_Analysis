@@ -19,7 +19,8 @@ from sklearn import linear_model
 # 5 words elim problem!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 if options['init']:
 	print('start init.sh')
-	os.system('bash init.sh')
+	os.system('bash init.sh ' \
+				+ DATA_PATH+POS_TWEETS_FILE + ' ' + DATA_PATH+NEG_TWEETS_FILE)
 
 # Load Data
 

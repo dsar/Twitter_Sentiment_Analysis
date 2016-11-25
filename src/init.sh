@@ -1,8 +1,7 @@
 #!/bin/bash
 
-DATA_PATH='../data/'
-POS_FILE=$DATA_PATH'train_pos.txt'
-NEG_FILE=$DATA_PATH'train_neg.txt'
+POS_FILE=$1
+NEG_FILE=$2
 
 echo -n 'build vocabulary... '
 bash build_vocab.sh $POS_FILE $NEG_FILE
