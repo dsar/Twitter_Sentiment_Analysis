@@ -56,7 +56,7 @@ elif options['ml_algorithm'] == 'SVM':
 	clf = svm.LinearSVC(max_iter=500)
 elif options['ml_algorithm'] == 'LR':
 	print('init Logistic Regression')
-	# clf = linear_model.LogisticRegression(C=1e5)
+	clf = linear_model.LogisticRegression(C=1e5)
 
 # perform cv
 if options['cv']:

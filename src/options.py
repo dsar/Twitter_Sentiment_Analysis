@@ -10,7 +10,7 @@ TEST_PREPROC_CACHING_PATH = 'test_preproc_set.csv'
 options = {
     'preprocess' : True,
     'init' : False,
-    'ml_algorithm' : 'SVM', # {SVM, LR, RF} later will be change to a set
+    'ml_algorithm' : 'LR', # {SVM, LR, RF} later will be change to a set
     'cv' : True,
     'k_fold' : 5,
     'warnings' : False
