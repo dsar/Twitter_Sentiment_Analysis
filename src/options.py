@@ -1,7 +1,7 @@
 DATA_PATH = '../data/'
 #remove data/train_preproc_set.csv before starting with a new dataset
-POS_TWEETS_FILE = 'train_pos.txt'
-NEG_TWEETS_FILE = 'train_neg.txt'
+POS_TWEETS_FILE = 'train_pos_small.txt'
+NEG_TWEETS_FILE = 'train_neg_small.txt'
 TEST_TWEETS_FILE = 'test_data.txt'
 PRED_SUBMISSION_FILE = 'pred_submission.csv'
 TRAIN_PREPROC_CACHING_PATH = 'train_preproc_set.csv'
@@ -10,9 +10,9 @@ TEST_PREPROC_CACHING_PATH = 'test_preproc_set.csv'
 options = {
     'preprocess' : False,
     'init' : True,
-    'ml_algorithm' : 'LR', # {SVM, LR, RF} later will be change to a set
-    'cv' : True,
-    'k_fold' : 5,
+    'ml_algorithm' : 'RF', # {SVM, LR, RF} later will be change to a set
+    'cv' : (True,5),
+    'scale': True,
     'warnings' : False
 }
 
@@ -22,15 +22,16 @@ WE_params = {
 }
 
 preprocessing_params = {
-    'fduplicates': True,
-    'frepeated_chars': True,
-    'fpunctuation': True,
-    'fuser': True,
-    'furl': True,
-    'fhashtag': True,
-    'fdigits': True,
+    'fduplicates': False,
+    'frepeated_chars': False,
+    'fpunctuation': False,
+    'fuser': False,
+    'furl': False,
+    'fhashtag': False,
+    'fdigits': False,
     'fsmall_words': False,
-    'save': True
+    'fstopwords' : (True,100),
+    'save': False
 }
 
 vectorizer_params = {

@@ -14,13 +14,9 @@ from cross_validation import cross_validation
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import linear_model
+from sklearn import preprocessing
 
-# Initialization phase
-# 5 words elim problem!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-if options['init']:
-	print('start init.sh')
-	os.system('bash init.sh ' \
-				+ DATA_PATH+POS_TWEETS_FILE + ' ' + DATA_PATH+NEG_TWEETS_FILE)
+import csv
 
 # Load Data
 
@@ -42,11 +38,26 @@ print('test data shape:', test_tweets.shape)
 
 #Tweets Preprocessing
 if options['preprocess']:
-	tweets = preprocessing(tweets,train=True, params=preprocessing_params)
-	test_tweets = preprocessing(test_tweets,train=False, params=preprocessing_params)
+	tweets = tweets_preprocessing(tweets,train=True, params=preprocessing_params)
+	test_tweets = tweets_preprocessing(test_tweets,train=False, params=preprocessing_params)
+
+# Initialization phase
+# 5 words elim problem!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+if options['init']:
+	f = open(DATA_PATH+'preprocessed_tweets.txt', "w")
+	for t in tweets['tweet']:
+		f.write(t+'\n')
+	f.close()
+	open(DATA_PATH+'empty.txt', "w").write('test test test')
+	print('start init.sh')
+	os.system('bash init.sh ' \
+				+ DATA_PATH+'preprocessed_tweets.txt' + ' ' + DATA_PATH+'empty.txt')
 
 # Features extraction
 we_tweets, we_test_tweets = baseline(tweets, test_tweets)
+if options['scale']:
+	we_tweets = preprocessing.scale(we_tweets)
+	we_test_tweets = preprocessing.scale(we_test_tweets)
 
 # Apply ML algorithm
 if options['ml_algorithm'] == 'RF':
@@ -60,9 +71,9 @@ elif options['ml_algorithm'] == 'LR':
 	clf = linear_model.LogisticRegression(C=1e5)
 
 # perform cv
-if options['cv']:
+if options['cv'][0]:
 	print('CV')
-	avg_test_accuracy, cv = cross_validation(clf, tweets.shape[0], we_tweets, tweets['sentiment'], n_folds=options['k_fold'])
+	avg_test_accuracy, cv = cross_validation(clf, tweets.shape[0], we_tweets, tweets['sentiment'], n_folds=options['cv'][1])
 	print('cv avg score: ',avg_test_accuracy)
 
 # train selected model

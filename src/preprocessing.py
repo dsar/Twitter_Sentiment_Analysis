@@ -5,6 +5,7 @@ import nltk
 import re
 import pandas as pd
 import numpy as np
+import pickle
 from nltk.stem.lancaster import LancasterStemmer
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
@@ -113,7 +114,7 @@ def load_preprocessed_tweets():
     print('\nThere is no cached file for preprocessed tweets\n')
     return None, False
 
-def preprocessing(tweets, train=True, params=None):
+def tweets_preprocessing(tweets, train=True, params=None):
     """
     -Duplicates are removed to avoid putting extra weight on any particular tweet.
     -We use preprocessing so that any letter occurring more than two times in a row is replaced with two occurrences.
@@ -123,6 +124,7 @@ def preprocessing(tweets, train=True, params=None):
     if params == None:
         print('set default parameters')
         fduplicates = frepeated_chars = fpunctuation = fuser = furl = fhashtag = fdigits = fsmall_words = save = True
+        fstopwords = (True,100)
     else:
         fduplicates = params['fduplicates']
         frepeated_chars = params['frepeated_chars']
@@ -132,6 +134,7 @@ def preprocessing(tweets, train=True, params=None):
         fhashtag = params['fhashtag']
         fdigits = params['fdigits']
         fsmall_words = params['fsmall_words']
+        fstopwords = params['fstopwords']
         save = params['save']
 
         print_dict_settings(params,msg='Preprocessing Settings:\n')
@@ -181,7 +184,12 @@ def preprocessing(tweets, train=True, params=None):
     if fsmall_words:
         tweets['tweet'] = tweets.apply(lambda tweet: filter_small_words(tweet['tweet']), axis=1)
         print('Small words filtering DONE')
-        
+
+    if fstopwords[0]:
+        stopwords = find_stopwords(fstopwords[1])
+        tweets['tweet'] = tweets.apply(lambda tweet: remove_stopwords_from_tweet(tweet['tweet'], stopwords), axis=1)
+        print('Stopwords filtering DONE')
+
     if train and save:
         print('\nSaving preprocessed tweets...')
         cache_preprocessing(tweets)
@@ -193,7 +201,7 @@ def preprocessing(tweets, train=True, params=None):
 
     return tweets
 
-def find_stopwords(number_of_stopwords=100):
+def find_stopwords_from_global_corpus(number_of_stopwords=153):
     stoplist = stopwords.words('english')
     fdist = FreqDist(stoplist)
     top = fdist.most_common(number_of_stopwords)
@@ -203,3 +211,26 @@ def find_stopwords(number_of_stopwords=100):
     stop_words = set(top)
     my_stop_words = text.ENGLISH_STOP_WORDS.union(stop_words)
     return my_stop_words
+
+def find_stopwords(threshold=100):
+    file = open(DATA_PATH+'vocab.txt', "r")
+    freq = {} #key= word, value=index
+    for line in file:
+        token = line.strip().split(' ')
+        freq[token[1]] = token[0]
+
+    stopwords = set()
+    for w in freq.keys():
+        if int(freq[w]) > threshold:
+            stopwords.add(w)
+
+    return stopwords
+
+
+def remove_stopwords_from_tweet(tweet, stopwords):
+    tokens = tweet.split()
+    for word in tokens:
+        if word in stopwords:
+            tokens.remove(word)
+    return ' '.join(tokens)
+

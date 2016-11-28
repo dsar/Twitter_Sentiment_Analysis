@@ -9,3 +9,4 @@ def create_csv_submission(y_pred):
         r1 = 1
         for r2 in y_pred:
             writer.writerow({'Id':int(r1),'Prediction':r2})
+            r1 += 1
