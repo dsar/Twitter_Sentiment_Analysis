@@ -2,6 +2,7 @@
 
 ### Contributors
 
+- Beril Besbinar
 - Dimitrios Sarigiannis
 - Panayiotis Smeros
 
