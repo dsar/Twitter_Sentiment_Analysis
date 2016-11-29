@@ -25,10 +25,10 @@ preprocessing_params = {
     'fduplicates': False,
     'frepeated_chars': True,
     'fpunctuation': False,
-    'fuser': False,
-    'furl': False,
+    'fuser': True,
+    'furl': True,
     'fhashtag': True,
-    'fdigits': False,
+    'fdigits': True,
     'fsmall_words': False,
     'fstopwords' : (False,100),
     'save': False

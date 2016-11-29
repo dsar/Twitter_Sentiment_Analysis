@@ -40,10 +40,11 @@ def split_hashtag(tweet):
     return (" ".join(t)).strip()
 
 def filter_digits(tweet):
-	from string import digits
-	import re
-	remove_digits = str.maketrans('', '', digits)
-	return re.sub(' +',' ',tweet.translate(remove_digits))
+    t = []
+    for w in tweet.split():
+        if not w.isdigit():
+            t.append(w)
+    return (" ".join(t)).strip()
  
 def filter_small_words(tweet):
 	return " ".join([w for w in tweet.split() if len(w) >2])
