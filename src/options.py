@@ -24,13 +24,14 @@ WE_params = {
 preprocessing_params = {
     'fduplicates': False,
     'frepeated_chars': True,
+    'fexpand_not': True,
     'fpunctuation': False,
-    'fuser': True,
-    'furl': True,
+    'fuser': False,
+    'furl': False,
     'fhashtag': True,
     'fdigits': True,
-    'fsmall_words': False,
-    'fstopwords' : (False,100),
+    'fsmall_words': True,
+    'fstopwords' : (True,100),
     'save': False
 }
 

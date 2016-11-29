@@ -18,16 +18,24 @@ from options import preprocessing_params, print_dict_settings, \
 
 
 # Initialization
+stopWords = stopwords.words("english")
+#remove words that denote sentiment
+for w in ['no', 'not', 'nor', 'only', 'against', 'up', 'down']:
+    stopWords.remove(w)
+
+
 lancaster_stemmer = LancasterStemmer()
 lmt = nltk.stem.WordNetLemmatizer()
 punc_tokenizer = RegexpTokenizer(r'\w+')
 
 def filter_user(tweets):
-	"""tweets: Series"""
 	return tweets.str.replace('<user>', '', case=False)
 
 def filter_url(tweets):
 	return tweets.str.replace('<url>', '', case=False)
+
+def expand_not(tweets):
+    return tweets.str.replace('n\'t', ' not', case=False)
 
 def split_hashtag(tweet):
     t = []
@@ -47,7 +55,7 @@ def filter_digits(tweet):
     return (" ".join(t)).strip()
  
 def filter_small_words(tweet):
-	return " ".join([w for w in tweet.split() if len(w) >2])
+	return " ".join([w for w in tweet.split() if len(w) >1 or not w.isalpha()])
 
 
 def tokenization(tweet):
@@ -137,6 +145,7 @@ def tweets_preprocessing(tweets, train=True, params=None):
     else:
         fduplicates = params['fduplicates']
         frepeated_chars = params['frepeated_chars']
+        fexpand_not = params['fexpand_not']
         fpunctuation = params['fpunctuation']
         fuser = params['fuser']
         furl = params['furl']
@@ -169,7 +178,11 @@ def tweets_preprocessing(tweets, train=True, params=None):
     if frepeated_chars:
         tweets['tweet'] = tweets.apply(lambda tweet: filter_repeated_chars_on_tweet(tweet['tweet']), axis=1)
         print('Repeated characters filtering DONE')
-    
+
+    if fexpand_not:
+        tweets['tweet'] = expand_not(tweets['tweet'])
+        print('Expanding not DONE')
+
     if fpunctuation:
         tweets['tweet'] = tweets.apply(lambda tweet: filter_punctuation(tweet['tweet']), axis=1)
         print('Punctuation filtering DONE')
@@ -222,18 +235,20 @@ def find_stopwords_from_global_corpus(number_of_stopwords=153):
     return my_stop_words
 
 def find_stopwords(threshold=100):
-    file = open(DATA_PATH+'vocab.txt', "r")
-    freq = {} #key= word, value=index
-    for line in file:
-        token = line.strip().split(' ')
-        freq[token[1]] = token[0]
+    return stopWords
 
-    stopwords = set()
-    for w in freq.keys():
-        if int(freq[w]) > threshold:
-            stopwords.add(w)
+    # file = open(DATA_PATH+'vocab.txt', "r")
+    # freq = {} #key= word, value=index
+    # for line in file:
+    #     token = line.strip().split(' ')
+    #     freq[token[1]] = token[0]
 
-    return stopwords
+    # stopwords = set()
+    # for w in freq.keys():
+    #     if int(freq[w]) > threshold:
+    #         stopwords.add(w)
+
+    # return stopwords
 
 
 def remove_stopwords_from_tweet(tweet, stopwords):
