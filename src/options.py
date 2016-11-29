@@ -8,9 +8,9 @@ TRAIN_PREPROC_CACHING_PATH = 'train_preproc_set.csv'
 TEST_PREPROC_CACHING_PATH = 'test_preproc_set.csv'
 
 options = {
-    'preprocess' : False,
+    'preprocess' : True,
     'init' : True,
-    'ml_algorithm' : 'RF', # {SVM, LR, RF} later will be change to a set
+    'ml_algorithm' : 'LR', # {SVM, LR, RF} later will be change to a set
     'cv' : (True,5),
     'scale': True,
     'warnings' : False
@@ -23,14 +23,14 @@ WE_params = {
 
 preprocessing_params = {
     'fduplicates': False,
-    'frepeated_chars': False,
+    'frepeated_chars': True,
     'fpunctuation': False,
     'fuser': False,
     'furl': False,
-    'fhashtag': False,
+    'fhashtag': True,
     'fdigits': False,
     'fsmall_words': False,
-    'fstopwords' : (True,100),
+    'fstopwords' : (False,100),
     'save': False
 }
 

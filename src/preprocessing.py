@@ -11,6 +11,7 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
 from sklearn.feature_extraction import text
+from split_hashtag import split_hashtag_to_words
 from options import preprocessing_params, print_dict_settings, \
                     DATA_PATH, \
                     TRAIN_PREPROC_CACHING_PATH, TEST_PREPROC_CACHING_PATH
@@ -23,13 +24,20 @@ punc_tokenizer = RegexpTokenizer(r'\w+')
 
 def filter_user(tweets):
 	"""tweets: Series"""
-	return tweets.str.replace('user', '', case=False)
+	return tweets.str.replace('<user>', '', case=False)
 
 def filter_url(tweets):
-	return tweets.str.replace('url', '', case=False)
+	return tweets.str.replace('<url>', '', case=False)
 
-def filter_hashtag(tweets):
-	return tweets.str.replace('^#', '', case=False)
+def split_hashtag(tweet):
+    t = []
+    for w in tweet.split():
+        if w.startswith("#"):
+            #print('before: ', w, ' after: ', split_hashtag_to_words(w))
+            t.append(split_hashtag_to_words(w))
+        else:
+            t.append(w)
+    return (" ".join(t)).strip()
 
 def filter_digits(tweet):
 	from string import digits
@@ -174,8 +182,8 @@ def tweets_preprocessing(tweets, train=True, params=None):
         print('Url filtering DONE')
     
     if fhashtag:
-        tweets['tweet'] = filter_hashtag(tweets['tweet'])
-        print('Hashtag filtering DONE')
+        tweets['tweet'] = tweets.apply(lambda tweet: split_hashtag(tweet['tweet']), axis=1)
+        print('Hashtag splitting DONE')
     
     if fdigits:
         tweets['tweet'] = tweets.apply(lambda tweet: filter_digits(tweet['tweet']), axis=1)
