@@ -8,7 +8,7 @@ TRAIN_PREPROC_CACHING_PATH = 'train_preproc_set.csv'
 TEST_PREPROC_CACHING_PATH = 'test_preproc_set.csv'
 
 options = {
-    'preprocess' : True,
+    'preprocess' : False,
     'init' : True,
     'ml_algorithm' : 'LR', # {SVM, LR, RF} later will be change to a set
     'cv' : (True,5),
@@ -17,7 +17,7 @@ options = {
 }
 
 WE_params = {
-    'we_features' : 20,
+    'we_features' : 200,
     'epochs' : 10
 }
 

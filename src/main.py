@@ -18,6 +18,11 @@ from sklearn import preprocessing
 
 import csv
 
+# Initialization phase
+if options['init']:
+	print('start init.sh')
+	os.system('bash init.sh ' + DATA_PATH+POS_TWEETS_FILE + ' ' + DATA_PATH+NEG_TWEETS_FILE)
+
 # Load Data
 
 #Train Data
@@ -40,18 +45,6 @@ print('test data shape:', test_tweets.shape)
 if options['preprocess']:
 	tweets = tweets_preprocessing(tweets,train=True, params=preprocessing_params)
 	test_tweets = tweets_preprocessing(test_tweets,train=False, params=preprocessing_params)
-
-# Initialization phase
-# 5 words elim problem!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-if options['init']:
-	f = open(DATA_PATH+'preprocessed_tweets.txt', "w")
-	for t in tweets['tweet']:
-		f.write(t+'\n')
-	f.close()
-	open(DATA_PATH+'empty.txt', "w").write('test test test')
-	print('start init.sh')
-	os.system('bash init.sh ' \
-				+ DATA_PATH+'preprocessed_tweets.txt' + ' ' + DATA_PATH+'empty.txt')
 
 # Features extraction
 we_tweets, we_test_tweets = baseline(tweets, test_tweets)
