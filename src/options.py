@@ -1,20 +1,22 @@
 DATA_PATH = '../data/'
 #remove data/train_preproc_set.csv before starting with a new dataset
-POS_TWEETS_FILE = 'train_pos.txt'
-NEG_TWEETS_FILE = 'train_neg.txt'
+POS_TWEETS_FILE = 'train_pos_small.txt'
+NEG_TWEETS_FILE = 'train_neg_small.txt'
 TEST_TWEETS_FILE = 'test_data.txt'
 PRED_SUBMISSION_FILE = 'pred_submission.csv'
 TRAIN_PREPROC_CACHING_PATH = 'train_preproc_set.csv'
 TEST_PREPROC_CACHING_PATH = 'test_preproc_set.csv'
+EMBEDDINGS_FILE = 'embeddings_100d_full.npy'
 
 options = {
     'preprocess' : True,
     'init' : False,
     'ml_algorithm' : 'LR', # {SVM, LR, RF} later will be change to a set
     'feature_extraction' : 'TFIDF', #later will change to set
-    'cv' : (True,5),
+    'cv' : (False,5),
     'scale': True,
-    'warnings' : False
+    'warnings' : False,
+    'PCA': (True, 50)
 }
 
 WE_params = {
@@ -25,14 +27,14 @@ WE_params = {
 preprocessing_params = {
     'fduplicates': False,
     'frepeated_chars': True,
-    'fexpand_not': True,
+    'fexpand_not': False,
     'fpunctuation': False,
     'fuser': False,
     'furl': False,
     'fhashtag': True,
     'fdigits': True,
     'fsmall_words': True,
-    'fstopwords' : (True,100),
+    'fstopwords' : True,
     'save': True
 }
 

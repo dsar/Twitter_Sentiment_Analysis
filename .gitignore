@@ -1,7 +1,7 @@
 # Other
 data/embeddings.npy
 data/vocab.pkl
-data/embedding.npy
+data/embedding*
 data/cooc.pkl
 data/vocab.txt
 data/vocab_cut.txt

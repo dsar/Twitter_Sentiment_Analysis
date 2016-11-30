@@ -16,6 +16,7 @@ from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import linear_model
 from sklearn import preprocessing
+from sklearn import decomposition
 
 import csv
 
@@ -57,6 +58,14 @@ elif options['feature_extraction'] == 'TFIDF':
 	tfidf = init_tfidf_vectorizer()
 	train_reptweets = tfidf.fit_transform(tweets['tweet'])
 	test_reptweets = tfidf.transform(test_tweets['tweet'])
+
+
+# PCA
+if options['PCA'][0]:
+    pca = decomposition.PCA(n_components=options['PCA'][1])
+    pca.fit(we_tweets)
+    we_tweets = pca.transform(we_tweets)
+    we_test_tweets = pca.transform(we_test_tweets)
 
 
 # Apply ML algorithm

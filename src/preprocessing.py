@@ -20,9 +20,8 @@ from options import preprocessing_params, print_dict_settings, \
 # Initialization
 stopWords = stopwords.words("english")
 #remove words that denote sentiment
-for w in ['no', 'not', 'nor', 'only', 'against', 'up', 'down']:
+for w in ['no', 'not', 'nor', 'only', 'against', 'up', 'down', 'couldn', 'didn', 'doesn', 'hadn', 'hasn', 'haven', 'isn', 'ain', 'aren', 'mightn', 'mustn', 'needn', 'shouldn', 'wasn', 'weren', 'wouldn']:
     stopWords.remove(w)
-
 
 lancaster_stemmer = LancasterStemmer()
 lmt = nltk.stem.WordNetLemmatizer()
@@ -140,8 +139,7 @@ def tweets_preprocessing(tweets, train=True, params=None):
 
     if params == None:
         print('set default parameters')
-        fduplicates = frepeated_chars = fpunctuation = fuser = furl = fhashtag = fdigits = fsmall_words = save = True
-        fstopwords = (True,100)
+        fduplicates = frepeated_chars = fpunctuation = fuser = furl = fhashtag = fdigits = fsmall_words = save = fstopwords = True
     else:
         fduplicates = params['fduplicates']
         frepeated_chars = params['frepeated_chars']
@@ -207,9 +205,8 @@ def tweets_preprocessing(tweets, train=True, params=None):
         tweets['tweet'] = tweets.apply(lambda tweet: filter_small_words(tweet['tweet']), axis=1)
         print('Small words filtering DONE')
 
-    if fstopwords[0]:
-        stopwords = find_stopwords(fstopwords[1])
-        tweets['tweet'] = tweets.apply(lambda tweet: remove_stopwords_from_tweet(tweet['tweet'], stopwords), axis=1)
+    if fstopwords:
+        tweets['tweet'] = tweets.apply(lambda tweet: remove_stopwords_from_tweet(tweet['tweet']), axis=1)
         print('Stopwords filtering DONE')
 
     if train and save:
@@ -223,38 +220,11 @@ def tweets_preprocessing(tweets, train=True, params=None):
 
     return tweets
 
-def find_stopwords_from_global_corpus(number_of_stopwords=153):
-    stoplist = stopwords.words('english')
-    fdist = FreqDist(stoplist)
-    top = fdist.most_common(number_of_stopwords)
-    top = [x[0] for x in top]
-    # In Python, searching a set is much faster than searching
-    #   a list, so convert the stop words to a set
-    stop_words = set(top)
-    my_stop_words = text.ENGLISH_STOP_WORDS.union(stop_words)
-    return my_stop_words
 
-def find_stopwords(threshold=100):
-    return stopWords
-
-    # file = open(DATA_PATH+'vocab.txt', "r")
-    # freq = {} #key= word, value=index
-    # for line in file:
-    #     token = line.strip().split(' ')
-    #     freq[token[1]] = token[0]
-
-    # stopwords = set()
-    # for w in freq.keys():
-    #     if int(freq[w]) > threshold:
-    #         stopwords.add(w)
-
-    # return stopwords
-
-
-def remove_stopwords_from_tweet(tweet, stopwords):
+def remove_stopwords_from_tweet(tweet):
     tokens = tweet.split()
     for word in tokens:
-        if word in stopwords:
+        if word in stopWords:
             tokens.remove(word)
     return ' '.join(tokens)
 

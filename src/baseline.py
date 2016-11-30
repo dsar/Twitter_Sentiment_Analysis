@@ -4,7 +4,7 @@ import pandas as pd
 from options import *
 
 def baseline(tweets, test_tweets):
-    we = np.load(DATA_PATH+'embeddings.npy')
+    we = np.load(DATA_PATH+EMBEDDINGS_FILE)
     print('we shape', we.shape)
 
     vocab_file = open(DATA_PATH+'vocab_cut.txt', "r")
