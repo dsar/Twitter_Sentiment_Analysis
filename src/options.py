@@ -1,16 +1,17 @@
 DATA_PATH = '../data/'
 #remove data/train_preproc_set.csv before starting with a new dataset
-POS_TWEETS_FILE = 'train_pos_small.txt'
-NEG_TWEETS_FILE = 'train_neg_small.txt'
+POS_TWEETS_FILE = 'train_pos.txt'
+NEG_TWEETS_FILE = 'train_neg.txt'
 TEST_TWEETS_FILE = 'test_data.txt'
 PRED_SUBMISSION_FILE = 'pred_submission.csv'
 TRAIN_PREPROC_CACHING_PATH = 'train_preproc_set.csv'
 TEST_PREPROC_CACHING_PATH = 'test_preproc_set.csv'
 
 options = {
-    'preprocess' : False,
-    'init' : True,
+    'preprocess' : True,
+    'init' : False,
     'ml_algorithm' : 'LR', # {SVM, LR, RF} later will be change to a set
+    'feature_extraction' : 'TFIDF', #later will change to set
     'cv' : (True,5),
     'scale': True,
     'warnings' : False
@@ -32,7 +33,7 @@ preprocessing_params = {
     'fdigits': True,
     'fsmall_words': True,
     'fstopwords' : (True,100),
-    'save': False
+    'save': True
 }
 
 vectorizer_params = {
@@ -40,10 +41,10 @@ vectorizer_params = {
     'max_df' : 0.8,
     'sublinear_tf' : True,
     'use_idf' : True,
-    'number_of_stopwords' : 153, # None or Int (max=153)
+    'number_of_stopwords' : None, # None or Int
     'tokenizer' : True, # None or anything else (e.g. True) for lemmatization
     'ngram_range' : (1,1), # (1,2) for bigrams
-    'max_features' : 5000 # None or Int
+    'max_features' : None # None or Int
 }
 
 split_params = {

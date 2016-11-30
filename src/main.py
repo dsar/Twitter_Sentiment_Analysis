@@ -10,6 +10,7 @@ from utils import *
 from preprocessing import *
 from baseline import *
 from cross_validation import cross_validation
+from vectorizer import init_tfidf_vectorizer
 
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
@@ -47,10 +48,16 @@ if options['preprocess']:
 	test_tweets = tweets_preprocessing(test_tweets,train=False, params=preprocessing_params)
 
 # Features extraction
-we_tweets, we_test_tweets = baseline(tweets, test_tweets)
-if options['scale']:
-	we_tweets = preprocessing.scale(we_tweets)
-	we_test_tweets = preprocessing.scale(we_test_tweets)
+if options['feature_extraction'] == 'WE':
+	train_reptweets, test_reptweets = baseline(tweets, test_tweets)
+	if options['scale']:
+		train_reptweets = preprocessing.scale(train_reptweets)
+		test_reptweets = preprocessing.scale(test_reptweets)
+elif options['feature_extraction'] == 'TFIDF':
+	tfidf = init_tfidf_vectorizer()
+	train_reptweets = tfidf.fit_transform(tweets['tweet'])
+	test_reptweets = tfidf.transform(test_tweets['tweet'])
+
 
 # Apply ML algorithm
 if options['ml_algorithm'] == 'RF':
@@ -58,21 +65,21 @@ if options['ml_algorithm'] == 'RF':
 	clf = RandomForestClassifier(n_estimators=20,max_depth=25,n_jobs=-1,random_state=4)
 elif options['ml_algorithm'] == 'SVM':
 	print('init SVM')
-	clf = svm.LinearSVC(max_iter=500)
+	clf = svm.LinearSVC(max_iter=10000)
 elif options['ml_algorithm'] == 'LR':
 	print('init Logistic Regression')
-	clf = linear_model.LogisticRegression(C=1e5)
+	clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
 
 # perform cv
 if options['cv'][0]:
 	print('CV')
-	avg_test_accuracy, cv = cross_validation(clf, tweets.shape[0], we_tweets, tweets['sentiment'], n_folds=options['cv'][1])
+	avg_test_accuracy, cv = cross_validation(clf, tweets.shape[0], train_reptweets, tweets['sentiment'], n_folds=options['cv'][1])
 	print('cv avg score: ',avg_test_accuracy)
 
 # train selected model
 print('training')
-clf.fit(we_tweets, tweets['sentiment'])
-pred = clf.predict(we_test_tweets)
+clf.fit(train_reptweets, tweets['sentiment'])
+pred = clf.predict(test_reptweets)
 
 # CAUTION with tweets ids(!)
 print('pred shape: ',pred.shape)

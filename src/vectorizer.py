@@ -13,7 +13,7 @@ def init_tfidf_vectorizer():
   if vectorizer_params['tokenizer'] != None:
       vectorizer_params['tokenizer'] = LemmaTokenizer()
 
-  print('stopwords:\n', vectorizer_params['number_of_stopwords'])
+  # print('stopwords:\n', vectorizer_params['number_of_stopwords'])
 
   return TfidfVectorizer(
      min_df = vectorizer_params['min_df'], 
