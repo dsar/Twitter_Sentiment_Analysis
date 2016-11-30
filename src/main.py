@@ -61,14 +61,19 @@ elif options['feature_extraction'] == 'TFIDF':
 	train_reptweets = tfidf.fit_transform(tweets['tweet'])
 	test_reptweets = tfidf.transform(test_tweets['tweet'])
 
-
 # PCA
 if options['PCA'][0]:
     print('PCA')
     pca = decomposition.PCA(n_components=options['PCA'][1])
     pca.fit(train_reptweets)
-    we_tweets = pca.transform(train_reptweets)
-    we_test_tweets = pca.transform(test_reptweets)
+    train_reptweets = pca.transform(train_reptweets)
+    test_reptweets = pca.transform(test_reptweets)
+
+#Polynomial expansion
+# from sklearn.preprocessing import PolynomialFeatures
+# poly = PolynomialFeatures(2)
+# train_reptweets = poly.fit_transform(train_reptweets.todense())
+# test_reptweets = poly.transform(test_reptweets.todense())
 
 
 # Apply ML algorithm
