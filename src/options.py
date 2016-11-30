@@ -13,10 +13,10 @@ options = {
     'init' : False,
     'ml_algorithm' : 'LR', # {SVM, LR, RF} later will be change to a set
     'feature_extraction' : 'TFIDF', #later will change to set
-    'cv' : (False,5),
+    'cv' : (True,5),
     'scale': True,
     'warnings' : False,
-    'PCA': (True, 50)
+    'PCA': (False, 50)
 }
 
 WE_params = {

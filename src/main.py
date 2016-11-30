@@ -50,11 +50,13 @@ if options['preprocess']:
 
 # Features extraction
 if options['feature_extraction'] == 'WE':
+	print('WE')
 	train_reptweets, test_reptweets = baseline(tweets, test_tweets)
 	if options['scale']:
 		train_reptweets = preprocessing.scale(train_reptweets)
 		test_reptweets = preprocessing.scale(test_reptweets)
 elif options['feature_extraction'] == 'TFIDF':
+	print('TFIDF')
 	tfidf = init_tfidf_vectorizer()
 	train_reptweets = tfidf.fit_transform(tweets['tweet'])
 	test_reptweets = tfidf.transform(test_tweets['tweet'])
@@ -62,10 +64,11 @@ elif options['feature_extraction'] == 'TFIDF':
 
 # PCA
 if options['PCA'][0]:
+    print('PCA')
     pca = decomposition.PCA(n_components=options['PCA'][1])
-    pca.fit(we_tweets)
-    we_tweets = pca.transform(we_tweets)
-    we_test_tweets = pca.transform(we_test_tweets)
+    pca.fit(train_reptweets)
+    we_tweets = pca.transform(train_reptweets)
+    we_test_tweets = pca.transform(test_reptweets)
 
 
 # Apply ML algorithm
