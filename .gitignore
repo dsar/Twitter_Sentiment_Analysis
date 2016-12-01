@@ -1,4 +1,5 @@
 # Other
+data/glove_data/
 data/embeddings.npy
 data/vocab.pkl
 data/embedding*

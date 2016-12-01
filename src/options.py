@@ -1,40 +1,43 @@
 DATA_PATH = '../data/'
-#remove data/train_preproc_set.csv before starting with a new dataset
-POS_TWEETS_FILE = 'train_pos_full.txt'
-NEG_TWEETS_FILE = 'train_neg_full.txt'
+GLOVE_DATA_PATH = '../data/glove_data/'
+POS_TWEETS_FILE = 'train_pos_small.txt'
+NEG_TWEETS_FILE = 'train_neg_small.txt'
 TEST_TWEETS_FILE = 'test_data.txt'
 PRED_SUBMISSION_FILE = 'pred_submission.csv'
+#remove data/train_preproc_set.csv before starting with a new dataset
 TRAIN_PREPROC_CACHING_PATH = 'train_preproc_set.csv'
 TEST_PREPROC_CACHING_PATH = 'test_preproc_set.csv'
-EMBEDDINGS_FILE = 'embeddings_200d_full.npy'
+EMBEDDINGS_FILE_25 = 'glove.twitter.27B.25d.txt'
+EMBEDDINGS_FILE_200 = 'glove.twitter.27B.200d.txt'
 
 options = {
-    'preprocess' : False,
+    'preprocess' : True,
     'init' : False,
-    'ml_algorithm' : 'LR', # {SVM, LR, RF} later will be change to a set
-    'feature_extraction' : 'WE', #later will change to set
-    'cv' : (False,5),
-    'scale': False,
+    'ml_algorithm' : 'NN', # {SVM, LR, RF, NN} later will be change to a set
+    'feature_extraction' : 'TFIDF', # {TFIDF,WE} later will change to set
+    'cv' : (True,5),
+    'scale': True,
     'warnings' : False,
-    'PCA': (False, 50)
+    'PCA': (False, 25),
+    'poly': (False,2)
 }
 
 WE_params = {
-    'we_features' : 200,
+    'we_features' : 25,
     'epochs' : 10
 }
 
 preprocessing_params = {
-    'fduplicates': False,
     'frepeated_chars': True,
     'fexpand_not': True,
+    'fhashtag': True,
+    'fdigits': True,
+    'fsmall_words': True,
+    'fstopwords' : True,
+    'fduplicates': False,
     'fpunctuation': False,
     'fuser': False,
     'furl': False,
-    'fhashtag': True,
-    'fdigits': False,
-    'fsmall_words': False,
-    'fstopwords' : False,
     'save': True
 }
 
