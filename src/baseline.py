@@ -4,14 +4,9 @@ import pandas as pd
 from options import *
 
 def baseline(tweets, test_tweets):
-    we = np.load(DATA_PATH+EMBEDDINGS_FILE)
-    print('we shape', we.shape)
-
-    vocab_file = open(DATA_PATH+'vocab_cut.txt', "r")
-    words = {} #key= word, value=embeddings
-    for i, line in enumerate(vocab_file):
-        words[line.rstrip()] = we[i]
 	
+    words = get_embeddings_dictionary()
+
     print('building tweets WE')
     we_tweets = average_vectors(tweets, words)
 
@@ -19,6 +14,29 @@ def baseline(tweets, test_tweets):
     we_test_tweets = average_vectors(test_tweets, words)
 
     return we_tweets, we_test_tweets
+
+
+
+def get_embeddings_dictionary():
+
+    words = {} #key= word, value=embeddings
+    trainEmbeddings = False
+    if (trainEmbeddings):
+        we = np.load(DATA_PATH+EMBEDDINGS_FILE)
+        print('we shape', we.shape)
+
+        vocab_file = open(DATA_PATH+'vocab_cut.txt', "r")
+        for i, line in enumerate(vocab_file):
+            words[line.rstrip()] = we[i]
+    else:
+        with open(DATA_PATH+'glove.twitter.27B/glove.twitter.27B.200d.txt', "r") as f:
+            for line in f:
+                tokens = line.strip().split()
+                words[tokens[0]] = np.array([float(x) for x in tokens[1:]])
+
+    return words
+
+
 
 
 def average_vectors(tweets, words):

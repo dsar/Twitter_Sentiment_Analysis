@@ -1,20 +1,20 @@
 DATA_PATH = '../data/'
 #remove data/train_preproc_set.csv before starting with a new dataset
-POS_TWEETS_FILE = 'train_pos_small.txt'
-NEG_TWEETS_FILE = 'train_neg_small.txt'
+POS_TWEETS_FILE = 'train_pos_full.txt'
+NEG_TWEETS_FILE = 'train_neg_full.txt'
 TEST_TWEETS_FILE = 'test_data.txt'
 PRED_SUBMISSION_FILE = 'pred_submission.csv'
 TRAIN_PREPROC_CACHING_PATH = 'train_preproc_set.csv'
 TEST_PREPROC_CACHING_PATH = 'test_preproc_set.csv'
-EMBEDDINGS_FILE = 'embeddings_100d_full.npy'
+EMBEDDINGS_FILE = 'embeddings_200d_full.npy'
 
 options = {
-    'preprocess' : True,
+    'preprocess' : False,
     'init' : False,
     'ml_algorithm' : 'LR', # {SVM, LR, RF} later will be change to a set
-    'feature_extraction' : 'TFIDF', #later will change to set
-    'cv' : (True,5),
-    'scale': True,
+    'feature_extraction' : 'WE', #later will change to set
+    'cv' : (False,5),
+    'scale': False,
     'warnings' : False,
     'PCA': (False, 50)
 }
@@ -27,14 +27,14 @@ WE_params = {
 preprocessing_params = {
     'fduplicates': False,
     'frepeated_chars': True,
-    'fexpand_not': False,
+    'fexpand_not': True,
     'fpunctuation': False,
     'fuser': False,
     'furl': False,
     'fhashtag': True,
-    'fdigits': True,
-    'fsmall_words': True,
-    'fstopwords' : True,
+    'fdigits': False,
+    'fsmall_words': False,
+    'fstopwords' : False,
     'save': True
 }
 
