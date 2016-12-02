@@ -14,7 +14,8 @@ from sklearn.feature_extraction import text
 from split_hashtag import split_hashtag_to_words
 from options import preprocessing_params, print_dict_settings, \
                     DATA_PATH, \
-                    TRAIN_PREPROC_CACHING_PATH, TEST_PREPROC_CACHING_PATH
+                    TRAIN_PREPROC_CACHING_PATH, TEST_PREPROC_CACHING_PATH, \
+                    options
 
 
 # Initialization
@@ -139,7 +140,7 @@ def tweets_preprocessing(tweets, train=True, params=None):
 
     if params == None:
         print('set default parameters')
-        fduplicates = frepeated_chars = fpunctuation = fuser = furl = fhashtag = fdigits = fsmall_words = save = fstopwords = True
+        fduplicates = frepeated_chars = fpunctuation = fuser = furl = fhashtag = fdigits = fsmall_words = fstopwords = True
     else:
         fduplicates = params['fduplicates']
         frepeated_chars = params['frepeated_chars']
@@ -151,7 +152,6 @@ def tweets_preprocessing(tweets, train=True, params=None):
         fdigits = params['fdigits']
         fsmall_words = params['fsmall_words']
         fstopwords = params['fstopwords']
-        save = params['save']
 
         print_dict_settings(params,msg='Preprocessing Settings:\n')
 
@@ -209,7 +209,7 @@ def tweets_preprocessing(tweets, train=True, params=None):
         tweets['tweet'] = tweets.apply(lambda tweet: remove_stopwords_from_tweet(tweet['tweet']), axis=1)
         print('Stopwords filtering DONE')
 
-    if train and save:
+    if train and options['preprocess'][1] == 'save':
         print('\nSaving preprocessed tweets...')
         cache_preprocessing(tweets)
         print('DONE')

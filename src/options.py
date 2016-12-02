@@ -11,10 +11,11 @@ EMBEDDINGS_FILE_25 = 'glove.twitter.27B.25d.txt'
 EMBEDDINGS_FILE_200 = 'glove.twitter.27B.200d.txt'
 
 options = {
-    'preprocess' : True,
+    'preprocess' : (True,'save'), #({True,False},{'save'})
     'init' : False,
-    'ml_algorithm' : 'NN', # {SVM, LR, RF, NN} later will be change to a set
     'feature_extraction' : 'TFIDF', # {TFIDF,WE} later will change to set
+    'we_method' : 'baseline', # {baseline}
+    'ml_algorithm' : 'NN', # {SVM, LR, RF, NN} later will be change to a set
     'cv' : (True,5),
     'scale': True,
     'warnings' : False,
@@ -38,7 +39,6 @@ preprocessing_params = {
     'fpunctuation': False,
     'fuser': False,
     'furl': False,
-    'save': True
 }
 
 vectorizer_params = {
