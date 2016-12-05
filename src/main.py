@@ -48,7 +48,7 @@ test_tweets['tweet'] = test_tweets.apply(lambda tweet: remove_tweet_id(tweet['tw
 print('test data shape:', test_tweets.shape)
 
 #Tweets Preprocessing
-if options['preprocess']:
+if options['preprocess'][0]:
 	tweets = tweets_preprocessing(tweets,train=True, params=preprocessing_params)
 	test_tweets = tweets_preprocessing(test_tweets,train=False, params=preprocessing_params)
 
@@ -59,21 +59,22 @@ if options['feature_extraction'] == 'WE':
 	if options['scale']:
 		scaler = StandardScaler()
 		train_reptweets = scaler.fit_transform(train_reptweets)  
-		test_reptweets = scaler.transform(test_reptweets)
+		test_reptweets = scaler.fit_transform(test_reptweets)
 		# train_reptweets = preprocessing.scale(train_reptweets)
 		# test_reptweets = preprocessing.scale(test_reptweets)
-	#Polynomial expansion
-	if  options['poly'][0]:
-		print('poly')
-		poly = PolynomialFeatures(options['poly'][1])
-		train_reptweets = poly.fit_transform(train_reptweets)
-		test_reptweets = poly.transform(test_reptweets)
+
 	# PCA
 	if options['PCA'][0]:
 	    print('PCA')
 	    pca = decomposition.PCA(n_components=options['PCA'][1])
 	    train_reptweets = pca.fit_transform(train_reptweets)
 	    test_reptweets = pca.transform(test_reptweets)
+	#Polynomial expansion
+	if  options['poly'][0]:
+		print('poly')
+		poly = PolynomialFeatures(options['poly'][1])
+		train_reptweets = poly.fit_transform(train_reptweets)
+		test_reptweets = poly.fit_transform(test_reptweets)
 
 elif options['feature_extraction'] == 'TFIDF':
 	print('TFIDF')

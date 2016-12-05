@@ -1,7 +1,7 @@
 DATA_PATH = '../data/'
 GLOVE_DATA_PATH = '../data/glove_data/'
-POS_TWEETS_FILE = 'train_pos_small.txt'
-NEG_TWEETS_FILE = 'train_neg_small.txt'
+POS_TWEETS_FILE = 'train_pos_full.txt'
+NEG_TWEETS_FILE = 'train_neg_full.txt'
 TEST_TWEETS_FILE = 'test_data.txt'
 PRED_SUBMISSION_FILE = 'pred_submission.csv'
 #remove data/train_preproc_set.csv before starting with a new dataset
@@ -13,10 +13,10 @@ EMBEDDINGS_FILE_200 = 'glove.twitter.27B.200d.txt'
 options = {
     'preprocess' : (True,'save'), #({True,False},{'save'})
     'init' : False,
-    'feature_extraction' : 'TFIDF', # {TFIDF,WE} later will change to set
+    'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
     'we_method' : 'baseline', # {baseline}
     'ml_algorithm' : 'NN', # {SVM, LR, RF, NN} later will be change to a set
-    'cv' : (True,5),
+    'cv' : (False,5),
     'scale': True,
     'warnings' : False,
     'PCA': (False, 25),
