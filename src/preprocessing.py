@@ -35,22 +35,53 @@ def filter_url(tweets):
 	return tweets.str.replace('<url>', '', case=False)
 
 def expand_not(tweets):
-    return tweets.str.replace('n\'t', ' not', case=False)
+    tweets = tweets.str.replace('n\'t', ' not', case=False)
+    tweets = tweets.str.replace('i\'m', 'i am', case=False)
+    tweets = tweets.str.replace('\'re', ' are', case=False)
+    tweets = tweets.str.replace('it\'s', 'it is', case=False)
+    tweets = tweets.str.replace('that\'s', 'that is', case=False)
+    tweets = tweets.str.replace('\'ll', ' will', case=False)
+    tweets = tweets.str.replace('\'l', ' will', case=False)
+    tweets = tweets.str.replace('\'ve', ' have', case=False)
+    tweets = tweets.str.replace('\'d', ' would', case=False)
+    tweets = tweets.str.replace('he\'s', 'he is', case=False)
+    tweets = tweets.str.replace('what\'s', 'what is', case=False)
+    tweets = tweets.str.replace('who\'s', 'who is', case=False)
+    tweets = tweets.str.replace('\'s', '', case=False)
+
+    for punct in ['!']:
+        regex = "(\\"+punct+"( *)){2,}"
+        tweets = tweets.str.replace(regex, punct+' <repeat> ', case=False)
+
+    tweets = tweets.str.replace('\.', '', case=False)
+
+    tweets = tweets.str.replace('\.', '', case=False)
+
+    tweets = tweets.str.replace('<3', '<heart>', case=False)
+    
+    for smiley in [":d", "=\)", ";d", ":-d", ":p", ";p", ":\'\)"]:
+        tweets = tweets.str.replace(smiley, '<lolface>', case=False)
+    for smiley in ["\:\/", "\/\:", "\:\|"]:
+        tweets = tweets.str.replace(smiley, '<sadface>', case=False)
+
+    return tweets
 
 def split_hashtag(tweet):
     t = []
     for w in tweet.split():
         if w.startswith("#"):
-            #print('before: ', w, ' after: ', split_hashtag_to_words(w))
-            t.append(split_hashtag_to_words(w))
-        else:
-            t.append(w)
+            t.append("<hashtag>")
+        t.append(w)
     return (" ".join(t)).strip()
 
 def filter_digits(tweet):
     t = []
     for w in tweet.split():
-        if not w.isdigit():
+        try:
+            num = re.sub('[,\.:%_\-\+\*\/\%\_]', '', w)
+            float(num)
+            t.append("<number>")
+        except:
             t.append(w)
     return (" ".join(t)).strip()
  
@@ -66,7 +97,10 @@ def pos_tag(tweet):
     return nltk.pos_tag(tweet)
 
 def filter_repeated_chars_on_tweet(tweet):
-	return re.sub(r'(.)\1+', r'\1\1', tweet)
+    t = []
+    for w in tweet.split():
+        t.append(re.sub(r'(.)\1+$', r'\1 <elong>', w))
+    return (" ".join(t)).strip()
 
 def remove_tweet_id(tweet):
     return tweet.split(',', 1)[-1]

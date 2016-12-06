@@ -93,7 +93,7 @@ elif options['ml_algorithm'] == 'LR':
 	print('init Logistic Regression')
 	clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
 elif options['ml_algorithm'] == 'NN':
-	clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=4, verbose=False)
+	clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(16, 2), random_state=4, verbose=False)
 
 # perform cv
 if options['cv'][0]:
