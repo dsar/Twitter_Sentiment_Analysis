@@ -49,20 +49,60 @@ def expand_not(tweets):
     tweets = tweets.str.replace('who\'s', 'who is', case=False)
     tweets = tweets.str.replace('\'s', '', case=False)
 
-    for punct in ['!']:
+    for punct in ['!', '?', '.']:
         regex = "(\\"+punct+"( *)){2,}"
         tweets = tweets.str.replace(regex, punct+' <repeat> ', case=False)
 
-    tweets = tweets.str.replace('\.', '', case=False)
-
-    tweets = tweets.str.replace('\.', '', case=False)
-
     tweets = tweets.str.replace('<3', '<heart>', case=False)
+    tweets = tweets.str.replace('♥', '<heart>', case=False)
     
-    for smiley in [":d", "=\)", ";d", ":-d", ":p", ";p", ":\'\)"]:
+    eyes = ["8",":","=",";"]
+    nose = ["'","`","-",r"\\"]
+    smilefaces = []
+    lolfaces = []
+    sadfaces = []
+    neutralfaces = []
+
+    for e in eyes:
+        for n in nose:
+            for s in ["\)", "d", "]", "}"]:
+                smilefaces.append(e+n+s)
+                smilefaces.append(e+s)
+            for s in ["\(", "\[", "{"]:
+                sadfaces.append(e+n+s)
+                sadfaces.append(e+s)
+            for s in ["\|", "\/", r"\\"]:
+                neutralfaces.append(e+n+s)
+                neutralfaces.append(e+s)
+            #reversed
+            for s in ["\(", "\[", "{"]:
+                smilefaces.append(s+n+e)
+                smilefaces.append(s+e)
+            for s in ["\)", "d", "\]", "}"]:
+                sadfaces.append(s+n+e)
+                sadfaces.append(s+e)
+            for s in ["\|", "\/", r"\\"]:
+                neutralfaces.append(s+n+e)
+                neutralfaces.append(s+e) 
+            lolfaces.append(e+n+"p")
+            lolfaces.append(e+"p")
+
+    smilefaces.extend([">:d","<[^_^]>"])
+    sadfaces.extend(["0_o","0_0","0-0","0_0","0__0","0___0","0,0","0.0"])
+
+
+    for smiley in smilefaces:
+        tweets = tweets.str.replace(smiley, '<smile>', case=False)
+    print("smilefaces DONE")
+    for smiley in lolfaces:
         tweets = tweets.str.replace(smiley, '<lolface>', case=False)
-    for smiley in ["\:\/", "\/\:", "\:\|"]:
+    print("lolfaces DONE")
+    for smiley in neutralfaces:
+        tweets = tweets.str.replace(smiley, '<neutralface>', case=False)
+    print("neutralfaces DONE")
+    for smiley in sadfaces:
         tweets = tweets.str.replace(smiley, '<sadface>', case=False)
+    print("sadfaces DONE")
 
     return tweets
 
