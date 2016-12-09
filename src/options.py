@@ -31,6 +31,7 @@ WE_params = {
 preprocessing_params = {
     'frepeated_chars': True,
     'fexpand_not': True,
+    'transform_emojis': True,
     'fhashtag': True,
     'fdigits': True,
     'fsmall_words': False,

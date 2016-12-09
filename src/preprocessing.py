@@ -53,9 +53,14 @@ def expand_not(tweets):
         regex = "(\\"+punct+"( *)){2,}"
         tweets = tweets.str.replace(regex, punct+' <repeat> ', case=False)
 
-    tweets = tweets.str.replace('<3', '<heart>', case=False)
-    tweets = tweets.str.replace('♥', '<heart>', case=False)
-    
+    return tweets
+
+
+def emoji_transformation(tweet):
+
+    #Construct emojis
+
+    hearts = ["<3", "♥"]
     eyes = ["8",":","=",";"]
     nose = ["'","`","-",r"\\"]
     smilefaces = []
@@ -90,21 +95,24 @@ def expand_not(tweets):
     smilefaces.extend([">:d","<[^_^]>"])
     sadfaces.extend(["0_o","0_0","0-0","0_0","0__0","0___0","0,0","0.0"])
 
+    t = []
+    for w in tweet.split():
+        if(w in hearts):
+            t.append("<heart>")
+        elif(w in smilefaces):
+            t.append("<smile>")
+        elif(w in lolfaces):
+            t.append("<lolface>")
+        elif(w in neutralfaces):
+            t.append("<neutralface>")
+        elif(w in sadfaces):
+            t.append("<sadface>")
+        else:
+            t.append(w)
+    return (" ".join(t)).strip()
 
-    for smiley in smilefaces:
-        tweets = tweets.str.replace(smiley, '<smile>', case=False)
-    print("smilefaces DONE")
-    for smiley in lolfaces:
-        tweets = tweets.str.replace(smiley, '<lolface>', case=False)
-    print("lolfaces DONE")
-    for smiley in neutralfaces:
-        tweets = tweets.str.replace(smiley, '<neutralface>', case=False)
-    print("neutralfaces DONE")
-    for smiley in sadfaces:
-        tweets = tweets.str.replace(smiley, '<sadface>', case=False)
-    print("sadfaces DONE")
 
-    return tweets
+
 
 def split_hashtag(tweet):
     t = []
@@ -139,7 +147,7 @@ def pos_tag(tweet):
 def filter_repeated_chars_on_tweet(tweet):
     t = []
     for w in tweet.split():
-        t.append(re.sub(r'(.)\1+$', r'\1 <elong>', w))
+        t.append(re.sub(r'([a-z])\1\1+$', r'\1 <elong>', w))
     return (" ".join(t)).strip()
 
 def remove_tweet_id(tweet):
@@ -214,7 +222,7 @@ def tweets_preprocessing(tweets, train=True, params=None):
 
     if params == None:
         print('set default parameters')
-        fduplicates = frepeated_chars = fpunctuation = fuser = furl = fhashtag = fdigits = fsmall_words = fstopwords = True
+        fduplicates = frepeated_chars = fpunctuation = fuser = furl = fhashtag = fdigits = fsmall_words = fstopwords = transform_emojis = True
     else:
         fduplicates = params['fduplicates']
         frepeated_chars = params['frepeated_chars']
@@ -226,6 +234,7 @@ def tweets_preprocessing(tweets, train=True, params=None):
         fdigits = params['fdigits']
         fsmall_words = params['fsmall_words']
         fstopwords = params['fstopwords']
+        transform_emojis = params['transform_emojis']
 
         print_dict_settings(params,msg='Preprocessing Settings:\n')
 
@@ -250,6 +259,10 @@ def tweets_preprocessing(tweets, train=True, params=None):
     if frepeated_chars:
         tweets['tweet'] = tweets.apply(lambda tweet: filter_repeated_chars_on_tweet(tweet['tweet']), axis=1)
         print('Repeated characters filtering DONE')
+
+    if transform_emojis:
+        tweets['tweet'] = tweets.apply(lambda tweet: emoji_transformation(tweet['tweet']), axis=1)
+        print('Transforming emojis DONE')
 
     if fexpand_not:
         tweets['tweet'] = expand_not(tweets['tweet'])
