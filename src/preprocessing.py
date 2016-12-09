@@ -13,7 +13,6 @@ from nltk.probability import FreqDist
 from sklearn.feature_extraction import text
 from split_hashtag import split_hashtag_to_words
 from options import preprocessing_params, print_dict_settings, \
-                    DATA_PATH, \
                     TRAIN_PREPROC_CACHING_PATH, TEST_PREPROC_CACHING_PATH, \
                     options
 
@@ -202,14 +201,17 @@ class LemmaTokenizer(object):
     def __call__(self, doc):
         return [self.wnl.lemmatize(t) for t in word_tokenize(doc)]
 
-def cache_preprocessing(tweets):
-    tweets.to_csv(path_or_buf=DATA_PATH+TRAIN_PREPROC_CACHING_PATH, sep=',', encoding='utf-8' ,index=False)
+def cache_preprocessing(tweets, train=True):
+    if train:
+        tweets.to_csv(path_or_buf=TRAIN_PREPROC_CACHING_PATH, sep=',' , header=False ,encoding='utf-8' ,index=False)
+    else:
+        tweets.to_csv(path_or_buf=TEST_PREPROC_CACHING_PATH, sep=',', header=False ,encoding='utf-8' ,index=False)
 
 def load_preprocessed_tweets():
     from pathlib import Path
-    my_file = Path(DATA_PATH+TRAIN_PREPROC_CACHING_PATH)
+    my_file = Path(TRAIN_PREPROC_CACHING_PATH)
     if my_file.is_file():
-        return pd.read_csv(DATA_PATH+TRAIN_PREPROC_CACHING_PATH,sep=',',encoding='utf-8'), True
+        return pd.read_csv(TRAIN_PREPROC_CACHING_PATH,sep=',', names=['tweet','sentiment'],encoding='utf-8'), True
     print('\nThere is no cached file for preprocessed tweets\n')
     return None, False
 
@@ -296,9 +298,9 @@ def tweets_preprocessing(tweets, train=True, params=None):
         tweets['tweet'] = tweets.apply(lambda tweet: remove_stopwords_from_tweet(tweet['tweet']), axis=1)
         print('Stopwords filtering DONE')
 
-    if train and options['preprocess'][1] == 'save':
+    if options['preprocess'][1] == 'save':
         print('\nSaving preprocessed tweets...')
-        cache_preprocessing(tweets)
+        cache_preprocessing(tweets, train=train)
         print('DONE')
     else:
         print('\nPreprocessed tweets did not saved...')

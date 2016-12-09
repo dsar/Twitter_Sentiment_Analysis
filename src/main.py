@@ -12,6 +12,7 @@ from preprocessing import *
 from baseline import *
 from cross_validation import cross_validation
 from vectorizer import load_vectorizer
+from doc2vec_solution import doc2vec
 
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
@@ -31,15 +32,15 @@ if options['clear']:
 # Initialization phase
 if options['init']:
 	print('start init.sh')
-	os.system('bash init.sh ' + DATA_PATH+POS_TWEETS_FILE + ' ' + DATA_PATH+NEG_TWEETS_FILE)
+	os.system('bash init.sh ' + POS_TWEETS_FILE + ' ' + NEG_TWEETS_FILE)
 
 # Load Data
 
 ##Train Data
 print('loading data')
-pos_tweets = pd.read_table(DATA_PATH+POS_TWEETS_FILE, names=['tweet','sentiment'])
+pos_tweets = pd.read_table(POS_TWEETS_FILE, names=['tweet','sentiment'])
 pos_tweets['sentiment'] = 1
-neg_tweets = pd.read_table(DATA_PATH+NEG_TWEETS_FILE ,names=['tweet','sentiment'])
+neg_tweets = pd.read_table(NEG_TWEETS_FILE ,names=['tweet','sentiment'])
 neg_tweets['sentiment'] = -1
 print('positive tweets shape: ',pos_tweets.shape)
 print('negative tweets shape: ',neg_tweets.shape)
@@ -47,7 +48,7 @@ tweets = pd.concat([pos_tweets, neg_tweets], axis=0)
 print('final tweets shape: ',tweets.shape)
 
 ##Test Data
-test_tweets = pd.read_table(DATA_PATH+TEST_TWEETS_FILE, names=['tweet','sentiment'])
+test_tweets = pd.read_table(TEST_TWEETS_FILE, names=['tweet','sentiment'])
 test_tweets['tweet'] = test_tweets.apply(lambda tweet: remove_tweet_id(tweet['tweet']), axis=1)
 print('test data shape:', test_tweets.shape)
 
@@ -59,11 +60,16 @@ if options['preprocess'][0]:
 # Features extraction
 if options['feature_extraction'] == 'WE':
 	print('WE')
-	train_reptweets, test_reptweets = baseline(tweets, test_tweets)
-	if options['scale']:
-		scaler = StandardScaler()
-		train_reptweets = scaler.fit_transform(train_reptweets)  
-		test_reptweets = scaler.fit_transform(test_reptweets)
+	if options['we_method'] == 'baseline':
+		print('baseline')
+		train_reptweets, test_reptweets = baseline(tweets, test_tweets)
+		if options['scale']:
+			scaler = StandardScaler()
+			train_reptweets = scaler.fit_transform(train_reptweets)  
+			test_reptweets = scaler.fit_transform(test_reptweets)
+	elif options['we_method'] == 'doc2vec':
+		print('doc2vec')
+		train_reptweets, test_reptweets = doc2vec()
 
 	# PCA
 	if options['PCA'][0]:
@@ -78,6 +84,7 @@ if options['feature_extraction'] == 'WE':
 		train_reptweets = poly.fit_transform(train_reptweets)
 		test_reptweets = poly.fit_transform(test_reptweets)
 
+# TFIDF
 elif options['feature_extraction'] == 'TFIDF':
 	train_reptweets, test_reptweets = load_vectorizer(tweets, test_tweets)
 

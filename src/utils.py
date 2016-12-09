@@ -3,7 +3,7 @@ from options import *
 import os
 
 def create_csv_submission(y_pred):
-    with open(DATA_PATH+PRED_SUBMISSION_FILE, 'w') as csvfile:
+    with open(PRED_SUBMISSION_FILE, 'w') as csvfile:
         fieldnames = ['Id', 'Prediction']
         writer = csv.DictWriter(csvfile, delimiter=",", fieldnames=fieldnames)
         writer.writeheader()
@@ -16,7 +16,8 @@ def clear_cache(preproc=True,tfidf=True,pred=True):
 	print('clearing cache files')
 	if preproc:
 		try:
-			os.system('rm ../data/train_preproc_set.csv')
+			os.system('rm '+ TRAIN_PREPROC_CACHING_PATH)
+			os.system('rm '+ TEST_PREPROC_CACHING_PATH)
 		except:
 			print('\nclear preproc FAILED\n')
 	if tfidf:
@@ -27,7 +28,7 @@ def clear_cache(preproc=True,tfidf=True,pred=True):
 			print('\nclear tfidf FAILED\n')
 	if preproc:
 		try:
-			os.system('rm ' + DATA_PATH+PRED_SUBMISSION_FILE)
+			os.system('rm ' + PRED_SUBMISSION_FILE)
 		except:
 			print('\nclear pred FAILED\n')
 	print('\nclear cache completed\n')

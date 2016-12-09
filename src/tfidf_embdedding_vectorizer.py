@@ -24,13 +24,13 @@ def get_embeddings_dictionary():
     words = {} #key= word, value=embeddings
     trainEmbeddings = False
     if (trainEmbeddings):
-        we = np.load(DATA_PATH+EMBEDDINGS_FILE)
+        we = np.load(EMBEDDINGS_FILE)
         print('we shape', we.shape)
-        vocab_file = open(DATA_PATH+'vocab_cut.txt', "r")
+        vocab_file = open('vocab_cut.txt', "r")
         for i, line in enumerate(vocab_file):
             words[line.rstrip()] = we[i]
     else:
-        with open(GLOVE_DATA_PATH+EMBEDDINGS_FILE_200, "r") as f:
+        with open(EMBEDDINGS_FILE_200, "r") as f:
             for line in f:
                 tokens = line.strip().split()
                 words[tokens[0]] = np.array([float(x) for x in tokens[1:]])

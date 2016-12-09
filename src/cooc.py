@@ -11,7 +11,7 @@ def main():
 
     data, row, col = [], [], []
     counter = 1
-    for fn in [DATA_PATH+POS_TWEETS_FILE, DATA_PATH+NEG_TWEETS_FILE]:
+    for fn in [POS_TWEETS_FILE, NEG_TWEETS_FILE]:
         with open(fn) as f:
             for line in f:
                 tokens = [vocab.get(t, -1) for t in line.strip().split()]
