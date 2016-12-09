@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
+import pickle
 
 from options import *
 if options['warnings'] == False:
@@ -10,7 +11,7 @@ from utils import *
 from preprocessing import *
 from baseline import *
 from cross_validation import cross_validation
-from vectorizer import init_tfidf_vectorizer
+from vectorizer import load_vectorizer
 
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
@@ -21,8 +22,11 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.preprocessing import StandardScaler 
 from sklearn.neural_network import MLPClassifier 
 
-
 import csv
+
+#clear cache
+if options['clear']:
+	clear_cache()
 
 # Initialization phase
 if options['init']:
@@ -60,8 +64,6 @@ if options['feature_extraction'] == 'WE':
 		scaler = StandardScaler()
 		train_reptweets = scaler.fit_transform(train_reptweets)  
 		test_reptweets = scaler.fit_transform(test_reptweets)
-		# train_reptweets = preprocessing.scale(train_reptweets)
-		# test_reptweets = preprocessing.scale(test_reptweets)
 
 	# PCA
 	if options['PCA'][0]:
@@ -77,10 +79,7 @@ if options['feature_extraction'] == 'WE':
 		test_reptweets = poly.fit_transform(test_reptweets)
 
 elif options['feature_extraction'] == 'TFIDF':
-	print('TFIDF')
-	tfidf = init_tfidf_vectorizer()
-	train_reptweets = tfidf.fit_transform(tweets['tweet'])
-	test_reptweets = tfidf.transform(test_tweets['tweet'])
+	train_reptweets, test_reptweets = load_vectorizer(tweets, test_tweets)
 
 # Apply ML algorithm
 if options['ml_algorithm'] == 'RF':

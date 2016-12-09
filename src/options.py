@@ -1,7 +1,7 @@
 DATA_PATH = '../data/'
 GLOVE_DATA_PATH = '../data/glove_data/'
-POS_TWEETS_FILE = 'train_pos_full.txt'
-NEG_TWEETS_FILE = 'train_neg_full.txt'
+POS_TWEETS_FILE = 'train_pos_small.txt'
+NEG_TWEETS_FILE = 'train_neg_small.txt'
 TEST_TWEETS_FILE = 'test_data.txt'
 PRED_SUBMISSION_FILE = 'pred_submission.csv'
 #remove data/train_preproc_set.csv before starting with a new dataset
@@ -13,14 +13,16 @@ EMBEDDINGS_FILE_200 = 'glove.twitter.27B.200d.txt'
 options = {
     'preprocess' : (True,'save'), #({True,False},{'save'})
     'init' : False,
-    'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
+    'feature_extraction' : 'TFIDF', # {TFIDF,WE} later will change to set
     'we_method' : 'baseline', # {baseline}
-    'ml_algorithm' : 'NN', # {SVM, LR, RF, NN} later will be change to a set
-    'cv' : (False,5),
+    'ml_algorithm' : 'SVM', # {SVM, LR, RF, NN} later will be change to a set
+    'cv' : (True,5),
     'scale': True,
     'warnings' : False,
     'PCA': (False, 25),
-    'poly': (False,2)
+    'poly': (False,2),
+    'cache_tfidf': False,
+    'clear' : True
 }
 
 WE_params = {
@@ -34,6 +36,7 @@ preprocessing_params = {
     'transform_emojis': True,
     'fhashtag': True,
     'fdigits': True,
+
     'fsmall_words': False,
     'fstopwords' : False,
     'fduplicates': False,
@@ -43,8 +46,8 @@ preprocessing_params = {
 }
 
 vectorizer_params = {
-    'min_df' : 5,
-    'max_df' : 0.8,
+    'min_df' : 1,
+    'max_df' : 1.0,
     'sublinear_tf' : True,
     'use_idf' : True,
     'number_of_stopwords' : None, # None or Int
