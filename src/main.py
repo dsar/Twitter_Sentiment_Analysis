@@ -56,6 +56,7 @@ print('test data shape:', test_tweets.shape)
 if options['preprocess'][0]:
 	tweets = tweets_preprocessing(tweets,train=True, params=preprocessing_params)
 	test_tweets = tweets_preprocessing(test_tweets,train=False, params=preprocessing_params)
+	print('processed tweets shape: ',tweets.shape)
 
 # Features extraction
 if options['feature_extraction'] == 'WE':
@@ -69,7 +70,7 @@ if options['feature_extraction'] == 'WE':
 			test_reptweets = scaler.fit_transform(test_reptweets)
 	elif options['we_method'] == 'doc2vec':
 		print('doc2vec')
-		train_reptweets, test_reptweets = doc2vec()
+		train_reptweets, test_reptweets = doc2vec(tweets, test_tweets)
 
 	# PCA
 	if options['PCA'][0]:
@@ -119,7 +120,7 @@ pred = clf.predict(test_reptweets)
 # CAUTION with tweets ids(!)
 print('pred shape: ',pred.shape)
 print('pred values: ',pred[0:20])
-
+print(train_reptweets)
 # Write predictions to file
 print('create final csv submission file')
 create_csv_submission(pred)

@@ -1,4 +1,7 @@
 # Other
+data/paragraph_vector.d2v
+data/preproc/
+data/doc2vec/
 data/cache/
 data/glove_data/
 data/embeddings.npy

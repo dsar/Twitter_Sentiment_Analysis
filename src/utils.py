@@ -12,7 +12,7 @@ def create_csv_submission(y_pred):
             writer.writerow({'Id':int(r1),'Prediction':r2})
             r1 += 1
 
-def clear_cache(preproc=True,tfidf=True,pred=True):
+def clear_cache(preproc=True,tfidf=True,pred=True, d2v=True):
 	print('clearing cache files')
 	if preproc:
 		try:
@@ -26,9 +26,14 @@ def clear_cache(preproc=True,tfidf=True,pred=True):
 			os.system('rm ' + DATA_PATH+'tfidf_test_reptweets.pkl')
 		except:
 			print('\nclear tfidf FAILED\n')
-	if preproc:
+	if pred:
 		try:
 			os.system('rm ' + PRED_SUBMISSION_FILE)
+		except:
+			print('\nclear pred FAILED\n')
+	if d2v:
+		try:
+			os.system('rm ' + DOC2VEC_MODEL_PATH)
 		except:
 			print('\nclear pred FAILED\n')
 	print('\nclear cache completed\n')
