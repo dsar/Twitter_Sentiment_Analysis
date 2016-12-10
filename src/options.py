@@ -3,8 +3,8 @@ PREPROC_DATA_PATH = DATA_PATH+'preproc/'
 GLOVE_DATA_PATH = DATA_PATH+'glove_data/'
 DOC2VEC_PATH = DATA_PATH + 'doc2vec/'
 
-POS_TWEETS_FILE = DATA_PATH+'train_pos.txt'
-NEG_TWEETS_FILE = DATA_PATH+'train_neg.txt'
+POS_TWEETS_FILE = DATA_PATH+'train_pos_small.txt'
+NEG_TWEETS_FILE = DATA_PATH+'train_neg_small.txt'
 TEST_TWEETS_FILE = DATA_PATH+'test_data.txt'
 PRED_SUBMISSION_FILE = DATA_PATH+'pred_submission.csv'
 #remove TRAIN_PREPROC_CACHING_PATH before starting with a new dataset
@@ -15,12 +15,16 @@ EMBEDDINGS_FILE_200 = GLOVE_DATA_PATH+'glove.twitter.27B.200d.txt'
 
 DOC2VEC_MODEL_PATH = DOC2VEC_PATH+'paragraph_vector.d2v'
 
+#Sentiment Lexicon
+POSITIVE_WORDS=DATA_PATH+'positive-words.txt'
+NEGATIVE_WORDS=DATA_PATH+'negative-words.txt'
+
 options = {
-    'preprocess' : (True,'save'), #({True,False},{'save', None})
+    'preprocess' : (True,None), #({True,False},{'save', None})
     'init' : False,
     'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
-    'we_method' : 'doc2vec', # {baseline, doc2vec}
-    'ml_algorithm' : 'SVM', # {SVM, LR, RF, NN} later will be change to a set
+    'we_method' : 'baseline', # {baseline, doc2vec}
+    'ml_algorithm' : 'NN', # {SVM, LR, RF, NN} later will be change to a set
     'cv' : (True,5),
     'scale': True,
     'warnings' : False,
@@ -31,7 +35,7 @@ options = {
 }
 
 clear = {
-    'preproc' : False,
+    'preproc' : True,
     'tfidf' : True,
     'pred' : True,
     'd2v' : False
@@ -48,6 +52,7 @@ preprocessing_params = {
     'transform_emojis': True,
     'fhashtag': True,
     'fdigits': True,
+    'sentiment_words': True,
 
     'fsmall_words': False,
     'fstopwords' : False,

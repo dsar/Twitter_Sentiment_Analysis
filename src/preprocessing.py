@@ -14,7 +14,7 @@ from sklearn.feature_extraction import text
 from split_hashtag import split_hashtag_to_words
 from options import preprocessing_params, print_dict_settings, \
                     TRAIN_PREPROC_CACHING_PATH, TEST_PREPROC_CACHING_PATH, \
-                    options
+                    POSITIVE_WORDS, NEGATIVE_WORDS, options
 
 
 # Initialization
@@ -26,6 +26,10 @@ for w in ['no', 'not', 'nor', 'only', 'against', 'up', 'down', 'couldn', 'didn',
 lancaster_stemmer = LancasterStemmer()
 lmt = nltk.stem.WordNetLemmatizer()
 punc_tokenizer = RegexpTokenizer(r'\w+')
+
+#Sentiment Lexicon
+positiveWords = open(POSITIVE_WORDS, encoding = "ISO-8859-1").read().split()
+negativeWords = open(NEGATIVE_WORDS, encoding = "ISO-8859-1").read().split()
 
 def filter_user(tweets):
 	return tweets.str.replace('<user>', '', case=False)
@@ -110,8 +114,16 @@ def emoji_transformation(tweet):
             t.append(w)
     return (" ".join(t)).strip()
 
-
-
+def emphasize_sentiment_words(tweet):
+    t = []
+    for w in tweet.split():
+        if w in positiveWords:
+            t.append('positive ' + w)
+        elif w in negativeWords:
+            t.append('negative ' + w)
+        else:
+            t.append(w)
+    return (" ".join(t)).strip()
 
 def split_hashtag(tweet):
     t = []
@@ -228,7 +240,7 @@ def tweets_preprocessing(tweets, train=True, params=None):
 
     if params == None:
         print('set default parameters')
-        fduplicates = frepeated_chars = fpunctuation = fuser = furl = fhashtag = fdigits = fsmall_words = fstopwords = transform_emojis = True
+        fduplicates = frepeated_chars = fpunctuation = fuser = furl = fhashtag = fdigits = fsmall_words = fstopwords = transform_emojis = sentiment_words = True
     else:
         fduplicates = params['fduplicates']
         frepeated_chars = params['frepeated_chars']
@@ -241,6 +253,7 @@ def tweets_preprocessing(tweets, train=True, params=None):
         fsmall_words = params['fsmall_words']
         fstopwords = params['fstopwords']
         transform_emojis = params['transform_emojis']
+        sentiment_words = params['sentiment_words']
 
         print_dict_settings(params,msg='Preprocessing Settings:\n')
 
@@ -265,6 +278,10 @@ def tweets_preprocessing(tweets, train=True, params=None):
     if frepeated_chars:
         tweets['tweet'] = tweets.apply(lambda tweet: filter_repeated_chars_on_tweet(tweet['tweet']), axis=1)
         print('Repeated characters filtering DONE')
+
+    if sentiment_words:
+        tweets['tweet'] = tweets.apply(lambda tweet: emphasize_sentiment_words(tweet['tweet']), axis=1)
+        print('Sentiment words emphasizing DONE')
 
     if transform_emojis:
         tweets['tweet'] = tweets.apply(lambda tweet: emoji_transformation(tweet['tweet']), axis=1)
