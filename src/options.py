@@ -43,7 +43,7 @@ clear = {
 
 WE_params = {
     'we_features' : 200,
-    'epochs' : 1
+    'epochs' : 5
 }
 
 preprocessing_params = {

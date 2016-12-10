@@ -39,10 +39,8 @@ if options['init']:
 ##Train Data
 print('loading data')
 pos_tweets = pd.DataFrame(read_file(POS_TWEETS_FILE), columns=['tweet'])
-# pos_tweets = pd.read_table(POS_TWEETS_FILE, header=None, names=['tweet','sentiment'])
 pos_tweets['sentiment'] = 1
 neg_tweets = pd.DataFrame(read_file(NEG_TWEETS_FILE), columns=['tweet'])
-# neg_tweets = pd.read_table(NEG_TWEETS_FILE, header= None, names=['tweet','sentiment'])
 neg_tweets['sentiment'] = -1
 print('positive tweets shape: ',pos_tweets.shape)
 print('negative tweets shape: ',neg_tweets.shape)
@@ -50,7 +48,7 @@ tweets = pd.concat([pos_tweets, neg_tweets], axis=0)
 print('final tweets shape: ',tweets.shape)
 
 ##Test Data
-test_tweets = pd.read_table(TEST_TWEETS_FILE, names=['tweet','sentiment'])
+test_tweets = pd.DataFrame(read_file(TEST_TWEETS_FILE), columns=['tweet'])
 test_tweets['tweet'] = test_tweets.apply(lambda tweet: remove_tweet_id(tweet['tweet']), axis=1)
 print('test data shape:', test_tweets.shape)
 
