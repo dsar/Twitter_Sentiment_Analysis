@@ -73,7 +73,7 @@ def doc2vec(tweets, test_tweets):
     print('POS shape: ',pos.shape)
     print('NEG shape: ',neg.shape)
 
-    model = Doc2Vec(dm=0,dm_concat=1,min_count=1, window=10, size=WE_params['we_features'], sample=1e-4, negative=5, workers=7)#, docvecs_mapfile=EMBEDDINGS_FILE_200)
+    model = Doc2Vec(dm=0,dm_concat=0,min_count=1, window=10, size=WE_params['we_features'], sample=0, negative=5, workers=10)#, docvecs_mapfile=EMBEDDINGS_FILE_200)
 
     if not os.path.exists(DOC2VEC_MODEL_PATH):
 
@@ -84,6 +84,7 @@ def doc2vec(tweets, test_tweets):
         sentences = LabeledLineSentence(sources)
 
         model.build_vocab(sentences.to_array())
+        model.intersect_word2vec_format(W2V_DATA_PATH + 'word2vec_twitter_model.bin', binary=True, encoding='utf8', unicode_errors='ignore', lockf=1.0)
 
         for epoch in range(WE_params['epochs']):
             logger.info('Epoch %d' % epoch)

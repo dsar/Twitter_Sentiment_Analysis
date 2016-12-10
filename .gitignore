@@ -1,4 +1,5 @@
 # Other
+data/word2vec/
 data/paragraph_vector.d2v
 data/preproc/
 data/doc2vec/

@@ -2,9 +2,10 @@ DATA_PATH = '../data/'
 PREPROC_DATA_PATH = DATA_PATH+'preproc/'
 GLOVE_DATA_PATH = DATA_PATH+'glove_data/'
 DOC2VEC_PATH = DATA_PATH + 'doc2vec/'
+W2V_DATA_PATH = DATA_PATH + 'word2vec/'
 
-POS_TWEETS_FILE = DATA_PATH+'train_pos_small.txt'
-NEG_TWEETS_FILE = DATA_PATH+'train_neg_small.txt'
+POS_TWEETS_FILE = DATA_PATH+'train_pos_full.txt'
+NEG_TWEETS_FILE = DATA_PATH+'train_neg_full.txt'
 TEST_TWEETS_FILE = DATA_PATH+'test_data.txt'
 PRED_SUBMISSION_FILE = DATA_PATH+'pred_submission.csv'
 #remove TRAIN_PREPROC_CACHING_PATH before starting with a new dataset
@@ -20,11 +21,11 @@ POSITIVE_WORDS=DATA_PATH+'positive-words.txt'
 NEGATIVE_WORDS=DATA_PATH+'negative-words.txt'
 
 options = {
-    'preprocess' : (True,None), #({True,False},{'save', None})
+    'preprocess' : (True,'save'), #({True,False},{'save', None})
     'init' : False,
     'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
-    'we_method' : 'baseline', # {baseline, doc2vec}
-    'ml_algorithm' : 'NN', # {SVM, LR, RF, NN} later will be change to a set
+    'we_method' : 'doc2vec', # {baseline, doc2vec}
+    'ml_algorithm' : 'SVM', # {SVM, LR, RF, NN} later will be change to a set
     'cv' : (True,5),
     'scale': True,
     'warnings' : False,
@@ -35,14 +36,14 @@ options = {
 }
 
 clear = {
-    'preproc' : True,
+    'preproc' : False,
     'tfidf' : True,
     'pred' : True,
-    'd2v' : False
+    'd2v' : True
 }
 
 WE_params = {
-    'we_features' : 200,
+    'we_features' : 400,
     'epochs' : 5
 }
 

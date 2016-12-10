@@ -28,8 +28,8 @@ lmt = nltk.stem.WordNetLemmatizer()
 punc_tokenizer = RegexpTokenizer(r'\w+')
 
 #Sentiment Lexicon
-positiveWords = open(POSITIVE_WORDS, encoding = "ISO-8859-1").read().split()
-negativeWords = open(NEGATIVE_WORDS, encoding = "ISO-8859-1").read().split()
+positiveWords = set(open(POSITIVE_WORDS, encoding = "ISO-8859-1").read().split())
+negativeWords = set(open(NEGATIVE_WORDS, encoding = "ISO-8859-1").read().split())
 
 def filter_user(tweets):
 	return tweets.str.replace('<user>', '', case=False)
@@ -265,7 +265,6 @@ def tweets_preprocessing(tweets, train=True, params=None):
     stored_tweets, read = load_preprocessed_tweets(train)
     if read:
         print('\nTweets have been successfully loaded!')
-        # stored_tweets['tweet'] = stored_tweets['tweet'].fillna('the')  #!!!!!!! under discussion
         return stored_tweets
 
     if train:
