@@ -35,3 +35,10 @@ def clear_cache(preproc=True,tfidf=True,pred=True, d2v=True):
 		except:
 			print('\nclear d2v FAILED\n')
 	print('\nclear cache completed\n')
+
+def read_file(filename):
+	data = []
+	with open(filename, "r") as ins:
+	    for line in ins:
+	        data.append(line)
+	return data
