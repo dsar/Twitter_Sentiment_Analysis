@@ -16,14 +16,12 @@ def clear_cache(preproc=True,tfidf=True,pred=True, d2v=True):
 	print('clearing cache files')
 	if preproc:
 		try:
-			os.system('rm '+ TRAIN_PREPROC_CACHING_PATH)
-			os.system('rm '+ TEST_PREPROC_CACHING_PATH)
+			os.system('rm '+ PREPROC_DATA_PATH+'*')
 		except:
 			print('\nclear preproc FAILED\n')
 	if tfidf:
 		try:
-			os.system('rm ' + DATA_PATH+'tfidf_train_reptweets.pkl')
-			os.system('rm ' + DATA_PATH+'tfidf_test_reptweets.pkl')
+			os.system('rm ' + DATA_PATH+'tfidf_*_reptweets.pkl')
 		except:
 			print('\nclear tfidf FAILED\n')
 	if pred:
@@ -35,5 +33,5 @@ def clear_cache(preproc=True,tfidf=True,pred=True, d2v=True):
 		try:
 			os.system('rm ' + DOC2VEC_MODEL_PATH)
 		except:
-			print('\nclear pred FAILED\n')
+			print('\nclear d2v FAILED\n')
 	print('\nclear cache completed\n')

@@ -89,7 +89,7 @@ def doc2vec(tweets, test_tweets):
             logger.info('Epoch %d' % epoch)
             model.train(sentences.sentences_perm())
 
-        # model.save(DOC2VEC_MODEL_PATH)
+        model.save(DOC2VEC_MODEL_PATH)
     else:
         model = model.load(DOC2VEC_MODEL_PATH)
 
@@ -105,8 +105,8 @@ def doc2vec(tweets, test_tweets):
         train_arrays[i+pos.shape[0]] = model.docvecs[prefix_train_neg]
         train_labels[i+pos.shape[0]] = -1
 
-    print('train_arrays: ',train_arrays)
-    print('train_labels',train_labels)
+    # print('train_arrays: ',train_arrays)
+    # print('train_labels',train_labels)
 
     test_arrays = np.zeros((test.shape[0], WE_params['we_features']))
     test_labels = np.zeros(test.shape[0])

@@ -27,7 +27,7 @@ import csv
 
 #clear cache
 if options['clear']:
-	clear_cache()
+	clear_cache(preproc=clear['preproc'],tfidf=clear['tfidf'],pred=clear['pred'], d2v=clear['d2v'])
 
 # Initialization phase
 if options['init']:

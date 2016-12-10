@@ -16,7 +16,7 @@ EMBEDDINGS_FILE_200 = GLOVE_DATA_PATH+'glove.twitter.27B.200d.txt'
 DOC2VEC_MODEL_PATH = DOC2VEC_PATH+'paragraph_vector.d2v'
 
 options = {
-    'preprocess' : (True,'save'), #({True,False},{'save'})
+    'preprocess' : (True,'save'), #({True,False},{'save', None})
     'init' : False,
     'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
     'we_method' : 'doc2vec', # {baseline, doc2vec}
@@ -30,9 +30,16 @@ options = {
     'clear' : True
 }
 
+clear = {
+    'preproc' : False,
+    'tfidf' : True,
+    'pred' : True,
+    'd2v' : False
+}
+
 WE_params = {
     'we_features' : 200,
-    'epochs' : 10
+    'epochs' : 1
 }
 
 preprocessing_params = {
@@ -57,13 +64,8 @@ vectorizer_params = {
     'use_idf' : True,
     'number_of_stopwords' : None, # None or Int
     'tokenizer' : True, # None or anything else (e.g. True) for lemmatization
-    'ngram_range' : (1,1), # (1,2) for bigrams
+    'ngram_range' : (1,1), # (1,2) for bigrams, (1,3) for trigrams and so on
     'max_features' : None # None or Int
-}
-
-split_params = {
-    'test_size' : 0.10,
-    'random_state': 4
 }
 
 

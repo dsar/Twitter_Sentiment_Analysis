@@ -207,11 +207,15 @@ def cache_preprocessing(tweets, train=True):
     else:
         tweets.to_csv(path_or_buf=TEST_PREPROC_CACHING_PATH, sep=',', header=False ,encoding='utf-8' ,index=False)
 
-def load_preprocessed_tweets():
+def load_preprocessed_tweets(train=True):
     from pathlib import Path
-    my_file = Path(TRAIN_PREPROC_CACHING_PATH)
+    if train:
+        path = TRAIN_PREPROC_CACHING_PATH
+    else:
+        path = TEST_PREPROC_CACHING_PATH
+    my_file = Path(path)
     if my_file.is_file():
-        return pd.read_csv(TRAIN_PREPROC_CACHING_PATH,sep=',', names=['tweet','sentiment'],encoding='utf-8'), True
+        return pd.read_csv(path,sep=',', names=['tweet','sentiment'],encoding='utf-8'), True
     print('\nThere is no cached file for preprocessed tweets\n')
     return None, False
 
@@ -245,10 +249,10 @@ def tweets_preprocessing(tweets, train=True, params=None):
     else:
         print('Tweets Preprocessing for the Testing set started\n')
 
-    stored_tweets, read = load_preprocessed_tweets()
-    if train==True and read == True:
+    stored_tweets, read = load_preprocessed_tweets(train)
+    if read:
         print('\nTweets have been successfully loaded!')
-        stored_tweets['tweet'] = stored_tweets['tweet'].fillna('the')  #!!!!!!! under discussion
+        # stored_tweets['tweet'] = stored_tweets['tweet'].fillna('the')  #!!!!!!! under discussion
         return stored_tweets
 
     if train:
