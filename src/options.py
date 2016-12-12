@@ -4,8 +4,8 @@ GLOVE_DATA_PATH = DATA_PATH+'glove_data/'
 DOC2VEC_PATH = DATA_PATH + 'doc2vec/'
 W2V_DATA_PATH = DATA_PATH + 'word2vec/'
 
-POS_TWEETS_FILE = DATA_PATH+'train_pos_full.txt'
-NEG_TWEETS_FILE = DATA_PATH+'train_neg_full.txt'
+POS_TWEETS_FILE = DATA_PATH+'train_pos_small.txt'
+NEG_TWEETS_FILE = DATA_PATH+'train_neg_small.txt'
 TEST_TWEETS_FILE = DATA_PATH+'test_data.txt'
 PRED_SUBMISSION_FILE = DATA_PATH+'pred_submission.csv'
 #remove TRAIN_PREPROC_CACHING_PATH before starting with a new dataset
@@ -21,29 +21,30 @@ POSITIVE_WORDS=DATA_PATH+'positive-words.txt'
 NEGATIVE_WORDS=DATA_PATH+'negative-words.txt'
 
 options = {
-    'preprocess' : (True,None), #({True,False},{'save', None})
+    'preprocess' : (True,'save'), #({True,False},{'save', None})
     'init' : False,
     'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
     'we_method' : 'baseline', # {baseline, doc2vec}
     'ml_algorithm' : 'NN', # {SVM, LR, RF, NN} later will be change to a set
-    'cv' : (False,5),
+    'cv' : (True,5),
     'scale': False,
     'warnings' : False,
     'PCA': (False, 25),
     'poly': (False,2),
     'cache_tfidf': False,
+    'model_selection': True,
     'clear' : True
 }
 
 clear = {
     'preproc' : False,
-    'tfidf' : False,
+    'tfidf' : True,
     'pred' : True,
     'd2v' : True
 }
 
 WE_params = {
-    'we_features' : 400,
+    'we_features' : 200,
     'epochs' : 5
 }
 
@@ -70,7 +71,7 @@ vectorizer_params = {
     'use_idf' : True,
     'number_of_stopwords' : None, # None or Int
     'tokenizer' : True, # None or anything else (e.g. True) for lemmatization
-    'ngram_range' : (1,5), # (1,2) for bigrams, (1,3) for trigrams and so on
+    'ngram_range' : (1,1), # (1,2) for bigrams, (1,3) for trigrams and so on
     'max_features' : None # None or Int
 }
 

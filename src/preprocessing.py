@@ -50,7 +50,7 @@ def filter_user(tweets):
     OUTPUT: 
             Series of <user>filtered tweets
     """
-	return tweets.str.replace('<user>', '', case=False)
+    return tweets.str.replace('<user>', '', case=False)
 
 def filter_url(tweets):
     """
@@ -61,7 +61,7 @@ def filter_url(tweets):
     OUTPUT: 
             Series of <url>-filtered tweets
     """
-	return tweets.str.replace('<url>', '', case=False)
+    return tweets.str.replace('<url>', '', case=False)
 
 def expand_not(tweets):
     """
@@ -222,7 +222,7 @@ def filter_small_words(tweet):
     OUTPUT: 
                 small words-filtered tweet as a python string
     """
-	return " ".join([w for w in tweet.split() if len(w) >1 or not w.isalpha()])
+    return " ".join([w for w in tweet.split() if len(w) >1 or not w.isalpha()])
 
 
 def tokenization(tweet):
@@ -386,7 +386,7 @@ def filter_punctuation(tweet):
     OUTPUT: 
             punctuation-filtered tweet as a python string.
     """
-	return " ".join(punc_tokenizer.tokenize(tweet))
+    return " ".join(punc_tokenizer.tokenize(tweet))
 
 class LemmaTokenizer(object):
     """

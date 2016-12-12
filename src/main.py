@@ -24,6 +24,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier 
 
 import csv
+import itertools
 
 #clear cache
 if options['clear']:
@@ -96,29 +97,92 @@ elif options['feature_extraction'] == 'TFIDF':
 	print('Feature extraction using TF-IDF')
 	train_reptweets, test_reptweets = load_vectorizer(tweets, test_tweets)
 
-# Apply ML algorithm
-if options['ml_algorithm'] == 'RF':
-	print('Initializing Random Forest')
-	clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
-elif options['ml_algorithm'] == 'SVM':
-	print('Initializing SVM')
-	clf = svm.LinearSVC(max_iter=10000)
-elif options['ml_algorithm'] == 'LR':
-	print('Initializing Logistic Regression')
-	clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
-elif options['ml_algorithm'] == 'NN':
-	print('Initializing Neural Network')
-	clf = MLPClassifier(solver='lbfgs', activation='logistic', hidden_layer_sizes=(16, 1), random_state=4, verbose=False)
+if options['model_selection']:
+	# param init
+	if options['ml_algorithm'] == 'RF':
+		print('Initializing Random Forest')
+		clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
+	elif options['ml_algorithm'] == 'SVM':
+		print('SVM params init')
+		listOLists = [['hinge','squared_hinge'],[0.1,0.5,0.8,1,2]]
+		clf = svm.LinearSVC(max_iter=10000)
+	elif options['ml_algorithm'] == 'LR':
+		print('Initializing Logistic Regression')
+		clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
+	elif options['ml_algorithm'] == 'NN':
+		print('NN params init')
+		listOLists = [[1e-2, 1e-3, 1e-4, 1e-5],['constant', 'invscaling', 'adaptive'],['lbfgs', 'sgd', 'adam'],[1,2],[8,16,32,64,128]]
+	c = itertools.product(*listOLists)
+	print('combinations: ',c)
 
-# Cross Validation
-if options['cv'][0]:
-	print('Cross-validating results')
-	avg_test_accuracy, cv = cross_validation(clf, 
-											tweets.shape[0],
-											train_reptweets,
-											tweets['sentiment'], 
-											n_folds=options['cv'][1])
-	print('Avg CV score: ',avg_test_accuracy)
+	max_tuple = []
+	max_avg_score = 0
+	for tuple_ in c:
+		print('tuple: ',tuple_)
+		# Apply ML algorithm
+		if options['ml_algorithm'] == 'RF':
+			print('Initializing Random Forest')
+			clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
+		elif options['ml_algorithm'] == 'SVM':
+			print('Initializing SVM')
+			clf = svm.LinearSVC(max_iter=10000,intercept_scaling=tuple_[1],loss=tuple_[0])
+		elif options['ml_algorithm'] == 'LR':
+			print('Initializing Logistic Regression')
+			clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
+		elif options['ml_algorithm'] == 'NN':
+			print('Initializing Neural Network')
+			clf = MLPClassifier(solver=tuple_[2],\
+								activation='logistic', \
+								hidden_layer_sizes=(tuple_[4], tuple_[3]), \
+								random_state=4, \
+								verbose=False,\
+							    alpha=tuple_[0],\
+								learning_rate = tuple_[1])
+
+		# Cross Validation
+		if options['cv'][0]:
+			print('Cross-validating results')
+			avg_test_accuracy, cv = cross_validation(clf, 
+													tweets.shape[0],
+													train_reptweets,
+													tweets['sentiment'], 
+													n_folds=options['cv'][1])
+			print('Avg CV score: ',avg_test_accuracy)
+
+		if avg_test_accuracy > max_avg_score:
+			max_tuple = tuple_
+			max_avg_score = avg_test_accuracy
+
+	print('max_avg_score', max_avg_score)
+	print('max_tuple', max_tuple)
+
+
+## best parameters hardcoded
+else:
+	# Apply ML algorithm
+	if options['ml_algorithm'] == 'RF':
+		print('Initializing Random Forest')
+		clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
+	elif options['ml_algorithm'] == 'SVM':
+		print('Initializing SVM')
+		clf = svm.LinearSVC(max_iter=10000)
+	elif options['ml_algorithm'] == 'LR':
+		print('Initializing Logistic Regression')
+		clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
+	elif options['ml_algorithm'] == 'NN':
+		print('Initializing Neural Network')
+		clf = MLPClassifier(solver='lbfgs', activation='logistic', hidden_layer_sizes=(16, 1), random_state=4, verbose=False)
+
+	# Cross Validation
+	if options['cv'][0]:
+		print('Cross-validating results')
+		avg_test_accuracy, cv = cross_validation(clf, 
+												tweets.shape[0],
+												train_reptweets,
+												tweets['sentiment'], 
+												n_folds=options['cv'][1])
+		print('Avg CV score: ',avg_test_accuracy)
+
 
 # Train model
 print('Training model')
