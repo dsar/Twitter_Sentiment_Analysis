@@ -13,7 +13,7 @@ from nltk.probability import FreqDist
 from sklearn.feature_extraction import text
 from split_hashtag import split_hashtag_to_words
 from options import preprocessing_params, print_dict_settings, \
-                    TRAIN_PREPROC_CACHING_PATH, TEST_PREPROC_CACHING_PATH, \
+                    PREPROC_DATA_PATH, TRAIN_PREPROC_CACHING_PATH, TEST_PREPROC_CACHING_PATH, \
                     POSITIVE_WORDS, NEGATIVE_WORDS, options
 
 
@@ -97,6 +97,11 @@ def emoji_transformation(tweet):
 
     smilefaces.extend([">:d","<[^_^]>"])
     sadfaces.extend(["0_o","0_0","0-0","0_0","0__0","0___0","0,0","0.0"])
+
+    smilefaces = set(smilefaces)
+    lolfaces = set(lolfaces)
+    sadfaces = set(sadfaces)
+    neutralfaces = set(neutralfaces)
 
     t = []
     for w in tweet.split():
@@ -214,6 +219,8 @@ class LemmaTokenizer(object):
         return [self.wnl.lemmatize(t) for t in word_tokenize(doc)]
 
 def cache_preprocessing(tweets, train=True):
+    from pathlib import Path    
+    Path(PREPROC_DATA_PATH ).mkdir(exist_ok=True)
     if train:
         tweets.to_csv(path_or_buf=TRAIN_PREPROC_CACHING_PATH, sep=',' , header=False ,encoding='utf-8' ,index=False)
     else:

@@ -24,9 +24,9 @@ options = {
     'preprocess' : (True,'save'), #({True,False},{'save', None})
     'init' : False,
     'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
-    'we_method' : 'doc2vec', # {baseline, doc2vec}
+    'we_method' : 'baseline', # {baseline, doc2vec}
     'ml_algorithm' : 'SVM', # {SVM, LR, RF, NN} later will be change to a set
-    'cv' : (True,5),
+    'cv' : (False,5),
     'scale': True,
     'warnings' : False,
     'PCA': (False, 25),
@@ -37,7 +37,7 @@ options = {
 
 clear = {
     'preproc' : False,
-    'tfidf' : True,
+    'tfidf' : False,
     'pred' : True,
     'd2v' : True
 }
@@ -56,7 +56,7 @@ preprocessing_params = {
     'sentiment_words': True,
 
     'fsmall_words': False,
-    'fstopwords' : False,
+    'fstopwords' : True,
     'fduplicates': False,
     'fpunctuation': False,
     'fuser': False,
@@ -70,7 +70,7 @@ vectorizer_params = {
     'use_idf' : True,
     'number_of_stopwords' : None, # None or Int
     'tokenizer' : True, # None or anything else (e.g. True) for lemmatization
-    'ngram_range' : (1,1), # (1,2) for bigrams, (1,3) for trigrams and so on
+    'ngram_range' : (1,5), # (1,2) for bigrams, (1,3) for trigrams and so on
     'max_features' : None # None or Int
 }
 
