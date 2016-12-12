@@ -66,7 +66,8 @@ if options['feature_extraction'] == 'WE':
 		train_reptweets, test_reptweets = baseline(tweets, test_tweets)
 		if options['scale']:
 			scaler = StandardScaler()
-			train_reptweets = scaler.fit_transform(train_reptweets)  
+			train_reptweets = scaler.fit_transform(train_reptweets)
+			scaler = StandardScaler()  
 			test_reptweets = scaler.fit_transform(test_reptweets)
 	elif options['we_method'] == 'doc2vec':
 		print('doc2vec')
@@ -77,12 +78,14 @@ if options['feature_extraction'] == 'WE':
 	    print('PCA')
 	    pca = decomposition.PCA(n_components=options['PCA'][1])
 	    train_reptweets = pca.fit_transform(train_reptweets)
-	    test_reptweets = pca.transform(test_reptweets)
+	    pca = decomposition.PCA(n_components=options['PCA'][1])
+	    test_reptweets = pca.fit_transform(test_reptweets)
 	#Polynomial expansion
 	if  options['poly'][0]:
 		print('poly')
 		poly = PolynomialFeatures(options['poly'][1])
 		train_reptweets = poly.fit_transform(train_reptweets)
+		poly = PolynomialFeatures(options['poly'][1])
 		test_reptweets = poly.fit_transform(test_reptweets)
 
 # TFIDF
@@ -100,7 +103,7 @@ elif options['ml_algorithm'] == 'LR':
 	print('init Logistic Regression')
 	clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
 elif options['ml_algorithm'] == 'NN':
-	clf = MLPClassifier(solver='lbfgs', activation='logistic', hidden_layer_sizes=(16, 2), random_state=4, verbose=False)
+	clf = MLPClassifier(solver='lbfgs', activation='logistic', hidden_layer_sizes=(16, 1), random_state=4, verbose=False)
 
 # perform cv
 if options['cv'][0]:

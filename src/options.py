@@ -21,13 +21,13 @@ POSITIVE_WORDS=DATA_PATH+'positive-words.txt'
 NEGATIVE_WORDS=DATA_PATH+'negative-words.txt'
 
 options = {
-    'preprocess' : (True,'save'), #({True,False},{'save', None})
+    'preprocess' : (True,None), #({True,False},{'save', None})
     'init' : False,
     'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
     'we_method' : 'baseline', # {baseline, doc2vec}
-    'ml_algorithm' : 'SVM', # {SVM, LR, RF, NN} later will be change to a set
+    'ml_algorithm' : 'NN', # {SVM, LR, RF, NN} later will be change to a set
     'cv' : (False,5),
-    'scale': True,
+    'scale': False,
     'warnings' : False,
     'PCA': (False, 25),
     'poly': (False,2),
@@ -56,7 +56,7 @@ preprocessing_params = {
     'sentiment_words': True,
 
     'fsmall_words': False,
-    'fstopwords' : True,
+    'fstopwords' : False,
     'fduplicates': False,
     'fpunctuation': False,
     'fuser': False,

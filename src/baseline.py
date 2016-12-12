@@ -32,10 +32,16 @@ def get_embeddings_dictionary():
 def average_vectors(tweets, words):
     we_tweets = np.zeros((tweets.shape[0], len(next(iter(words.values())))))
     for i, tweet in enumerate(tweets['tweet']):
-        split_tweet = tweet.split()
+        try:
+            split_tweet = tweet.split()
+        except:
+            continue;
+
+        foundEmbeddings = 0
         for word in split_tweet:
             try:
                 we_tweets[i] += words[word]
+                foundEmbeddings+=1
             except:
                 if (not word.startswith("#")):
                     word = "#" + word
@@ -45,9 +51,10 @@ def average_vectors(tweets, words):
                     if((len(token) != 1) or (token == "a") or (token == "i")):
                         try:
                             we_tweets[i] += words[token]
+                            foundEmbeddings+=1
                         except:
                             #print('Not found: ', token)
                             continue;
                 continue;
-        we_tweets[i] /= len(split_tweet)
+        we_tweets[i] /= foundEmbeddings
     return we_tweets

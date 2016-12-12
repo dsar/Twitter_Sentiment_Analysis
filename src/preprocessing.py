@@ -86,7 +86,7 @@ def emoji_transformation(tweet):
             for s in ["\(", "\[", "{"]:
                 smilefaces.append(s+n+e)
                 smilefaces.append(s+e)
-            for s in ["\)", "d", "\]", "}"]:
+            for s in ["\)", "\]", "}"]:
                 sadfaces.append(s+n+e)
                 sadfaces.append(s+e)
             for s in ["\|", "\/", r"\\"]:
@@ -94,9 +94,6 @@ def emoji_transformation(tweet):
                 neutralfaces.append(s+e) 
             lolfaces.append(e+n+"p")
             lolfaces.append(e+"p")
-
-    smilefaces.extend([">:d","<[^_^]>"])
-    sadfaces.extend(["0_o","0_0","0-0","0_0","0__0","0___0","0,0","0.0"])
 
     smilefaces = set(smilefaces)
     lolfaces = set(lolfaces)
