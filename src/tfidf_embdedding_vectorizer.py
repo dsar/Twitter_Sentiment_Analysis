@@ -12,17 +12,19 @@ def tfidf_embdedding_vectorizer(tweets, test_tweets):
     print('building train tfidf')
     vectorizer_params['tokenizer'] = None
     tfidf = init_tfidf_vectorizer()
-    tfidf.fit_transform(tweets['tweet'])
-    max_idf = max(tfidf.idf_)
-    word2weight = collections.defaultdict(lambda: max_idf,[(w, tfidf.idf_[i]) for w, i in tfidf.vocabulary_.items()])
+    X = tfidf.fit_transform(tweets['tweet'])
+    #max_idf = max(tfidf.idf_)
+    #print('max idf: ',max_idf)
+    #word2weight = collections.defaultdict(lambda: max_idf,[(w, tfidf.idf_[i]/max_idf) for w, i in tfidf.vocabulary_.items()])
+    #print(word2weight)
     print('building tweets WE')
-    we_tweets = average_vectors(tweets, words, word2weight)
+    we_tweets = average_vectors(tweets, words, tfidf, X)
     print('building test tweets WE')
     tfidf = init_tfidf_vectorizer()
-    tfidf.fit_transform(test_tweets['tweet'])
-    max_idf = max(tfidf.idf_)
-    word2weight = collections.defaultdict(lambda: max_idf,[(w, tfidf.idf_[i]) for w, i in tfidf.vocabulary_.items()])
-    we_test_tweets = average_vectors(test_tweets, words, word2weight)
+    X = tfidf.fit_transform(test_tweets['tweet'])
+    #max_idf = max(tfidf.idf_)
+    #word2weight = collections.defaultdict(lambda: max_idf,[(w, tfidf.idf_[i]) for w, i in tfidf.vocabulary_.items()])
+    we_test_tweets = average_vectors(test_tweets, words, tfidf, X)
     return we_tweets, we_test_tweets
 
 def get_embeddings_dictionary():
@@ -41,7 +43,7 @@ def get_embeddings_dictionary():
                 words[tokens[0]] = np.array([float(x) for x in tokens[1:]])
     return words
 
-def average_vectors(tweets, words, word2weight):
+def average_vectors(tweets, words, tfidf, X):
     we_tweets = np.zeros((tweets.shape[0], len(next(iter(words.values())))))
     for i, tweet in enumerate(tweets['tweet']):
         try:
@@ -52,7 +54,10 @@ def average_vectors(tweets, words, word2weight):
         foundEmbeddings = 0
         for word in split_tweet:
             try:
-                we_tweets[i] += words[word] * word2weight[word]
+                #print('test: ', X[(0,4873)])
+                #print('vocab: ', tfidf.vocabulary_[word])
+                #print('wtf??? : ', X[(i,tfidf.vocabulary_(word))])
+                we_tweets[i] += words[word] * X[(i,tfidf.vocabulary_[word])]
                 foundEmbeddings+=1
             except:
                 if (not word.startswith("#")):
@@ -62,10 +67,10 @@ def average_vectors(tweets, words, word2weight):
                 for token in tokens.split():
                     if((len(token) != 1) or (token == "a") or (token == "i")):
                         try:
-                            we_tweets[i] += words[token] * word2weight[token]
+                            we_tweets[i] += words[token] * X[(i,tfidf.vocabulary_[token])]
                             foundEmbeddings+=1
                         except:
-                            print('Not found: ', token)
+                            #print('Not found: ', token)
                             continue;
                 continue;
         we_tweets[i] /= foundEmbeddings
