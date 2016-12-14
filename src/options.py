@@ -4,8 +4,8 @@ GLOVE_DATA_PATH = DATA_PATH+'glove_data/'
 DOC2VEC_PATH = DATA_PATH + 'doc2vec/'
 W2V_DATA_PATH = DATA_PATH + 'word2vec/'
 
-POS_TWEETS_FILE = DATA_PATH+'train_pos_full.txt'
-NEG_TWEETS_FILE = DATA_PATH+'train_neg_full.txt'
+POS_TWEETS_FILE = DATA_PATH+'train_pos_small.txt'
+NEG_TWEETS_FILE = DATA_PATH+'train_neg_small.txt'
 TEST_TWEETS_FILE = DATA_PATH+'test_data.txt'
 PRED_SUBMISSION_FILE = DATA_PATH+'pred_submission.csv'
 #remove TRAIN_PREPROC_CACHING_PATH before starting with a new dataset
@@ -24,7 +24,7 @@ options = {
     'preprocess' : (True,'save'), #({True,False},{'save', None})
     'init' : False,
     'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
-    'we_method' : 'we_tfidf', # {we_mean, doc2vec, we_tfidf}
+    'we_method' : 'we_mean', # {we_mean, we_tfidf, dm_doc2vec, dbow_doc2vec}
     'ml_algorithm' : 'NN', # {SVM, LR, RF, NN}
     'cv' : (True,5),
     'scale': False,

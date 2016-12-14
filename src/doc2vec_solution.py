@@ -70,10 +70,12 @@ def doc2vec(tweets, test_tweets):
     test = test_tweets['tweet']
     test.to_csv(PREPROC_DATA_PATH+'test.d2v', header=False, index=False, encoding='utf-8')
 
-    print('POS shape: ',pos.shape)
-    print('NEG shape: ',neg.shape)
-
-    model = Doc2Vec(dm=0,dm_concat=0,min_count=1, window=10, size=WE_params['we_features'], sample=0, negative=5, workers=10)#, docvecs_mapfile=EMBEDDINGS_FILE_200)
+    if options['we_method'] == 'dm_doc2vec':
+        print('DM Doc2Vec')
+        model = Doc2Vec(dm=1,dm_concat=0,min_count=1, window=10, size=WE_params['we_features'], sample=0, negative=5, workers=10)#, docvecs_mapfile=EMBEDDINGS_FILE_200)
+    elif options['we_method'] == 'dbow_doc2vec':
+        print('DBOW Doc2Vec')
+        model = Doc2Vec(dm=0,dm_concat=0,min_count=1, window=10, size=WE_params['we_features'], sample=0, negative=5, workers=10)#, docvecs_mapfile=EMBEDDINGS_FILE_200)
 
     if not os.path.exists(DOC2VEC_MODEL_PATH):
 
