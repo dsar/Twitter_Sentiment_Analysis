@@ -53,7 +53,7 @@ def average_vectors(tweets, words):
                             we_tweets[i] += words[token]
                             foundEmbeddings+=1
                         except:
-                            #print('Not found: ', token)
+                            print('Not found: ', token)
                             continue;
                 continue;
         we_tweets[i] /= foundEmbeddings

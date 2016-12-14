@@ -13,7 +13,7 @@ def init_tfidf_vectorizer():
   if vectorizer_params['tokenizer'] != None:
       vectorizer_params['tokenizer'] = LemmaTokenizer()
 
-  # print('stopwords:\n', vectorizer_params['number_of_stopwords'])
+  print('stopwords:\n', vectorizer_params['number_of_stopwords'])
 
   return TfidfVectorizer(
      min_df = vectorizer_params['min_df'], 
@@ -39,13 +39,11 @@ def load_vectorizer(tweets, test_tweets):
     if options['cache_tfidf']:
       f = open(DATA_PATH+'tfidf_train_reptweets.pkl','wb')
       pickle.dump(train_reptweets, f)
-    test_reptweets = tfidf.transform(test_tweets['tweet'])
+    test_reptweets = tfidf.fit_transform(test_tweets['tweet'])
     if options['cache_tfidf']:
       f = open(DATA_PATH+'tfidf_test_reptweets.pkl','wb')
       pickle.dump(test_reptweets, f)
   return train_reptweets, test_reptweets
-
-
 
 def init_count_vectorizer():
   pass

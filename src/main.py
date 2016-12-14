@@ -12,6 +12,7 @@ from preprocessing import *
 from baseline import *
 from cross_validation import cross_validation
 from vectorizer import load_vectorizer
+from tfidf_embdedding_vectorizer import tfidf_embdedding_vectorizer
 from doc2vec_solution import doc2vec
 
 from sklearn import svm
@@ -61,12 +62,14 @@ if options['preprocess'][0]:
 # Features extraction
 if options['feature_extraction'] == 'WE':
 	print('Feature extraction using WE')
-	if options['we_method'] == 'baseline':
+	if options['we_method'] == 'we_mean':
 		print('Averaging vectors')
 		train_reptweets, test_reptweets = baseline(tweets, test_tweets)
 	elif options['we_method'] == 'doc2vec':
 		print('Using doc2vec')
 		train_reptweets, test_reptweets = doc2vec(tweets, test_tweets)
+	elif options['we_method'] == 'we_tfidf':
+		train_reptweets, test_reptweets = tfidf_embdedding_vectorizer(tweets, test_tweets)
 
 	# Scale matrices
 	if options['scale']:
@@ -171,7 +174,7 @@ else:
 		clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
 	elif options['ml_algorithm'] == 'NN':
 		print('Initializing Neural Network')
-		clf = MLPClassifier(solver='lbfgs', activation='logistic', hidden_layer_sizes=(16, 1), random_state=4, verbose=False)
+		clf = MLPClassifier(solver='adam', activation='logistic', hidden_layer_sizes=(16, 1), random_state=4, verbose=False, max_iter=10000)
 
 	# Cross Validation
 	if options['cv'][0]:

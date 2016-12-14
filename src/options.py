@@ -24,20 +24,20 @@ options = {
     'preprocess' : (True,'save'), #({True,False},{'save', None})
     'init' : False,
     'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
-    'we_method' : 'baseline', # {baseline, doc2vec}
-    'ml_algorithm' : 'NN', # {SVM, LR, RF, NN} later will be change to a set
+    'we_method' : 'we_tfidf', # {we_mean, doc2vec, we_tfidf}
+    'ml_algorithm' : 'NN', # {SVM, LR, RF, NN}
     'cv' : (True,5),
     'scale': False,
     'warnings' : False,
     'PCA': (False, 25),
     'poly': (False,2),
     'cache_tfidf': False,
-    'model_selection': True,
+    'model_selection': False,
     'clear' : True
 }
 
 clear = {
-    'preproc' : False,
+    'preproc' : True,
     'tfidf' : True,
     'pred' : True,
     'd2v' : True
@@ -45,7 +45,7 @@ clear = {
 
 WE_params = {
     'we_features' : 200,
-    'epochs' : 5
+    'epochs' : 50
 }
 
 preprocessing_params = {
