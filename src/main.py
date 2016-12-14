@@ -25,12 +25,7 @@ from sklearn.neural_network import MLPClassifier
 
 #clear cache
 if options['clear']:
-	clear_cache(preproc=clear['preproc'],tfidf=clear['tfidf'],pred=clear['pred'], d2v=clear['d2v'])
-
-# Initialization phase
-if options['init']:
-	print('start init.sh')
-	os.system('bash init.sh ' + POS_TWEETS_FILE + ' ' + NEG_TWEETS_FILE)
+	clear_cache(clear_params)
 
 # Load Data
 print('loading data')
