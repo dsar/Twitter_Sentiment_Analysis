@@ -1,31 +1,27 @@
 import numpy as np
 import pandas as pd
+
 import os
 import pickle
-
-from options import *
-if options['warnings'] == False:
-	pd.options.mode.chained_assignment = None
+import csv
+import itertools
 
 from utils import *
-from preprocessing import *
-from baseline import *
+from preprocessing import tweets_preprocessing, remove_tweet_id
+from baseline import baseline
 from cross_validation import cross_validation
 from vectorizer import load_vectorizer
 from tfidf_embdedding_vectorizer import tfidf_embdedding_vectorizer
 from doc2vec_solution import doc2vec
+from options import *
+if options['warnings'] == False:
+	pd.options.mode.chained_assignment = None
 
-from sklearn import svm
+from sklearn import svm, linear_model, preprocessing, decomposition
 from sklearn.ensemble import RandomForestClassifier
-from sklearn import linear_model
-from sklearn import preprocessing
-from sklearn import decomposition
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.preprocessing import StandardScaler 
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 from sklearn.neural_network import MLPClassifier 
 
-import csv
-import itertools
 
 #clear cache
 if options['clear']:
