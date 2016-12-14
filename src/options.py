@@ -43,6 +43,27 @@ clear = {
     'd2v' : True
 }
 
+NN = {
+    'hidden_layers' : 1,
+    'k' : 16,
+    'solver' : 'adam',
+    'activation' : 'logistic',
+    'alpha' : 0.0001,
+    'learning_rate': 'constant',
+    'max_iter': 10000
+}
+
+SVM = {
+    'loss' : 'squared_hinge',
+    'intercept_scaling': 1,
+    'max_iter' : 10000
+}
+
+LR = {
+    'C' : 1e5,
+    'max_iter': 10000
+}
+
 WE_params = {
     'we_features' : 200,
     'epochs' : 50

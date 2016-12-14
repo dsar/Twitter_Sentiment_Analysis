@@ -167,13 +167,14 @@ else:
 		clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
 	elif options['ml_algorithm'] == 'SVM':
 		print('Initializing SVM')
-		clf = svm.LinearSVC(max_iter=10000)
+		clf = svm.LinearSVC(max_iter=SVM['max_iter'], intercept_scaling=SVM['intercept_scaling'], loss=SVM['loss'])
 	elif options['ml_algorithm'] == 'LR':
 		print('Initializing Logistic Regression')
-		clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
+		clf = linear_model.LogisticRegression(C=LR['C'],max_iter=LR['max_iter'],n_jobs=-1)
 	elif options['ml_algorithm'] == 'NN':
 		print('Initializing Neural Network')
-		clf = MLPClassifier(solver='adam', activation='logistic', hidden_layer_sizes=(16, 1), random_state=4, verbose=False, max_iter=10000)
+		clf = MLPClassifier(solver=NN['solver'], activation=NN['activation'], hidden_layer_sizes=(NN['k'],NN['hidden_layers']),\
+							 random_state=4, verbose=False, max_iter=NN['max_iter'])
 
 	# Cross Validation
 	if options['cv'][0]:
