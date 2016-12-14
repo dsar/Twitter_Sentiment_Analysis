@@ -81,7 +81,7 @@ if options['feature_extraction'] == 'WE':
 
 	# Apply PCA
 	if options['PCA'][0]:
-	    print('Appling PCA with '+options['PCA'][1]+' number of components')
+	    print('Appling PCA with '+str(options['PCA'][1])+' number of components')
 	    pca = decomposition.PCA(n_components=options['PCA'][1])
 	    train_reptweets = pca.fit_transform(train_reptweets)
 	    pca = decomposition.PCA(n_components=options['PCA'][1])
@@ -89,8 +89,7 @@ if options['feature_extraction'] == 'WE':
 
 	#Polynomial expansion
 	if  options['poly'][0]:
-		print('Polynomial expansion with '+options['poly'][1]+' base')
-		print('poly')
+		print('Polynomial expansion with '+str(options['poly'][1])+' base')
 		poly = PolynomialFeatures(options['poly'][1])
 		train_reptweets = poly.fit_transform(train_reptweets)
 		poly = PolynomialFeatures(options['poly'][1])
