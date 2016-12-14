@@ -1,6 +1,7 @@
 import numpy as np
 import csv
 import os
+from glove import Corpus, Glove
 
 from options import *
 
@@ -63,10 +64,11 @@ def load_glove_embeddings():
             words[tokens[0]] = np.array([float(x) for x in tokens[1:]])
     return words
 
-def get_embeddings_dictionary():
+def get_embeddings_dictionary(tweets=None):
     if options['init'] == 'mytrain':
-        call_init()
-        words = load_my_embeddings()
+        # call_init()
+        # words = load_my_embeddings()
+        words = build_glove_embeddings(build_python_glove_representation(tweets['tweet']))
     elif options['init'] == 'pretrained':
         words = load_glove_embeddings()
     elif options['init'] == 'merge':
@@ -96,6 +98,7 @@ def merge_embeddings(glove_words, my_words):
 				for i in v:
 					f.write("%s " % i)
 				f.write('\n')
+	print(glove_words)
 	return glove_words
 
 def call_init():
@@ -104,3 +107,24 @@ def call_init():
 		os.system('bash init.sh ' + POS_TWEETS_FILE + ' ' + NEG_TWEETS_FILE)
 	else:
 		print('my embeddings found')
+
+def build_python_glove_representation(tweets):
+    """
+    tweets Series (column)
+    """
+    return tweets.apply(lambda tweet: tweet.split()).tolist()
+
+def build_glove_embeddings(corpus):
+	model  = Corpus()
+	model.fit(corpus, window = 5)
+
+	glove = Glove(no_components=200, learning_rate=0.1)
+	print('fitting Glove')
+	glove.fit(model.matrix, epochs=10)
+	glove.add_dictionary(model.dictionary)
+
+	words = {}
+	for w, id_ in glove.dictionary.items():
+		words[w] = np.array(glove.word_vectors[id_])
+
+	return words

@@ -24,7 +24,7 @@ NEGATIVE_WORDS=DATA_PATH+'negative-words.txt'
 
 options = {
     'preprocess' : (True,'save'), #({True,False},{'save', None})
-    'init' : 'merge', # {'mytrain', 'pretrained', 'merge'}
+    'init' : 'mytrain', # {'mytrain', 'pretrained', 'merge'}
     'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
     'we_method' : 'we_mean', # {we_mean, we_tfidf, dm_doc2vec, dbow_doc2vec}
     'ml_algorithm' : 'NN', # {SVM, LR, RF, NN}
