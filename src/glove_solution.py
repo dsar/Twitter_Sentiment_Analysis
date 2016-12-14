@@ -34,7 +34,7 @@ def main():
             scale = 2 * eta * fn * (logn - np.dot(x, y))
             xs[ix, :] += scale * y
             ys[jy, :] += scale * x
-    np.save(DATA_PATH+'embeddings', xs)
+    np.save(GLOVE_DATA_PATH+'embeddings', xs)
 
 
 if __name__ == '__main__':

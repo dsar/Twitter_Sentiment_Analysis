@@ -15,9 +15,8 @@ def baseline(tweets, test_tweets):
 
 def get_embeddings_dictionary():
     words = {} #key= word, value=embeddings
-    trainEmbeddings = False
-    if (trainEmbeddings):
-        we = np.load(EMBEDDINGS_FILE)
+    if (options['init']):
+        we = np.load(MY_EMBEDDINGS_FILE)
         print('we shape', we.shape)
         vocab_file = open(DATA_PATH+'vocab_cut.txt', "r")
         for i, line in enumerate(vocab_file):
@@ -56,5 +55,6 @@ def average_vectors(tweets, words):
                             #print('Not found: ', token)
                             continue;
                 continue;
-        we_tweets[i] /= foundEmbeddings
+        if (foundEmbeddings != 0):
+            we_tweets[i] /= foundEmbeddings
     return we_tweets

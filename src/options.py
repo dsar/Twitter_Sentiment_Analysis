@@ -13,6 +13,7 @@ TRAIN_PREPROC_CACHING_PATH = PREPROC_DATA_PATH+'preproc_train.csv'
 TEST_PREPROC_CACHING_PATH = PREPROC_DATA_PATH+'preproc_test.csv'
 EMBEDDINGS_FILE_25 = GLOVE_DATA_PATH+'glove.twitter.27B.25d.txt'
 EMBEDDINGS_FILE_200 = GLOVE_DATA_PATH+'glove.twitter.27B.200d.txt'
+MY_EMBEDDINGS_FILE = GLOVE_DATA_PATH+'embeddings.npy'
 
 DOC2VEC_MODEL_PATH = DOC2VEC_PATH+'paragraph_vector.d2v'
 
@@ -22,7 +23,7 @@ NEGATIVE_WORDS=DATA_PATH+'negative-words.txt'
 
 options = {
     'preprocess' : (True,'save'), #({True,False},{'save', None})
-    'init' : False,
+    'init' : True,
     'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
     'we_method' : 'we_mean', # {we_mean, we_tfidf, dm_doc2vec, dbow_doc2vec}
     'ml_algorithm' : 'NN', # {SVM, LR, RF, NN}
@@ -34,6 +35,11 @@ options = {
     'cache_tfidf': False,
     'model_selection': False,
     'clear' : True
+}
+
+WE_params = {
+    'we_features' : 200,
+    'epochs' : 2
 }
 
 clear = {
@@ -62,11 +68,6 @@ SVM = {
 LR = {
     'C' : 1e5,
     'max_iter': 10000
-}
-
-WE_params = {
-    'we_features' : 200,
-    'epochs' : 50
 }
 
 preprocessing_params = {
