@@ -7,9 +7,9 @@ from split_hashtag import split_hashtag_to_words
 
 def baseline(tweets, test_tweets):
     words = get_embeddings_dictionary(tweets)
-    print('building tweets WE')
+    print('\nBuilding tweets Embeddings')
     we_tweets = average_vectors(tweets, words)
-    print('building test tweets WE')
+    print('Building test tweets Embeddings')
     we_test_tweets = average_vectors(test_tweets, words)
     return we_tweets, we_test_tweets
 

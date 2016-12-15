@@ -13,6 +13,7 @@ from cross_validation import cross_validation
 from vectorizer import load_vectorizer
 from tfidf_embdedding_vectorizer import tfidf_embdedding_vectorizer
 from doc2vec_solution import doc2vec
+from fast_text import fast_text
 from options import *
 if options['warnings'] == False:
 	pd.options.mode.chained_assignment = None
@@ -28,7 +29,7 @@ if options['clear']:
 	clear_cache(clear_params)
 
 # Load Data
-print('loading data')
+print('Loading data')
 
 pos_tweets = pd.DataFrame(read_file(POS_TWEETS_FILE), columns=['tweet'])
 pos_tweets['sentiment'] = 1
@@ -40,33 +41,44 @@ test_tweets = pd.DataFrame(read_file(TEST_TWEETS_FILE), columns=['tweet'])
 test_tweets['tweet'] = test_tweets.apply(lambda tweet: remove_tweet_id(tweet['tweet']), axis=1)
 
 #Data Shape
-print('positive tweets shape: ',pos_tweets.shape)
-print('negative tweets shape: ',neg_tweets.shape)
-print('final tweets shape: ',tweets.shape)
-print('test data shape:', test_tweets.shape)
+print('\tpositive tweets shape: ',pos_tweets.shape)
+print('\tnegative tweets shape: ',neg_tweets.shape)
+print('\tfinal tweets shape: ',tweets.shape)
+print('\ttest data shape:', test_tweets.shape)
 
 #Tweets Preprocessing
 if options['preprocess'][0]:
 	tweets = tweets_preprocessing(tweets,train=True, params=preprocessing_params)
 	test_tweets = tweets_preprocessing(test_tweets,train=False, params=preprocessing_params)
 
+## FastText case
+if options['ml_algorithm'] == 'FT':
+	print('\nInitializing FastText')
+	pred = fast_text(tweets, test_tweets)
+	# Preview of the results
+	print('pred shape: ',len(pred))
+	print('pred values: ',pred[0:20])
+	print('Creating final csv submission file')
+	create_csv_submission(pred)
+	exit()
+
 # Features extraction
 if options['feature_extraction'] == 'WE':
 	print_dict_settings(WE_params, msg='\nWord Embeddings Parameters:')
 	print('Feature extraction using WE\n')
 	if options['we_method'] == 'we_mean':
-		print('Using WE mean')
+		print('\tUsing WE mean')
 		train_reptweets, test_reptweets = baseline(tweets, test_tweets)
-	elif options['we_method'] == 'doc2vec':
-		print('Using doc2vec')
+	elif (options['we_method'] == 'dm_doc2vec') or (options['we_method'] == 'dbow_doc2vec'):
+		print('\tUsing doc2vec')
 		train_reptweets, test_reptweets = doc2vec(tweets, test_tweets)
 	elif options['we_method'] == 'we_tfidf':
-		print('Using WE tfidf')
+		print('\tUsing WE tfidf')
 		train_reptweets, test_reptweets = tfidf_embdedding_vectorizer(tweets, test_tweets)
 
 	# Scale matrices
 	if options['scale']:
-		print('Scaling Matrices')
+		print('Scaling Matrices\n')
 		scaler = StandardScaler()
 		train_reptweets = scaler.fit_transform(train_reptweets)
 		scaler = StandardScaler()  
@@ -167,7 +179,7 @@ else:
 	elif options['ml_algorithm'] == 'NN':
 		print('\nInitializing Neural Network')
 		clf = MLPClassifier(solver=NN['solver'], activation=NN['activation'], hidden_layer_sizes=(NN['k'],NN['hidden_layers']),\
-							 random_state=4, verbose=False, max_iter=NN['max_iter'])
+							 random_state=4, verbose=False, max_iter=NN['max_iter'], tol=NN['tol'])
 
 	# Cross Validation
 	if options['cv'][0]:

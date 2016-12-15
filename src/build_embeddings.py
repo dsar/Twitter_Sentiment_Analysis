@@ -12,7 +12,7 @@ def load_glove_embeddings_from_txt_file(filename):
     if not os.path.exists(filename):
         print(filename,'embeddings not found')
         return None
-    print('Creating', filename ,'embeddings dictionary')
+    print('Constructing dictionary for', filename, 'file')
     words = {} #key= word, value=embeddings
     with open(filename, "r") as f:
         for line in f:
@@ -34,7 +34,15 @@ def get_embeddings_dictionary(tweets=None):
         if words != None:
             return words
         print('Merged embeddings file not found')
-        my_words = build_glove_embeddings(build_python_glove_representation(tweets['tweet']))
+        if not os.path.exists(MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE):
+        	build_glove_embeddings(build_python_glove_representation(tweets['tweet']))
+        else:
+        	print(MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE,'exists!')
+        if os.path.exists(PRETRAINED_EMBEDDINGS_FILE):
+        	print(PRETRAINED_EMBEDDINGS_FILE,'exists!')
+        else:
+        	print(PRETRAINED_EMBEDDINGS_FILE,'does not exist. Please download Stanford pretrained embeddings file.')
+        	exit()
         # glove_words = load_glove_embeddings_from_txt_file(PRETRAINED_EMBEDDINGS_FILE)
         words = build_merge_embeddings()
     return words
