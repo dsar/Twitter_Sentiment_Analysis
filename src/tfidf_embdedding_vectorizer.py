@@ -2,7 +2,7 @@ import collections
 import numpy as np
 import pandas as pd
 from vectorizer import init_tfidf_vectorizer
-from utils import get_embeddings_dictionary
+from build_embeddings import get_embeddings_dictionary
 
 from options import *
 from split_hashtag import split_hashtag_to_words

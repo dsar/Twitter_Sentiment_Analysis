@@ -464,7 +464,8 @@ def tweets_preprocessing(tweets, train=True, params=None):
         transform_emojis = params['transform_emojis']
         sentiment_words = params['sentiment_words']
 
-        print_dict_settings(params,msg='Preprocessing Settings:\n')
+        if train:
+            print_dict_settings(params,msg='Preprocessing Settings:\n')
 
     if train:    
         print('Tweets Preprocessing for the Training set started\n')

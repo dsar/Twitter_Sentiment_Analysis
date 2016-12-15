@@ -52,14 +52,16 @@ if options['preprocess'][0]:
 
 # Features extraction
 if options['feature_extraction'] == 'WE':
+	print(print_dict_settings(WE_params, msg='\nWord Embeddings Parameters:'))
 	print('Feature extraction using WE')
 	if options['we_method'] == 'we_mean':
-		print('Averaging vectors')
+		print('Using WE mean')
 		train_reptweets, test_reptweets = baseline(tweets, test_tweets)
 	elif options['we_method'] == 'doc2vec':
 		print('Using doc2vec')
 		train_reptweets, test_reptweets = doc2vec(tweets, test_tweets)
 	elif options['we_method'] == 'we_tfidf':
+		print('Using WE tfidf')
 		train_reptweets, test_reptweets = tfidf_embdedding_vectorizer(tweets, test_tweets)
 
 	# Scale matrices
@@ -169,7 +171,7 @@ else:
 
 	# Cross Validation
 	if options['cv'][0]:
-		print('Cross-validating results')
+		print('Cross Validation...')
 		avg_test_accuracy, cv = cross_validation(clf, 
 												tweets.shape[0],
 												train_reptweets,
