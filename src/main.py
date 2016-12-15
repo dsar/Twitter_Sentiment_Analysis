@@ -52,14 +52,16 @@ if options['preprocess'][0]:
 
 # Features extraction
 if options['feature_extraction'] == 'WE':
-	print('Feature extraction using WE')
+	print_dict_settings(WE_params, msg='\nWord Embeddings Parameters:')
+	print('Feature extraction using WE\n')
 	if options['we_method'] == 'we_mean':
-		print('Averaging vectors')
+		print('Using WE mean')
 		train_reptweets, test_reptweets = baseline(tweets, test_tweets)
 	elif options['we_method'] == 'doc2vec':
 		print('Using doc2vec')
 		train_reptweets, test_reptweets = doc2vec(tweets, test_tweets)
 	elif options['we_method'] == 'we_tfidf':
+		print('Using WE tfidf')
 		train_reptweets, test_reptweets = tfidf_embdedding_vectorizer(tweets, test_tweets)
 
 	# Scale matrices
@@ -154,22 +156,22 @@ if options['model_selection']:
 else:
 	# Apply ML algorithm
 	if options['ml_algorithm'] == 'RF':
-		print('Initializing Random Forest')
+		print('\nInitializing Random Forest')
 		clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
 	elif options['ml_algorithm'] == 'SVM':
-		print('Initializing SVM')
+		print('\nInitializing SVM')
 		clf = svm.LinearSVC(max_iter=SVM['max_iter'], intercept_scaling=SVM['intercept_scaling'], loss=SVM['loss'])
 	elif options['ml_algorithm'] == 'LR':
-		print('Initializing Logistic Regression')
+		print('\nInitializing Logistic Regression')
 		clf = linear_model.LogisticRegression(C=LR['C'],max_iter=LR['max_iter'],n_jobs=-1)
 	elif options['ml_algorithm'] == 'NN':
-		print('Initializing Neural Network')
+		print('\nInitializing Neural Network')
 		clf = MLPClassifier(solver=NN['solver'], activation=NN['activation'], hidden_layer_sizes=(NN['k'],NN['hidden_layers']),\
 							 random_state=4, verbose=False, max_iter=NN['max_iter'])
 
 	# Cross Validation
 	if options['cv'][0]:
-		print('Cross-validating results')
+		print('Cross Validation...')
 		avg_test_accuracy, cv = cross_validation(clf, 
 												tweets.shape[0],
 												train_reptweets,

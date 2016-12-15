@@ -3,7 +3,9 @@ from scipy.sparse import *
 import numpy as np
 import pickle
 import random
+from build_embeddings import store_embeddings_to_txt_file
 from options import *
+
 
 
 def main():
@@ -34,7 +36,15 @@ def main():
             scale = 2 * eta * fn * (logn - np.dot(x, y))
             xs[ix, :] += scale * y
             ys[jy, :] += scale * x
-    np.save(GLOVE_DATA_PATH+'embeddings', xs)
+    # np.save(GLOVE_DATA_PATH+'embeddings', xs)
+    words = {} #key= word, value=embeddings
+    we = xs
+    print('we shape', we.shape)
+    vocab_file = open(DATA_PATH+'vocab_cut.txt', "r")
+    for i, line in enumerate(vocab_file):
+        words[line.rstrip()] = we[i]
+    store_embeddings_to_txt_file(words, MY_EMBEDDINGS_TXT_FILE)
+
 
 
 if __name__ == '__main__':
