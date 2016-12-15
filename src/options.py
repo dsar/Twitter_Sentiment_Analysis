@@ -52,7 +52,7 @@ clear_params = {
     'd2v' : True,
     'baseline_embeddings' : False,
     'my_glove_python_embeddings' : False,
-    'merged': False
+    'merged': True
 }
 
 NN = {

@@ -35,18 +35,20 @@ def get_embeddings_dictionary(tweets=None):
             return words
         print('Merged embeddings file not found')
         my_words = build_glove_embeddings(build_python_glove_representation(tweets['tweet']))
-        print(len(my_words))
-        glove_words = load_glove_embeddings_from_txt_file(PRETRAINED_EMBEDDINGS_FILE)
-        print(len(glove_words))
-        words = build_merge_embeddings(glove_words, my_words)
+        # glove_words = load_glove_embeddings_from_txt_file(PRETRAINED_EMBEDDINGS_FILE)
+        words = build_merge_embeddings()
     return words
 
-def build_merge_embeddings(glove_words, my_words):
+def build_merge_embeddings():
 	print('Build merged Embeddings')	
-	for k,v in my_words.items():
-		if k not in set(glove_words.keys()):
-			glove_words[k] = v
-	store_embeddings_to_txt_file(glove_words, MERGED_EMBEDDINGS_FILE)
+	# for k,v in my_words.items():
+	# 	if k not in set(glove_words.keys()):
+	# 		glove_words[k] = v
+	# os.system('sort' + PRETRAINED_EMBEDDINGS_FILE + ' -o ' + PRETRAINED_EMBEDDINGS_FILE)
+	# os.system('sort' + MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE + ' -o ' + MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE)
+	os.system('join -i -a1 -a2 ' +PRETRAINED_EMBEDDINGS_FILE + ' ' + MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE +' 2>/dev/null | cut -d \' \' -f1-'+str(WE_params['we_features'])+" > "+ MERGED_EMBEDDINGS_FILE)
+	# store_embeddings_to_txt_file(glove_words, MERGED_EMBEDDINGS_FILE)
+	glove_words = load_glove_embeddings_from_txt_file(MERGED_EMBEDDINGS_FILE)
 	return glove_words
 
 def call_init():
