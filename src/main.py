@@ -23,6 +23,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 from sklearn.neural_network import MLPClassifier 
 
+from trainCNN import trainCNN
+from evalCNN import evalCNN
 
 #clear cache
 if options['clear']:
@@ -180,6 +182,14 @@ else:
 		print('\nInitializing Neural Network')
 		clf = MLPClassifier(solver=NN['solver'], activation=NN['activation'], hidden_layer_sizes=(NN['k'],NN['hidden_layers']),\
 							 random_state=4, verbose=False, max_iter=NN['max_iter'], tol=NN['tol'])
+	elif options['ml_algorithm'] == 'CNN':
+		labels = np.zeros((tweets.shape[0], 2))
+		labels[pos_tweets.shape[0]:, 0] = 1.0
+		labels[:pos_tweets.shape[0], 1] = 1.0
+		path = trainCNN(tweets, labels)
+		pred = evalCNN(test_tweets, path)
+		create_csv_submission(pred)
+		exit()
 
 	# Cross Validation
 	if options['cv'][0]:

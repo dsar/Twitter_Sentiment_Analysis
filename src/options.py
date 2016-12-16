@@ -19,6 +19,8 @@ MERGED_EMBEDDINGS_FILE = GLOVE_DATA_PATH+'merged_embeddings.txt'
 FASTTEXT_TRAIN_FILE = FASTTEXT_DATA_PATH+'fasttext_train.txt'
 FASTTEXT_MODEL = FASTTEXT_DATA_PATH+'fasttext_model'
 
+TF_SAVE_PATH = 'models/'
+
 DOC2VEC_MODEL_PATH = DOC2VEC_PATH+'paragraph_vector.d2v'
 
 #Sentiment Lexicon
@@ -30,7 +32,7 @@ options = {
     'build_we_method' : 'glove_python', # {'baseline', 'pretrained', 'glove_python', 'merge'}
     'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
     'we_method' : 'we_mean', # {we_mean, we_tfidf, dm_doc2vec, dbow_doc2vec}
-    'ml_algorithm' : 'FT', # {SVM, LR, RF, NN, FT}
+    'ml_algorithm' : 'CNN', # {SVM, LR, RF, NN, FT, CNN}
     'cv' : (False,5),
     'scale': False,
     'warnings' : False,
@@ -83,6 +85,26 @@ LR = {
     'max_iter': 10000
 }
 
+cnn_params = {
+   'embedding_size':WE_params['we_features'], 
+   'n_filters':128, 
+   'filter_sizes':[2, 3, 4, 5, 6], 
+   'n_classes':2, 
+   'dropout_prob':0.5,
+   'optimizer':'Adam',  #{Adam, RMSProp}
+   'lambda':1e-4,
+   'moment':0.9, 
+   'eval_every':20, 
+   'checkpoint_every':500, 
+   'learn_embedding':False, 
+   'max_num_words':40, 
+   'batch_size':128, 
+   'n_epochs':10, 
+   'shuffle_every_epoch':True, 
+   'save_from_file':False, 
+   'checkpoint_dir':'models/1481848311/checkpoints'
+}
+
 preprocessing_params = {
     'frepeated_chars': True,
     'fexpand_not': True,
@@ -109,6 +131,7 @@ vectorizer_params = {
     'ngram_range' : (1,1), # (1,2) for bigrams, (1,3) for trigrams and so on
     'max_features' : None # None or Int
 }
+
 
 
 def print_dict_settings(dict_, msg='settings\n'):
