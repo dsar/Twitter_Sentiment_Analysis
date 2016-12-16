@@ -39,7 +39,7 @@ def load_vectorizer(tweets, test_tweets):
     if options['cache_tfidf']:
       f = open(DATA_PATH+'tfidf_train_reptweets.pkl','wb')
       pickle.dump(train_reptweets, f)
-    test_reptweets = tfidf.fit_transform(test_tweets['tweet'])
+    test_reptweets = tfidf.transform(test_tweets['tweet'])
     if options['cache_tfidf']:
       f = open(DATA_PATH+'tfidf_test_reptweets.pkl','wb')
       pickle.dump(test_reptweets, f)

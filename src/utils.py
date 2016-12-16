@@ -1,7 +1,6 @@
 import numpy as np
 import csv
 import os
-from glove import Corpus, Glove
 
 from options import *
 
