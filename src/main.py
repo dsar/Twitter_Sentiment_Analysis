@@ -104,19 +104,20 @@ if 'feature_extraction' in algorithm['options']:
 if 'model_selection' in algorithm['options']:
 	if algorithm['options']['model_selection']:
 		# param init
-		if algorithm['options']['ml_algorithm'] == 'RF':
-			print('Initializing Random Forest')
-			clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
-		elif algorithm['options']['ml_algorithm'] == 'SVM':
+		if algorithm['options']['ml_algorithm'] == 'SVM':
 			print('SVM params init')
 			listOLists = [['hinge','squared_hinge'],[0.1,0.5,0.8,1,2]]
 			clf = svm.LinearSVC(max_iter=10000)
 		elif algorithm['options']['ml_algorithm'] == 'LR':
-			print('Initializing Logistic Regression')
-			clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
+			print('Logistic params init')
+			listOLists = [[1e4, 1e5]]
 		elif algorithm['options']['ml_algorithm'] == 'NN':
 			print('NN params init')
-			listOLists = [[1e-2, 1e-3, 1e-4, 1e-5],['constant', 'invscaling', 'adaptive'],['lbfgs', 'sgd', 'adam'],[1,2],[8,16,32,64,128]]
+			listOLists = [[1e-3, 1e-4, 1e-5],\
+							['constant'], #,'invscaling', 'adaptive'],\
+							['lbfgs', 'adam'],\
+							[1,2],\
+							[16,32]]#,64,128]]
 		c = itertools.product(*listOLists)
 		print('combinations: ',c)
 
@@ -125,15 +126,12 @@ if 'model_selection' in algorithm['options']:
 		for tuple_ in c:
 			print('tuple: ',tuple_)
 			# Apply ML algorithm
-			if algorithm['options']['ml_algorithm'] == 'RF':
-				print('Initializing Random Forest')
-				clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
-			elif algorithm['options']['ml_algorithm'] == 'SVM':
+			if algorithm['options']['ml_algorithm'] == 'SVM':
 				print('Initializing SVM')
 				clf = svm.LinearSVC(max_iter=10000,intercept_scaling=tuple_[1],loss=tuple_[0])
 			elif algorithm['options']['ml_algorithm'] == 'LR':
 				print('Initializing Logistic Regression')
-				clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
+				clf = linear_model.LogisticRegression(C=tuple_[0],n_jobs=-1,max_iter=10000)
 			elif algorithm['options']['ml_algorithm'] == 'NN':
 				print('Initializing Neural Network')
 				clf = MLPClassifier(solver=tuple_[2],\
@@ -150,7 +148,7 @@ if 'model_selection' in algorithm['options']:
 													tweets.shape[0],
 													train_reptweets,
 													tweets['sentiment'], 
-													n_folds=options['cv'][1])
+													n_folds=algorithm['options']['cv'][1])
 			print('Avg CV score: ',avg_test_accuracy)
 
 			if avg_test_accuracy > max_avg_score:
@@ -166,7 +164,9 @@ if 'model_selection' in algorithm['options']:
 		# Apply ML algorithm
 		if algorithm['options']['ml_algorithm'] == 'RF':
 			print('\nInitializing Random Forest')
-			clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
+			clf = RandomForestClassifier(n_estimators=algorithm['options']['params']['n_estimators'],\
+										 max_depth=algorithm['options']['params']['max_depth'],\
+										 n_jobs=-1,random_state=4)
 		elif algorithm['options']['ml_algorithm'] == 'SVM':
 			print('\nInitializing SVM')
 			clf = svm.LinearSVC(max_iter=algorithm['params']['max_iter'],\

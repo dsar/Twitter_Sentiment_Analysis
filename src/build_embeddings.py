@@ -52,13 +52,7 @@ def get_embeddings_dictionary(tweets=None):
 
 def build_merge_embeddings():
 	print('Build merged Embeddings')	
-	# for k,v in my_words.items():
-	# 	if k not in set(glove_words.keys()):
-	# 		glove_words[k] = v
-	# os.system('sort' + PRETRAINED_EMBEDDINGS_FILE + ' -o ' + PRETRAINED_EMBEDDINGS_FILE)
-	# os.system('sort' + MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE + ' -o ' + MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE)
 	os.system('join -i -a1 -a2 ' +PRETRAINED_EMBEDDINGS_FILE + ' ' + MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE +' 2>/dev/null | cut -d \' \' -f1-'+str(algorithm['options']['WE']['we_features'])+" > "+ MERGED_EMBEDDINGS_FILE)
-	# store_embeddings_to_txt_file(glove_words, MERGED_EMBEDDINGS_FILE)
 	glove_words = load_glove_embeddings_from_txt_file(MERGED_EMBEDDINGS_FILE)
 	return glove_words
 

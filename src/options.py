@@ -1,3 +1,4 @@
+#Paths
 DATA_PATH = '../data/'
 DATASETS_PATH = DATA_PATH + 'datasets/'
 SUBMISSIONS_PATH = DATA_PATH + 'submissions/'
@@ -37,7 +38,13 @@ NEGATIVE_WORDS=METADATA_PATH+'negative-words.txt'
 WORD_FREQUENCIES = METADATA_PATH + 'words-by-frequency.txt'
 
 
-algorithm = 'FT'
+
+# After performing Model Selection we have found the optimal parameters that
+# give us the reported scores. The only option that need to be set is the algorithm.
+# However, if you want to play with the parameters, go to the corresponding dictionary
+# of each algorithm and set it.
+
+algorithm = 'SVM' #{SVM, LR, NN, CNN, RF, FT}
 
 SVM = {
     'params' : {
@@ -48,7 +55,7 @@ SVM = {
     'options' : {
                     'ml_algorithm' : 'SVM',
                     'preprocess' : (True,'save'), #({True,False},{'save', None})
-                    'preprocessing_params' : { 
+                    'preprocessing_params' : { # Check the documentation of preprocessing.py functions 
                                                 # group1
                                                 'frepeated_chars': True,
                                                 'fexpand_not': True,
@@ -98,7 +105,7 @@ SVM = {
                     'poly': (False,2),
                     'model_selection': False,
                     'clear' : False,
-                    'clear_params' : {
+                    'clear_params' : { #In case an update is needed, the corresponding file must be deleted first by enabling the options below.
                                       'preproc' : False,
 
                                       'tfidf' : False,
@@ -141,8 +148,8 @@ LR = {
                                               },
                     'feature_extraction' : 'WE', # {TFIDF,WE,DOC2VEC} later will change to set
                     'WE' : {
-                              'build_we_method' : 'glove_python', # {'baseline', 'pretrained', 'glove_python', 'merge'}
-                              'tweet2vec_method' : 'we_tfidf', # {we_mean, we_tfidf}
+                              'build_we_method' : 'pretrained', # {'baseline', 'pretrained', 'glove_python', 'merge'}
+                              'tweet2vec_method' : 'we_mean', # {we_mean, we_tfidf}
                               'we_features' : 200,
                               'epochs' : 50,
                               'learning_rate' : 0.05,
@@ -151,7 +158,7 @@ LR = {
                     'DOC2VEC' : {
                                   'method' : 'dbow_doc2vec', # {dm_doc2vec, dbow_doc2vec}
                                   'we_features' : 200,
-                                  'epochs' : 10,
+                                  'epochs' : 20,
                                   'window_size' : 5
                                 },
                     'TFIDF' : {
@@ -173,7 +180,7 @@ LR = {
                     'poly': (False,2),
                     'model_selection': False,
                     'clear' : True,
-                    'clear_params' : {
+                    'clear_params' : {#In case an update is needed, the corresponding file must be deleted first by enabling the options below.
                                       'preproc' : False,
 
                                       'tfidf' : True,
@@ -193,7 +200,7 @@ NN = {
     'params' : {  
                   'hidden_layers' : 1,
                   'k' : 16,
-                  'solver' : 'lbfgs',
+                  'solver' : 'lbfgs', #adam is slightly better but lbfgs is much faster
                   'activation' : 'logistic',
                   'alpha' : 1e-5,
                   'learning_rate': 'constant',
@@ -203,7 +210,7 @@ NN = {
     'options' : {
                     'ml_algorithm' : 'NN',
                     'preprocess' : (True,'save'), #({True,False},{'save', None})
-                    'preprocessing_params' : { 
+                    'preprocessing_params' : { #In case an update is needed, the corresponding file must be deleted first by enabling the options below.
                                                 # group1
                                                 'frepeated_chars': True,
                                                 'fexpand_not': True,
@@ -220,9 +227,9 @@ NN = {
                                                 'furl': False
 
                                               },
-                    'feature_extraction' : 'WE', # {TFIDF,WE,DOC2VEC} later will change to set
+                    'feature_extraction' : 'WE', # {WE,DOC2VEC} later will change to set
                     'WE' : {
-                              'build_we_method' : 'pretrained', # {'baseline', 'pretrained', 'glove_python', 'merge'}
+                              'build_we_method' : 'glove_python', # {'baseline', 'pretrained', 'glove_python', 'merge'}
                               'tweet2vec_method' : 'we_mean', # {we_mean, we_tfidf}
                               'we_features' : 200,
                               'epochs' : 50,
@@ -235,7 +242,7 @@ NN = {
                                   'epochs' : 20,
                                   'window_size' : 5
                                 },
-                    'TFIDF' : {
+                    'TFIDF' : { # mainly added for we_tfidf method
                                 'cache_tfidf': False,
 
                                 'min_df' : 1,
@@ -293,7 +300,7 @@ CNN = {
         'options' : {
                     'ml_algorithm' : 'CNN',
                     'preprocess' : (True,'save'), #({True,False},{'save', None})
-                    'preprocessing_params' : { 
+                    'preprocessing_params' : { #In case an update is needed, the corresponding file must be deleted first by enabling the options below.
                                                 # group1
                                                 'frepeated_chars': True,
                                                 'fexpand_not': True,
@@ -349,6 +356,80 @@ CNN = {
 
 }
 
+RF = {
+    'params' : {
+                  'n_estimators' : 100,
+                  'max_depth' : 50
+                },
+    'options' : {
+                    'ml_algorithm' : 'RF',
+                    'preprocess' : (True,'save'), #({True,False},{'save', None})
+                    'preprocessing_params' : { # Check the documentation of preprocessing.py functions 
+                                                # group1
+                                                'frepeated_chars': True,
+                                                'fexpand_not': True,
+                                                'transform_emojis': True,
+                                                'fhashtag': True,
+                                                'fdigits': True,
+                                                'sentiment_words': True,
+                                                # group2
+                                                'fsmall_words': False,
+                                                'fstopwords' : False,
+                                                'fduplicates': False,
+                                                'fpunctuation': False,
+                                                'fuser': False,
+                                                'furl': False
+                                              },
+                    'feature_extraction' : 'TFIDF', # {TFIDF,WE,DOC2VEC} later will change to set
+                    'WE' : {
+                              'build_we_method' : 'pretrained', # {'baseline', 'pretrained', 'glove_python', 'merge'}
+                              'tweet2vec_method' : 'we_mean', # {we_mean, we_tfidf}
+                              'we_features' : 200,
+                              'epochs' : 50,
+                              'learning_rate' : 0.05,
+                              'window_size' : 5
+                            },
+                    'DOC2VEC' : {
+                                  'method' : 'dm_doc2vec', # {dm_doc2vec, dbow_doc2vec}
+                                  'we_features' : 200,
+                                  'epochs' : 20,
+                                  'window_size' : 5
+                                },
+                    'TFIDF' : {
+                                'cache_tfidf': True,
+
+                                'min_df' : 1,
+                                'max_df' : 1.0,
+                                'sublinear_tf' : True,
+                                'use_idf' : True,
+                                'number_of_stopwords' : None, # None or Int
+                                'tokenizer' : True, # None or anything else (e.g. True) for lemmatization
+                                'ngram_range' : (1,1), # (1,2) for bigrams, (1,3) for trigrams and so on
+                                'max_features' : None # None or Int
+                              },
+                    'cv' : (False,5),
+                    'scale': False,
+                    'warnings' : False,
+                    'PCA': (False, 100),
+                    'poly': (False,2),
+                    'model_selection': False,
+                    'clear' : False,
+                    'clear_params' : { #In case an update is needed, the corresponding file must be deleted first by enabling the options below.
+                                      'preproc' : False,
+
+                                      'tfidf' : False,
+                                      'd2v' : False,
+
+                                      'baseline_embeddings' : False,
+                                      'my_glove_python_embeddings' : False,
+                                      'merged': False,
+                                      'init_files' : True,
+
+                                      'pred' : False
+                                      }
+                }
+}
+
 FT = {
     'params' : {
                 'we_features' : 200,
@@ -359,7 +440,7 @@ FT = {
     'options' : { 
                   'ml_algorithm' : 'FT',
                   'preprocess' : (True,'save'), #({True,False},{'save', None})
-                  'preprocessing_params' : { 
+                  'preprocessing_params' : { #In case an update is needed, the corresponding file must be deleted first by enabling the options below.
                                               # group1
                                               'frepeated_chars': True,
                                               'fexpand_not': True,
