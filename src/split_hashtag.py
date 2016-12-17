@@ -1,10 +1,10 @@
 #Copyright (c) http://stackoverflow.com/users/1515832/generic-human (http://stackoverflow.com/a/11642687)
 
 from math import log
-from options import DATA_PATH
+from options import WORD_FREQUENCIES
 
 # Build a cost dictionary, assuming Zipf's law and cost = -math.log(probability).
-words = open(DATA_PATH+"words-by-frequency.txt").read().split()
+words = open(WORD_FREQUENCIES).read().split()
 wordcost = dict((k, log((i+1)*log(len(words)))) for i,k in enumerate(words))
 maxword = max(len(x) for x in words)
 

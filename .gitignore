@@ -12,13 +12,10 @@ data/embedding*
 data/cooc.pkl
 data/vocab.txt
 data/vocab_cut.txt
-data/empty.txt
 data/preprocessed_tweets.txt
-data/train_neg_full.txt
-data/train_pos_full.txt
-data/pred_submission.csv
-data/train_preproc_set.csv
-data/test_preproc_set.csv
+data/datasets/train_neg_full.txt
+data/datasets/train_pos_full.txt
+data/submissions/
 notes.txt
 .ipynb_checkpoints
 .dropbox

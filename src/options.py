@@ -1,38 +1,42 @@
 DATA_PATH = '../data/'
+DATASETS_PATH = DATA_PATH + 'datasets/'
+SUBMISSIONS_PATH = DATA_PATH + 'submissions/'
+METADATA_PATH = DATA_PATH + 'meta/'
 PREPROC_DATA_PATH = DATA_PATH+'preproc/'
 GLOVE_DATA_PATH = DATA_PATH+'glove_data/'
 DOC2VEC_PATH = DATA_PATH + 'doc2vec/'
 W2V_DATA_PATH = DATA_PATH + 'word2vec/'
 FASTTEXT_DATA_PATH = DATA_PATH + 'fasttext/'
 
-POS_TWEETS_FILE = DATA_PATH+'train_pos_full.txt'
-NEG_TWEETS_FILE = DATA_PATH+'train_neg_full.txt'
-TEST_TWEETS_FILE = DATA_PATH+'test_data.txt'
-PRED_SUBMISSION_FILE = DATA_PATH+'pred_submission.csv'
+POS_TWEETS_FILE = DATASETS_PATH + 'train_pos_small.txt'
+NEG_TWEETS_FILE = DATASETS_PATH + 'train_neg_small.txt'
+TEST_TWEETS_FILE = DATASETS_PATH + 'test_data.txt'
+PRED_SUBMISSION_FILE = SUBMISSIONS_PATH + 'pred_submission.csv'
 #remove TRAIN_PREPROC_CACHING_PATH before starting with a new dataset
-TRAIN_PREPROC_CACHING_PATH = PREPROC_DATA_PATH+'preproc_train.csv'
-TEST_PREPROC_CACHING_PATH = PREPROC_DATA_PATH+'preproc_test.csv'
-PRETRAINED_EMBEDDINGS_FILE = GLOVE_DATA_PATH+'glove.twitter.27B.200d.txt'
-MY_EMBEDDINGS_TXT_FILE = GLOVE_DATA_PATH+'baseline_embeddings.txt'
-MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE = GLOVE_DATA_PATH+'glove_python_embeddings.txt'
-MERGED_EMBEDDINGS_FILE = GLOVE_DATA_PATH+'merged_embeddings.txt'
-FASTTEXT_TRAIN_FILE = FASTTEXT_DATA_PATH+'fasttext_train.txt'
-FASTTEXT_MODEL = FASTTEXT_DATA_PATH+'fasttext_model'
+TRAIN_PREPROC_CACHING_PATH = PREPROC_DATA_PATH + 'preproc_train.csv'
+TEST_PREPROC_CACHING_PATH = PREPROC_DATA_PATH + 'preproc_test.csv'
+PRETRAINED_EMBEDDINGS_FILE = GLOVE_DATA_PATH + 'glove.twitter.27B.200d.txt'
+MY_EMBEDDINGS_TXT_FILE = GLOVE_DATA_PATH + 'baseline_embeddings.txt'
+MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE = GLOVE_DATA_PATH + 'glove_python_embeddings.txt'
+MERGED_EMBEDDINGS_FILE = GLOVE_DATA_PATH + 'merged_embeddings.txt'
+FASTTEXT_TRAIN_FILE = FASTTEXT_DATA_PATH + 'fasttext_train.txt'
+FASTTEXT_MODEL = FASTTEXT_DATA_PATH + 'fasttext_model'
 
 TF_SAVE_PATH = 'models/'
 
 DOC2VEC_MODEL_PATH = DOC2VEC_PATH+'paragraph_vector.d2v'
 
 #Sentiment Lexicon
-POSITIVE_WORDS=DATA_PATH+'positive-words.txt'
-NEGATIVE_WORDS=DATA_PATH+'negative-words.txt'
+POSITIVE_WORDS=METADATA_PATH+'positive-words.txt'
+NEGATIVE_WORDS=METADATA_PATH+'negative-words.txt'
+WORD_FREQUENCIES = METADATA_PATH + 'words-by-frequency.txt'
 
 options = {
     'preprocess' : (True,'save'), #({True,False},{'save', None})
     'build_we_method' : 'glove_python', # {'baseline', 'pretrained', 'glove_python', 'merge'}
-    'feature_extraction' : 'WE', # {TFIDF,WE} later will change to set
+    'feature_extraction' : 'TFIDF', # {TFIDF,WE} later will change to set
     'we_method' : 'we_mean', # {we_mean, we_tfidf, dm_doc2vec, dbow_doc2vec}
-    'ml_algorithm' : 'CNN', # {SVM, LR, RF, NN, FT, CNN}
+    'ml_algorithm' : 'SVM', # {SVM, LR, RF, NN, FT, CNN}
     'cv' : (False,5),
     'scale': False,
     'warnings' : False,
