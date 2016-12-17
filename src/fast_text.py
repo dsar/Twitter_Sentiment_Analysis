@@ -11,12 +11,12 @@ def fast_text(tweets, test_tweets):
     
     write_tweets_with_fasttext_labels(tweets)
 
-    classifier = fasttext.supervised(FASTTEXT_TRAIN_FILE, 'fasttext_model',\
+    classifier = fasttext.supervised(FASTTEXT_TRAIN_FILE, FASTTEXT_MODEL,\
                                                      label_prefix='__label__',\
-                                                     epoch=WE_params['epochs'],\
-                                                     dim=WE_params['we_features'],\
-                                                     ws = WE_params['window_size'],\
-                                                     lr = WE_params['learning_rate'])
+                                                     epoch=algorithm['params']['epochs'],\
+                                                     dim=algorithm['params']['we_features'],\
+                                                     ws = algorithm['params']['window_size'],\
+                                                     lr = algorithm['params']['learning_rate'])
 
     test_tweets = transform_test_tweets(test_tweets)
 

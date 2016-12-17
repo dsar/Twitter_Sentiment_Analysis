@@ -14,9 +14,7 @@ from nltk import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction import text
 from split_hashtag import split_hashtag_to_words
-from options import preprocessing_params, print_dict_settings, \
-                    PREPROC_DATA_PATH, TRAIN_PREPROC_CACHING_PATH, TEST_PREPROC_CACHING_PATH, \
-                    POSITIVE_WORDS, NEGATIVE_WORDS, options
+from options import *
 
 
 # Global Operations
@@ -528,7 +526,7 @@ def tweets_preprocessing(tweets, train=True, params=None):
         tweets['tweet'] = tweets.apply(lambda tweet: remove_stopwords_from_tweet(tweet['tweet']), axis=1)
         print('Stopwords filtering DONE')
 
-    if options['preprocess'][1] == 'save':
+    if algorithm['options']['preprocess'][1] == 'save':
         print('\nSaving preprocessed tweets...')
         cache_preprocessing(tweets, train=train)
         print('DONE')

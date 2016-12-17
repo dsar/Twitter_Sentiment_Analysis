@@ -1,10 +1,11 @@
 #!/bin/bash
 
-mkdir ../data/preproc
-mkdir ../data/word2vec
-mkdir ../data/doc2vec
-mkdir ../data/glove_python
-mkdir ../data/fasttext
-mkdir ../data/models
-mkdir ../data/submissions
-mkdir ../data/meta
+mkdir ../data/preproc 2> /dev/null
+mkdir ../data/word2vec 2> /dev/null
+mkdir ../data/doc2vec 2> /dev/null
+mkdir ../data/glove 2> /dev/null
+mkdir ../data/fasttext 2> /dev/null
+mkdir ../data/models 2> /dev/null
+mkdir ../data/submissions 2> /dev/null
+mkdir ../data/meta 2> /dev/null
+mkdir ../data/tfidf 2> /dev/null

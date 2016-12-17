@@ -9,9 +9,9 @@ from split_hashtag import split_hashtag_to_words
 
 
 def tfidf_embdedding_vectorizer(tweets, test_tweets):
-    words = get_embeddings_dictionary()
+    words = get_embeddings_dictionary(tweets)
     print('building train tfidf')
-    vectorizer_params['tokenizer'] = None
+    algorithm['options']['TFIDF']['tokenizer'] = None
     tfidf = init_tfidf_vectorizer()
     X = tfidf.fit_transform(tweets['tweet'].append(test_tweets['tweet']))
     

@@ -16,27 +16,30 @@ def create_csv_submission(y_pred):
 
 def clear_cache(clear):
 	print('clearing cache files')
-	if clear['preproc']:
+	if algorithm['options']['clear_params']['preproc']:
 		if os.system('rm '+ PREPROC_DATA_PATH+'*') == 0:
 			print('clear preproc DONE')
-	if clear['tfidf']:
-		if os.system('rm ' + DATA_PATH+'tfidf_*_reptweets.pkl') == 0:
+	if algorithm['options']['clear_params']['tfidf']:
+		if os.system('rm ' + TFIDF_TRAIN_FILE) == 0:
 			print('clear tfidf DONE')
-	if clear['pred']:
+	if algorithm['options']['clear_params']['pred']:
 		if os.system('rm ' + PRED_SUBMISSION_FILE) == 0:
 			print('clear pred DONE')
-	if clear['d2v']:
+	if algorithm['options']['clear_params']['d2v']:
 		if os.system('rm ' + DOC2VEC_MODEL_PATH) == 0:
 			print('clear d2v DONE')
-	if clear['merged']:
+	if algorithm['options']['clear_params']['merged']:
 		if os.system('rm ' + MERGED_EMBEDDINGS_FILE) == 0:
 			print('clear merged DONE')
-	if clear['baseline_embeddings']:
+	if algorithm['options']['clear_params']['baseline_embeddings']:
 		if os.system('rm ' + MY_EMBEDDINGS_TXT_FILE) == 0:
 			print('clear my txt embeddings DONE')
-	if clear['my_glove_python_embeddings']:
+	if algorithm['options']['clear_params']['my_glove_python_embeddings']:
 		if os.system('rm ' + MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE) == 0:
 			print('clear my glove python embeddings DONE')
+	if algorithm['options']['clear_params']['init_files']:
+		if os.system('rm ' + VOCAB_CUT_FILE + ' ' +VOCAB_FILE + ' ' + COOC_FILE+ ' ' + GLOVE_DATA_PATH+'vocab.txt') == 0:
+			print('clear my init_files DONE')
 	print('clear cache operation... DONE\n')
 
 def read_file(filename):

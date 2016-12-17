@@ -5,7 +5,7 @@ data/paragraph_vector.d2v
 data/preproc/
 data/doc2vec/
 data/cache/
-data/glove_data/
+data/glove/
 data/embeddings.npy
 data/vocab.pkl
 data/embedding*

@@ -22,13 +22,16 @@ def load_glove_embeddings_from_txt_file(filename):
     return words
 
 def get_embeddings_dictionary(tweets=None):
-    if options['build_we_method'] == 'baseline':
+    if tweets is None:
+        print('WARNING(!): Tweets is None.')
+    if algorithm['options']['WE']['build_we_method'] == 'baseline':
         words = call_init()
-    elif options['build_we_method'] == 'glove_python':
-        words = build_glove_embeddings(build_python_glove_representation(tweets['tweet']))
-    elif options['build_we_method'] == 'pretrained':
+    elif algorithm['options']['WE']['build_we_method'] == 'glove_python':
+        new_tweets_representation = build_python_glove_representation(tweets['tweet'])
+        words = build_glove_embeddings(new_tweets_representation)
+    elif algorithm['options']['WE']['build_we_method'] == 'pretrained':
         words = load_glove_embeddings_from_txt_file(PRETRAINED_EMBEDDINGS_FILE)
-    elif options['build_we_method'] == 'merge':
+    elif algorithm['options']['WE']['build_we_method'] == 'merge':
         # my_words = call_init()
         words = load_glove_embeddings_from_txt_file(MERGED_EMBEDDINGS_FILE)
         if words != None:
@@ -54,7 +57,7 @@ def build_merge_embeddings():
 	# 		glove_words[k] = v
 	# os.system('sort' + PRETRAINED_EMBEDDINGS_FILE + ' -o ' + PRETRAINED_EMBEDDINGS_FILE)
 	# os.system('sort' + MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE + ' -o ' + MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE)
-	os.system('join -i -a1 -a2 ' +PRETRAINED_EMBEDDINGS_FILE + ' ' + MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE +' 2>/dev/null | cut -d \' \' -f1-'+str(WE_params['we_features'])+" > "+ MERGED_EMBEDDINGS_FILE)
+	os.system('join -i -a1 -a2 ' +PRETRAINED_EMBEDDINGS_FILE + ' ' + MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE +' 2>/dev/null | cut -d \' \' -f1-'+str(algorithm['options']['WE']['we_features'])+" > "+ MERGED_EMBEDDINGS_FILE)
 	# store_embeddings_to_txt_file(glove_words, MERGED_EMBEDDINGS_FILE)
 	glove_words = load_glove_embeddings_from_txt_file(MERGED_EMBEDDINGS_FILE)
 	return glove_words
@@ -75,23 +78,23 @@ def build_python_glove_representation(tweets):
     return tweets.apply(lambda tweet: tweet.split()).tolist()
 
 def build_glove_embeddings(corpus):
-	words = load_glove_embeddings_from_txt_file(MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE)
-	if words != None:
-		return words
-	model  = Corpus()
-	model.fit(corpus, window = WE_params['window_size'])
+    words = load_glove_embeddings_from_txt_file(MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE)
+    if words != None:
+        return words
+    model  = Corpus()
+    model.fit(corpus, window = algorithm['options']['WE']['window_size'])
 
-	glove = Glove(no_components=WE_params['we_features'], learning_rate=WE_params['learning_rate'])
-	print('\nFitting Glove Python Embeddings')
-	glove.fit(model.matrix, epochs=WE_params['epochs'])
-	glove.add_dictionary(model.dictionary)
+    glove = Glove(no_components=algorithm['options']['WE']['we_features'], learning_rate=algorithm['options']['WE']['learning_rate'])
+    print('\nFitting Glove Python Embeddings')
+    glove.fit(model.matrix, epochs=algorithm['options']['WE']['epochs'])
+    glove.add_dictionary(model.dictionary)
 
-	words = {}
-	for w, id_ in glove.dictionary.items():
-		words[w] = np.array(glove.word_vectors[id_])
+    words = {}
+    for w, id_ in glove.dictionary.items():
+        words[w] = np.array(glove.word_vectors[id_])
 
-	store_embeddings_to_txt_file(words, MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE)
-	return words
+    store_embeddings_to_txt_file(words, MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE)
+    return words
 
 def store_embeddings_to_txt_file(dict, filename):
 	with open(filename, "w") as f:

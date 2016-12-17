@@ -70,12 +70,12 @@ def doc2vec(tweets, test_tweets):
     test = test_tweets['tweet']
     test.to_csv(PREPROC_DATA_PATH+'test.d2v', header=False, index=False, encoding='utf-8')
 
-    if options['we_method'] == 'dm_doc2vec':
+    if algorithm['options']['DOC2VEC']['method'] == 'dm_doc2vec':
         print('DM Doc2Vec')
-        model = Doc2Vec(dm=1,dm_concat=0,min_count=1, window=10, size=WE_params['we_features'], sample=0, negative=5, workers=10)#, docvecs_mapfile=EMBEDDINGS_FILE_200)
-    elif options['we_method'] == 'dbow_doc2vec':
+        model = Doc2Vec(dm=1,dm_concat=0,min_count=1, window=10, size=algorithm['options']['DOC2VEC']['we_features'], sample=0, negative=5, workers=10)#, docvecs_mapfile=EMBEDDINGS_FILE_200)
+    elif algorithm['options']['DOC2VEC']['method'] == 'dbow_doc2vec':
         print('DBOW Doc2Vec')
-        model = Doc2Vec(dm=0,dm_concat=0,min_count=1, window=10, size=WE_params['we_features'], sample=0, negative=5, workers=10)#, docvecs_mapfile=EMBEDDINGS_FILE_200)
+        model = Doc2Vec(dm=0,dm_concat=0,min_count=1, window=10, size=algorithm['options']['DOC2VEC']['we_features'], sample=0, negative=5, workers=10)#, docvecs_mapfile=EMBEDDINGS_FILE_200)
 
     if not os.path.exists(DOC2VEC_MODEL_PATH):
 
@@ -86,9 +86,10 @@ def doc2vec(tweets, test_tweets):
         sentences = LabeledLineSentence(sources)
 
         model.build_vocab(sentences.to_array())
-        model.intersect_word2vec_format(W2V_DATA_PATH + 'word2vec_twitter_model.bin', binary=True, encoding='utf8', unicode_errors='ignore', lockf=1.0)
+        #Include pretrained word embeddings
+        # model.intersect_word2vec_format(W2V_DATA_PATH + 'word2vec_twitter_model.bin', binary=True, encoding='utf8', unicode_errors='ignore', lockf=1.0)
 
-        for epoch in range(WE_params['epochs']):
+        for epoch in range(algorithm['options']['DOC2VEC']['epochs']):
             logger.info('Epoch %d' % epoch)
             model.train(sentences.sentences_perm())
 
@@ -96,7 +97,7 @@ def doc2vec(tweets, test_tweets):
     else:
         model = model.load(DOC2VEC_MODEL_PATH)
 
-    train_arrays = np.zeros((pos.shape[0] + neg.shape[0], WE_params['we_features']))
+    train_arrays = np.zeros((pos.shape[0] + neg.shape[0], algorithm['options']['DOC2VEC']['we_features']))
     train_labels = np.zeros(pos.shape[0] + neg.shape[0])
 
     for i in range(pos.shape[0]):
@@ -108,10 +109,7 @@ def doc2vec(tweets, test_tweets):
         train_arrays[i+pos.shape[0]] = model.docvecs[prefix_train_neg]
         train_labels[i+pos.shape[0]] = -1
 
-    # print('train_arrays: ',train_arrays)
-    # print('train_labels',train_labels)
-
-    test_arrays = np.zeros((test.shape[0], WE_params['we_features']))
+    test_arrays = np.zeros((test.shape[0], algorithm['options']['DOC2VEC']['we_features']))
     test_labels = np.zeros(test.shape[0])
 
     for i in range(test.shape[0]):

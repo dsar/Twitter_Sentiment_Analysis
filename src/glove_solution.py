@@ -10,7 +10,7 @@ from options import *
 
 def main():
     print("loading cooccurrence matrix")
-    with open(DATA_PATH+'cooc.pkl', 'rb') as f:
+    with open(COOC_FILE, 'rb') as f:
         cooc = pickle.load(f)
     print("{} nonzero entries".format(cooc.nnz))
 
@@ -18,16 +18,16 @@ def main():
     print("using nmax =", nmax, ", cooc.max() =", cooc.max())
 
     print("initializing embeddings")
-    embedding_dim = WE_params['we_features']
+    embedding_dim = algorithm['options']['WE']['we_features']
     xs = np.random.normal(size=(cooc.shape[0], embedding_dim))
     ys = np.random.normal(size=(cooc.shape[1], embedding_dim))
 
     eta = 0.001
     alpha = 3 / 4
 
-    epochs = 10
+    # epochs = 10
 
-    for epoch in range(WE_params['epochs']):
+    for epoch in range(algorithm['options']['WE']['epochs']):
         print("epoch {}".format(epoch))
         for ix, jy, n in zip(cooc.row, cooc.col, cooc.data):
             logn = np.log(n)
@@ -40,7 +40,7 @@ def main():
     words = {} #key= word, value=embeddings
     we = xs
     print('we shape', we.shape)
-    vocab_file = open(DATA_PATH+'vocab_cut.txt', "r")
+    vocab_file = open(VOCAB_CUT_FILE, "r")
     for i, line in enumerate(vocab_file):
         words[line.rstrip()] = we[i]
     store_embeddings_to_txt_file(words, MY_EMBEDDINGS_TXT_FILE)

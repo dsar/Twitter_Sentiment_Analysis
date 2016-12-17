@@ -6,6 +6,9 @@ import pickle
 import csv
 import itertools
 
+from options import *
+if algorithm['options']['warnings'] == False:
+	pd.options.mode.chained_assignment = None
 from utils import *
 from preprocessing import tweets_preprocessing, remove_tweet_id
 from baseline import baseline
@@ -14,9 +17,6 @@ from vectorizer import load_vectorizer
 from tfidf_embdedding_vectorizer import tfidf_embdedding_vectorizer
 from doc2vec_solution import doc2vec
 from fast_text import fast_text
-from options import *
-if options['warnings'] == False:
-	pd.options.mode.chained_assignment = None
 
 from sklearn import svm, linear_model, preprocessing, decomposition
 from sklearn.ensemble import RandomForestClassifier
@@ -26,9 +26,12 @@ from sklearn.neural_network import MLPClassifier
 from trainCNN import trainCNN
 from evalCNN import evalCNN
 
+# Project Stucture initialization
+os.system('./create_structure.sh')
+
 #clear cache
-if options['clear']:
-	clear_cache(clear_params)
+if algorithm['options']['clear']:
+	clear_cache(algorithm['options']['clear_params'])
 
 # Load Data
 print('Loading data')
@@ -49,107 +52,99 @@ print('\tfinal tweets shape: ',tweets.shape)
 print('\ttest data shape:', test_tweets.shape)
 
 #Tweets Preprocessing
-if options['preprocess'][0]:
-	tweets = tweets_preprocessing(tweets,train=True, params=preprocessing_params)
-	test_tweets = tweets_preprocessing(test_tweets,train=False, params=preprocessing_params)
+if algorithm['options']['preprocess'][0]:
+	tweets = tweets_preprocessing(tweets,train=True, params=algorithm['options']['preprocessing_params'])
+	test_tweets = tweets_preprocessing(test_tweets,train=False, params=algorithm['options']['preprocessing_params'])
 
-## FastText case
-if options['ml_algorithm'] == 'FT':
-	print('\nInitializing FastText')
-	pred = fast_text(tweets, test_tweets)
-	# Preview of the results
-	print('pred shape: ',len(pred))
-	print('pred values: ',pred[0:20])
-	print('Creating final csv submission file')
-	create_csv_submission(pred)
-	exit()
+# Feature extraction
+if 'feature_extraction' in algorithm['options']:
+	if algorithm['options']['feature_extraction'] == 'WE':
+		print_dict_settings(algorithm['options']['WE'], msg='\nWord Embeddings Parameters:')
+		print('Feature extraction using WE\n')
+		if algorithm['options']['WE']['tweet2vec_method'] == 'we_mean':
+			print('\tUsing WE mean')
+			train_reptweets, test_reptweets = baseline(tweets, test_tweets)
+		elif algorithm['options']['WE']['tweet2vec_method'] == 'we_tfidf':
+			print('\tUsing WE tfidf')
+			train_reptweets, test_reptweets = tfidf_embdedding_vectorizer(tweets, test_tweets)
 
-# Features extraction
-if options['feature_extraction'] == 'WE':
-	print_dict_settings(WE_params, msg='\nWord Embeddings Parameters:')
-	print('Feature extraction using WE\n')
-	if options['we_method'] == 'we_mean':
-		print('\tUsing WE mean')
-		train_reptweets, test_reptweets = baseline(tweets, test_tweets)
-	elif (options['we_method'] == 'dm_doc2vec') or (options['we_method'] == 'dbow_doc2vec'):
+		# Scale matrices
+		if algorithm['options']['scale']:
+			print('Scaling Matrices\n')
+			scaler = StandardScaler()
+			train_reptweets = scaler.fit_transform(train_reptweets)
+			scaler = StandardScaler()  
+			test_reptweets = scaler.fit_transform(test_reptweets)
+
+		# Apply PCA
+		if algorithm['options']['PCA'][0]:
+		    print('Appling PCA with '+str(algorithm['options']['PCA'][1])+' number of components')
+		    pca = decomposition.PCA(n_components=algorithm['options']['PCA'][1])
+		    train_reptweets = pca.fit_transform(train_reptweets)
+		    pca = decomposition.PCA(n_components=algorithm['options']['PCA'][1])
+		    test_reptweets = pca.fit_transform(test_reptweets)
+
+		#Polynomial expansion
+		if  algorithm['options']['poly'][0]:
+			print('Polynomial expansion with '+str(algorithm['options']['poly'][1])+' base')
+			poly = PolynomialFeatures(algorithm['options']['poly'][1])
+			train_reptweets = poly.fit_transform(train_reptweets)
+			poly = PolynomialFeatures(algorithm['options']['poly'][1])
+			test_reptweets = poly.fit_transform(test_reptweets)
+
+	elif algorithm['options']['feature_extraction'] == 'TFIDF':
+		print('Feature extraction using TF-IDF')
+		train_reptweets, test_reptweets = load_vectorizer(tweets, test_tweets)
+	elif (algorithm['options']['feature_extraction'] == 'DOC2VEC'):
 		print('\tUsing doc2vec')
 		train_reptweets, test_reptweets = doc2vec(tweets, test_tweets)
-	elif options['we_method'] == 'we_tfidf':
-		print('\tUsing WE tfidf')
-		train_reptweets, test_reptweets = tfidf_embdedding_vectorizer(tweets, test_tweets)
 
-	# Scale matrices
-	if options['scale']:
-		print('Scaling Matrices\n')
-		scaler = StandardScaler()
-		train_reptweets = scaler.fit_transform(train_reptweets)
-		scaler = StandardScaler()  
-		test_reptweets = scaler.fit_transform(test_reptweets)
 
-	# Apply PCA
-	if options['PCA'][0]:
-	    print('Appling PCA with '+str(options['PCA'][1])+' number of components')
-	    pca = decomposition.PCA(n_components=options['PCA'][1])
-	    train_reptweets = pca.fit_transform(train_reptweets)
-	    pca = decomposition.PCA(n_components=options['PCA'][1])
-	    test_reptweets = pca.fit_transform(test_reptweets)
 
-	#Polynomial expansion
-	if  options['poly'][0]:
-		print('Polynomial expansion with '+str(options['poly'][1])+' base')
-		poly = PolynomialFeatures(options['poly'][1])
-		train_reptweets = poly.fit_transform(train_reptweets)
-		poly = PolynomialFeatures(options['poly'][1])
-		test_reptweets = poly.fit_transform(test_reptweets)
-
-elif options['feature_extraction'] == 'TFIDF':
-	print('Feature extraction using TF-IDF')
-	train_reptweets, test_reptweets = load_vectorizer(tweets, test_tweets)
-
-if options['model_selection']:
-	# param init
-	if options['ml_algorithm'] == 'RF':
-		print('Initializing Random Forest')
-		clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
-	elif options['ml_algorithm'] == 'SVM':
-		print('SVM params init')
-		listOLists = [['hinge','squared_hinge'],[0.1,0.5,0.8,1,2]]
-		clf = svm.LinearSVC(max_iter=10000)
-	elif options['ml_algorithm'] == 'LR':
-		print('Initializing Logistic Regression')
-		clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
-	elif options['ml_algorithm'] == 'NN':
-		print('NN params init')
-		listOLists = [[1e-2, 1e-3, 1e-4, 1e-5],['constant', 'invscaling', 'adaptive'],['lbfgs', 'sgd', 'adam'],[1,2],[8,16,32,64,128]]
-	c = itertools.product(*listOLists)
-	print('combinations: ',c)
-
-	max_tuple = []
-	max_avg_score = 0
-	for tuple_ in c:
-		print('tuple: ',tuple_)
-		# Apply ML algorithm
-		if options['ml_algorithm'] == 'RF':
+if 'model_selection' in algorithm['options']:
+	if algorithm['options']['model_selection']:
+		# param init
+		if algorithm['options']['ml_algorithm'] == 'RF':
 			print('Initializing Random Forest')
 			clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
-		elif options['ml_algorithm'] == 'SVM':
-			print('Initializing SVM')
-			clf = svm.LinearSVC(max_iter=10000,intercept_scaling=tuple_[1],loss=tuple_[0])
-		elif options['ml_algorithm'] == 'LR':
+		elif algorithm['options']['ml_algorithm'] == 'SVM':
+			print('SVM params init')
+			listOLists = [['hinge','squared_hinge'],[0.1,0.5,0.8,1,2]]
+			clf = svm.LinearSVC(max_iter=10000)
+		elif algorithm['options']['ml_algorithm'] == 'LR':
 			print('Initializing Logistic Regression')
 			clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
-		elif options['ml_algorithm'] == 'NN':
-			print('Initializing Neural Network')
-			clf = MLPClassifier(solver=tuple_[2],\
-								activation='logistic', \
-								hidden_layer_sizes=(tuple_[4], tuple_[3]), \
-								random_state=4, \
-								verbose=False,\
-							    alpha=tuple_[0],\
-								learning_rate = tuple_[1])
+		elif algorithm['options']['ml_algorithm'] == 'NN':
+			print('NN params init')
+			listOLists = [[1e-2, 1e-3, 1e-4, 1e-5],['constant', 'invscaling', 'adaptive'],['lbfgs', 'sgd', 'adam'],[1,2],[8,16,32,64,128]]
+		c = itertools.product(*listOLists)
+		print('combinations: ',c)
 
-		# Cross Validation
-		if options['cv'][0]:
+		max_tuple = []
+		max_avg_score = 0
+		for tuple_ in c:
+			print('tuple: ',tuple_)
+			# Apply ML algorithm
+			if algorithm['options']['ml_algorithm'] == 'RF':
+				print('Initializing Random Forest')
+				clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
+			elif algorithm['options']['ml_algorithm'] == 'SVM':
+				print('Initializing SVM')
+				clf = svm.LinearSVC(max_iter=10000,intercept_scaling=tuple_[1],loss=tuple_[0])
+			elif algorithm['options']['ml_algorithm'] == 'LR':
+				print('Initializing Logistic Regression')
+				clf = linear_model.LogisticRegression(C=1e5,n_jobs=-1,max_iter=10000)
+			elif algorithm['options']['ml_algorithm'] == 'NN':
+				print('Initializing Neural Network')
+				clf = MLPClassifier(solver=tuple_[2],\
+									activation='logistic', \
+									hidden_layer_sizes=(tuple_[4], tuple_[3]), \
+									random_state=4, \
+									verbose=False,\
+								    alpha=tuple_[0],\
+									learning_rate = tuple_[1])
+
+		
 			print('Cross-validating results')
 			avg_test_accuracy, cv = cross_validation(clf, 
 													tweets.shape[0],
@@ -158,55 +153,64 @@ if options['model_selection']:
 													n_folds=options['cv'][1])
 			print('Avg CV score: ',avg_test_accuracy)
 
-		if avg_test_accuracy > max_avg_score:
-			max_tuple = tuple_
-			max_avg_score = avg_test_accuracy
+			if avg_test_accuracy > max_avg_score:
+				max_tuple = tuple_
+				max_avg_score = avg_test_accuracy
 
-	print('max_avg_score', max_avg_score)
-	print('max_tuple', max_tuple)
-
-
-## best parameters hardcoded
-else:
-	# Apply ML algorithm
-	if options['ml_algorithm'] == 'RF':
-		print('\nInitializing Random Forest')
-		clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
-	elif options['ml_algorithm'] == 'SVM':
-		print('\nInitializing SVM')
-		clf = svm.LinearSVC(max_iter=SVM['max_iter'], intercept_scaling=SVM['intercept_scaling'], loss=SVM['loss'])
-	elif options['ml_algorithm'] == 'LR':
-		print('\nInitializing Logistic Regression')
-		clf = linear_model.LogisticRegression(C=LR['C'],max_iter=LR['max_iter'],n_jobs=-1)
-	elif options['ml_algorithm'] == 'NN':
-		print('\nInitializing Neural Network')
-		clf = MLPClassifier(solver=NN['solver'], activation=NN['activation'], hidden_layer_sizes=(NN['k'],NN['hidden_layers']),\
-							 random_state=4, verbose=False, max_iter=NN['max_iter'], tol=NN['tol'])
-	elif options['ml_algorithm'] == 'CNN':
-		labels = np.zeros((tweets.shape[0], 2))
-		labels[pos_tweets.shape[0]:, 0] = 1.0
-		labels[:pos_tweets.shape[0], 1] = 1.0
-		path = trainCNN(tweets, labels)
-		pred = evalCNN(test_tweets, path)
-		create_csv_submission(pred)
-		exit()
-
-	# Cross Validation
-	if options['cv'][0]:
-		print('Cross Validation...')
-		avg_test_accuracy, cv = cross_validation(clf, 
-												tweets.shape[0],
-												train_reptweets,
-												tweets['sentiment'], 
-												n_folds=options['cv'][1])
-		print('Avg CV score: ',avg_test_accuracy)
+		print('max_avg_score', max_avg_score)
+		print('max_tuple', max_tuple)
 
 
-# Train model
-print('Training model')
-clf.fit(train_reptweets, tweets['sentiment'])
-print('Predicting')
-pred = clf.predict(test_reptweets)
+	## best parameters hardcoded
+	else:
+		# Apply ML algorithm
+		if algorithm['options']['ml_algorithm'] == 'RF':
+			print('\nInitializing Random Forest')
+			clf = RandomForestClassifier(n_estimators=100,max_depth=50,n_jobs=-1,random_state=4)
+		elif algorithm['options']['ml_algorithm'] == 'SVM':
+			print('\nInitializing SVM')
+			clf = svm.LinearSVC(max_iter=algorithm['params']['max_iter'],\
+			 					intercept_scaling=algorithm['params']['intercept_scaling'],\
+			 					loss=algorithm['params']['loss'])
+		elif algorithm['options']['ml_algorithm'] == 'LR':
+			print('\nInitializing Logistic Regression')
+			clf = linear_model.LogisticRegression(C=algorithm['params']['C'],\
+								max_iter=algorithm['params']['max_iter'],n_jobs=-1)
+		elif algorithm['options']['ml_algorithm'] == 'NN':
+			print('\nInitializing Neural Network')
+			clf = MLPClassifier(solver=algorithm['params']['solver'],\
+								activation=algorithm['params']['activation'], \
+								hidden_layer_sizes=(algorithm['params']['k'],algorithm['params']['hidden_layers']),\
+								random_state=4, verbose=False,\
+								max_iter=algorithm['params']['max_iter'], tol=algorithm['params']['tol'])
+		elif algorithm['options']['ml_algorithm'] == 'CNN':
+			labels = np.zeros((tweets.shape[0], 2))
+			labels[pos_tweets.shape[0]:, 0] = 1.0
+			labels[:pos_tweets.shape[0], 1] = 1.0
+			path = trainCNN(tweets, labels)
+			pred = evalCNN(test_tweets, path)
+if algorithm['options']['ml_algorithm'] == 'FT':
+	print('\nInitializing FastText')
+	pred = fast_text(tweets, test_tweets)
+	pred = np.array(pred)
+
+	if 'cv' in algorithm['options']:
+		# Cross Validation
+		if algorithm['options']['cv'][0]:
+			print('Cross Validation...')
+			avg_test_accuracy, cv = cross_validation(clf, 
+													tweets.shape[0],
+													train_reptweets,
+													tweets['sentiment'], 
+													n_folds=algorithm['options']['cv'][1])
+			print('Avg CV score: ',avg_test_accuracy)
+
+if algorithm['options']['ml_algorithm'] not in ['FT','CNN']:
+	# Train model
+	print('Training model')
+	clf.fit(train_reptweets, tweets['sentiment'])
+	print('Predicting')
+	pred = clf.predict(test_reptweets)
 
 # Preview of the results
 print('pred shape: ',pred.shape)
