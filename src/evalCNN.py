@@ -1,11 +1,9 @@
-import tensorflow as tf
-import numpy as np
-
-from tweetCNN import tweetCNN
-from trainCNN import glove_per_word
-from baseline import get_embeddings_dictionary
-
 from options import *
+
+import tensorflow as tf
+
+from trainCNN import glove_per_word
+from build_embeddings import get_embeddings_dictionary
 
 def evalCNN(test_tweets, path):
     
@@ -18,7 +16,7 @@ def evalCNN(test_tweets, path):
     graph = tf.Graph()
     with graph.as_default():
         if cnn_params['save_from_file']:
-            checkpoint_file = tf.train.latest_checkpoint(cnn_params['checkpoint_dir'])
+            checkpoint_file = tf.train.latest_checkpoint(path)
         else:
             checkpoint_file = path
             
@@ -29,7 +27,7 @@ def evalCNN(test_tweets, path):
             
             x = graph.get_operation_by_name("embedding").outputs[0]
             dropout_prob = graph.get_operation_by_name("dropout_prob").outputs[0]
-            predictions = graph.get_operation_by_name("prediction/predictions").outputs[0]
+            predictions = graph.get_operation_by_name("softmax/predicted_classes").outputs[0]
             
             test_predictions = sess.run(predictions, {x:test_reptweets,  dropout_prob:1.0})
             test_predictions[test_predictions==0] = -1

@@ -3,23 +3,29 @@ import time
 
 import tensorflow as tf
 import numpy as np
-import pandas as pd
 
 from tweetCNN import tweetCNN
-from baseline import get_embeddings_dictionary
+from build_embeddings import get_embeddings_dictionary
 from split_hashtag import split_hashtag_to_words
 
 from options import *
     
 def glove_per_word(tweets, words, opts):
+    # function that outputs a matrix by [max_num_words]x[embedding dimension]
+    # each row corresponds to the embedding of word
     embeddings = np.zeros((tweets.shape[0], opts['max_num_words'], opts['embedding_size'], 1))
     for i, tweet in enumerate(tweets['tweet']):
         try:
             split_tweet = tweet.split()
         except:
             continue;
+            
+        # keed two index variables
+        # one for words we obtained after splitting, but splitted words can be splitted into tokens
+        # so the other one for keeping the record of embeddings with splitted and unsplitted words        
         ind_word = 0
         ind_embed = 0
+        
         for k in range(opts['max_num_words']):
             if k<len(split_tweet):
                 word = split_tweet[ind_word]
@@ -57,20 +63,24 @@ def batch_iter(train_indices, batch_size, shuffle=True):
 			yield shuffled_indices[start_index:end_index]
             
 
-def trainCNN(tweets, labels):
-    
+def prepare_data(tweets, labels):
     n_data = tweets['tweet'].shape[0]
-    n_valid = 2000
     
     shuffled_indices = np.random.permutation(np.arange(n_data))
-    valid_ind = shuffled_indices[:n_valid]
-    train_ind = shuffled_indices[n_valid:]   
+    valid_ind = shuffled_indices[:cnn_params['n_valid']]
+    train_ind = shuffled_indices[cnn_params['n_valid']:]   
     
     words = get_embeddings_dictionary()
     
     x_valid = glove_per_word(tweets.loc[valid_ind], words, cnn_params)
     y_valid = labels[valid_ind, :]
     
+    return train_ind, x_valid, y_valid,  words
+    
+
+def trainCNN(tweets, labels):
+    
+    train_ind, x_valid, y_valid, words = prepare_data(tweets,  labels)
     
     with tf.Graph().as_default():
         sess = tf.Session()
@@ -79,10 +89,14 @@ def trainCNN(tweets, labels):
             cnn = tweetCNN(cnn_params)
 
             global_step = tf.Variable(0, name="global_step", trainable=False)
+            
+            learning_rate = tf.train.exponential_decay(cnn_params['lambda'], global_step, 
+                                                        cnn_params['lambda_decay_period'], cnn_params['lambda_decay_rate'], 
+                                                        staircase=True, name='learning_rate')
             if cnn_params['optimizer']=='Adam':
-                train_op = tf.train.AdamOptimizer(cnn_params['lambda']).minimize(cnn.loss, global_step=global_step)
+                train_op = tf.train.AdamOptimizer(learning_rate, name='optimizer').minimize(cnn.loss, global_step=global_step, name='optim_operation')
             elif cnn_params['optimizer']=='RMSProp':
-                train_op = tf.train.RMSPropOptimizer(cnn_params['lambda'],cnn_params['moment']).minimize(cnn.loss, global_step=global_step)
+                train_op = tf.train.RMSPropOptimizer(learning_rate,cnn_params['moment'], name='optimizer').minimize(cnn.loss, global_step=global_step, name='optim_operation')
 
             # Use timestamps for summaries
             timestamp = str(int(time.time()))
@@ -91,12 +105,13 @@ def trainCNN(tweets, labels):
             # Summaries for visualization
             loss_summary = tf.summary.scalar('loss', cnn.loss)
             acc_summary = tf.summary.scalar('accuracy', cnn.accuracy)
+            lambda_summary = tf.summary.scalar('learning_rate', learning_rate)
             
-            train_summary_op = tf.merge_summary([loss_summary, acc_summary])
+            train_summary_op = tf.summary.merge([loss_summary, acc_summary, lambda_summary], name='training_summaries')
             train_summary_dir = os.path.join(out_dir, 'summaries', 'train')
             train_summary_writer = tf.train.SummaryWriter(train_summary_dir, sess.graph)
             
-            valid_summary_op = tf.merge_summary([loss_summary, acc_summary])
+            valid_summary_op = tf.merge_summary([loss_summary, acc_summary], name='validation_summaries')
             valid_summary_dir = os.path.join(out_dir, 'summaries', 'validation')
             valid_summary_writer = tf.train.SummaryWriter(valid_summary_dir, sess.graph)
 
@@ -105,7 +120,7 @@ def trainCNN(tweets, labels):
             checkpoint_prefix = os.path.join(checkpoint_dir, "model")
             if not os.path.exists(checkpoint_dir):
                 os.makedirs(checkpoint_dir)
-            saver = tf.train.Saver(tf.all_variables())
+            saver = tf.train.Saver(tf.all_variables(), max_to_keep=cnn_params['n_checkpoints_to_keep'], name='saver')
             
             sess.run(tf.global_variables_initializer())
 
@@ -116,7 +131,7 @@ def trainCNN(tweets, labels):
                                                         [train_op, global_step, train_summary_op, cnn.loss, cnn.accuracy],
                                                         feed_dict
                                                     )
-                print('step %d,    loss %.3f,    acc %.2f' %(step,loss,100*accuracy))
+                print('step %d,    loss %.3f,    accuracy %.2f' %(step,loss,100*accuracy))
                 train_summary_writer.add_summary(summaries, step)
                 
             def valid_step(x_batch, y_batch, writer=None):
@@ -126,7 +141,98 @@ def trainCNN(tweets, labels):
                                                     [global_step, valid_summary_op, cnn.loss, cnn.accuracy, cnn.y_pred],
                                                     feed_dict
                                                     )
-                print('step %d,    loss %.3f,    acc %.2f' %(step,loss,100*accuracy)), 
+                print('step %d,    loss %.3f,    accuracy %.2f' %(step,loss,100*accuracy)), 
+                if writer:
+                    writer.add_summary(summaries, step)
+                
+
+            for ep in range(cnn_params['n_epochs']):
+                for batch_ind in batch_iter(train_ind, cnn_params['batch_size']):
+                    
+                    minibatch_x = glove_per_word(tweets.loc[batch_ind], words, cnn_params)                    
+                    minibatch_y = labels[batch_ind, :]
+                    
+                    train_step(minibatch_x, minibatch_y)
+                    current_step = tf.train.global_step(sess, global_step)
+                    if current_step % cnn_params['eval_every'] == 0:
+                        print("\nEvaluation:")
+                        valid_step(x_valid, y_valid, writer=valid_summary_writer)
+                    if current_step% cnn_params['checkpoint_every'] == 0:
+                        path = saver.save(sess, checkpoint_prefix, global_step=current_step)
+                        print("Saved model checkpoint to {}\n".format(path))
+                        
+    return path
+
+def trainCNN_fromcheckpoint(tweets, labels):
+    
+    train_ind, x_valid, y_valid,  words = prepare_data(tweets,  labels)
+    
+    graph = tf.Graph()
+    with graph.as_default():
+        checkpoint_file = tf.train.latest_checkpoint(cnn_params['checkpoint_dir'])
+            
+        sess = tf.Session()
+        with sess.as_default():
+            
+            saver = tf.train.import_meta_graph("{}.meta".format(checkpoint_file))
+            saver.restore(sess, checkpoint_file)
+            
+            x = graph.get_operation_by_name('embedding').outputs[0]
+            y = graph.get_operation_by_name('class_probability').outputs[0]
+            
+            dropout_prob = graph.get_operation_by_name("dropout_prob").outputs[0]     
+            
+            predictions = graph.get_operation_by_name('softmax/predicted_classes').outputs[0]
+            loss = graph.get_operation_by_name('loss_calculation/loss').outputs[0]
+            accuracy = graph.get_operation_by_name('accuracy/accuracy').outputs[0]            
+            
+            global_step = graph.get_operation_by_name('global_step').outputs[0]
+            learning_rate = graph.get_operation_by_name('learning_rate').outputs[0]
+            train_op = graph.get_operation_by_name('optim_operation').outputs[0]
+            
+            checkpoint_dir = cnn_params['checkpoint_dir']
+            checkpoint_prefix = os.path.join(checkpoint_dir, "model")
+            out_dir, _ = os.path.split(checkpoint_dir)
+            
+            # Summaries
+            loss_summary = tf.summary.scalar('loss', loss)
+            acc_summary = tf.summary.scalar('accuracy', accuracy)
+            lambda_summary = tf.summary.scalar('learning_rate', learning_rate)
+            
+            train_summary_op = tf.summary.merge([loss_summary, acc_summary, lambda_summary], name='training_summaries')
+            train_summary_dir = os.path.join(out_dir, 'summaries', 'train')
+            train_summary_writer = tf.train.SummaryWriter(train_summary_dir, sess.graph)
+            
+            valid_summary_op = tf.summary.merge([loss_summary, acc_summary], name='validation_summaries')
+            valid_summary_dir = os.path.join(out_dir, 'summaries', 'validation')
+            valid_summary_writer = tf.train.SummaryWriter(valid_summary_dir, sess.graph)
+                        
+            saver = tf.train.Saver(tf.all_variables())
+            
+            uninitialized_vars = []
+            for var in tf.all_variables():
+                try:
+                    sess.run(var)
+                except tf.errors.FailedPreconditionError:
+                    uninitialized_vars.append(var)
+            sess.run(tf.initialize_variables(uninitialized_vars))
+            
+            def train_step(x_batch, y_batch):
+                feed_dict = {x: x_batch, y: y_batch, dropout_prob:cnn_params['dropout_prob']}
+                _, step, summaries, loss_value, accuracy_value = sess.run(
+                                                        [train_op, global_step, train_summary_op, loss, accuracy],
+                                                        feed_dict
+                                                    )
+                print('step %d,    loss %.3f,    acc %.2f' %(step,loss_value,100*accuracy_value))
+                train_summary_writer.add_summary(summaries, step)
+                
+            def valid_step(x_batch, y_batch, writer=None):
+                feed_dict = {x: x_batch, y: y_batch, dropout_prob:1.0}
+                step, summaries, loss_, accuracy_,  pred = sess.run(
+                                                    [global_step, valid_summary_op, loss, accuracy, predictions],
+                                                    feed_dict
+                                                    )
+                print('step %d,    loss %.3f,    acc %.2f' %(step,loss_,100*accuracy_)), 
                 if writer:
                     writer.add_summary(summaries, step)
                 
@@ -148,4 +254,3 @@ def trainCNN(tweets, labels):
                         
 
     return path
-
