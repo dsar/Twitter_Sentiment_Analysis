@@ -5,7 +5,7 @@ import tensorflow as tf
 from trainCNN import glove_per_word
 from build_embeddings import get_embeddings_dictionary
 
-def evalCNN(test_tweets, path):
+def evalCNN(test_tweets, path, cnn_params):
     
     print('getting dictionary for embeddings...')
     words = get_embeddings_dictionary()        

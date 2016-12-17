@@ -22,6 +22,8 @@ def load_glove_embeddings_from_txt_file(filename):
     return words
 
 def get_embeddings_dictionary(tweets=None):
+    if algorithm['options']['ml_algorithm'] == 'CNN':
+        return load_glove_embeddings_from_txt_file(PRETRAINED_EMBEDDINGS_FILE)
     if tweets is None:
         print('WARNING(!): Tweets is None.')
     if algorithm['options']['WE']['build_we_method'] == 'baseline':

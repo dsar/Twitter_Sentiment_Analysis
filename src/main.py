@@ -23,8 +23,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 from sklearn.neural_network import MLPClassifier 
 
-from trainCNN import trainCNN
 from evalCNN import evalCNN
+from trainCNN import trainCNN, trainCNN_fromcheckpoint
 
 # Project Stucture initialization
 os.system('./create_structure.sh')
@@ -57,10 +57,11 @@ if algorithm['options']['preprocess'][0]:
 	test_tweets = tweets_preprocessing(test_tweets,train=False, params=algorithm['options']['preprocessing_params'])
 
 # Feature extraction
-if 'feature_extraction' in algorithm['options']:
+if 'feature_extraction' in algorithm['options'] and 'WE' in algorithm['options']:
 	if algorithm['options']['feature_extraction'] == 'WE':
 		print_dict_settings(algorithm['options']['WE'], msg='\nWord Embeddings Parameters:')
 		print('Feature extraction using WE\n')
+
 		if algorithm['options']['WE']['tweet2vec_method'] == 'we_mean':
 			print('\tUsing WE mean')
 			train_reptweets, test_reptweets = baseline(tweets, test_tweets)
@@ -139,7 +140,7 @@ if 'model_selection' in algorithm['options']:
 									hidden_layer_sizes=(tuple_[4], tuple_[3]), \
 									random_state=4, \
 									verbose=False,\
-								    alpha=tuple_[0],\
+									alpha=tuple_[0],\
 									learning_rate = tuple_[1])
 
 		
@@ -183,12 +184,19 @@ if 'model_selection' in algorithm['options']:
 								hidden_layer_sizes=(algorithm['params']['k'],algorithm['params']['hidden_layers']),\
 								random_state=4, verbose=False,\
 								max_iter=algorithm['params']['max_iter'], tol=algorithm['params']['tol'])
-		elif algorithm['options']['ml_algorithm'] == 'CNN':
-			labels = np.zeros((tweets.shape[0], 2))
-			labels[pos_tweets.shape[0]:, 0] = 1.0
-			labels[:pos_tweets.shape[0], 1] = 1.0
-			path = trainCNN(tweets, labels)
-			pred = evalCNN(test_tweets, path)
+if algorithm['options']['ml_algorithm'] == 'CNN':
+	if algorithm['params']['train']:
+		labels = np.zeros((tweets.shape[0], 2))
+		labels[pos_tweets.shape[0]:, 0] = 1.0
+		labels[:pos_tweets.shape[0], 1] = 1.0
+		if algorithm['params']['train_from'] == 'from_scratch':
+			path = trainCNN(tweets, labels, algorithm['params'])
+		elif algorithm['params']['train_from'] == 'from_checkpoint':
+			path = trainCNN_fromcheckpoint(tweets, labels, algorithm['params'])
+	else:
+		path = algorithm['params']['checkpoint_dir']
+		algorithm['params']['save_from_file'] = True
+	pred = evalCNN(test_tweets, path, algorithm['params'])
 if algorithm['options']['ml_algorithm'] == 'FT':
 	print('\nInitializing FastText')
 	pred = fast_text(tweets, test_tweets)

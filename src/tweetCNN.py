@@ -44,6 +44,7 @@ class tweetCNN(object):
             self.features_dropout = tf.nn.dropout(self.features, self.dropout_prob, name='after_dropout_1')
             softmax_input = self.features_dropout
             n_in_softmax = n_filters_total
+            print(n_filters_total)
         
         if opts['n_layers']==2:
             with tf.name_scope('hidden_layer'):

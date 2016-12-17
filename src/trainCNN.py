@@ -63,7 +63,7 @@ def batch_iter(train_indices, batch_size, shuffle=True):
 			yield shuffled_indices[start_index:end_index]
             
 
-def prepare_data(tweets, labels):
+def prepare_data(tweets, labels, cnn_params):
     n_data = tweets['tweet'].shape[0]
     
     shuffled_indices = np.random.permutation(np.arange(n_data))
@@ -78,9 +78,9 @@ def prepare_data(tweets, labels):
     return train_ind, x_valid, y_valid,  words
     
 
-def trainCNN(tweets, labels):
+def trainCNN(tweets, labels, cnn_params):
     
-    train_ind, x_valid, y_valid, words = prepare_data(tweets,  labels)
+    train_ind, x_valid, y_valid, words = prepare_data(tweets,  labels, cnn_params)
     
     with tf.Graph().as_default():
         sess = tf.Session()
@@ -148,7 +148,6 @@ def trainCNN(tweets, labels):
 
             for ep in range(cnn_params['n_epochs']):
                 for batch_ind in batch_iter(train_ind, cnn_params['batch_size']):
-                    
                     minibatch_x = glove_per_word(tweets.loc[batch_ind], words, cnn_params)                    
                     minibatch_y = labels[batch_ind, :]
                     
@@ -157,15 +156,15 @@ def trainCNN(tweets, labels):
                     if current_step % cnn_params['eval_every'] == 0:
                         print("\nEvaluation:")
                         valid_step(x_valid, y_valid, writer=valid_summary_writer)
-                    if current_step% cnn_params['checkpoint_every'] == 0:
+                    if current_step % cnn_params['checkpoint_every'] == 0:
                         path = saver.save(sess, checkpoint_prefix, global_step=current_step)
                         print("Saved model checkpoint to {}\n".format(path))
                         
     return path
 
-def trainCNN_fromcheckpoint(tweets, labels):
+def trainCNN_fromcheckpoint(tweets, labels, cnn_params):
     
-    train_ind, x_valid, y_valid,  words = prepare_data(tweets,  labels)
+    train_ind, x_valid, y_valid,  words = prepare_data(tweets,  labels, cnn_params)
     
     graph = tf.Graph()
     with graph.as_default():

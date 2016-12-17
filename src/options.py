@@ -10,8 +10,8 @@ W2V_DATA_PATH = DATA_PATH + 'word2vec/'
 FASTTEXT_DATA_PATH = DATA_PATH + 'fasttext/'
 TFIDF_DATA_PATH = DATA_PATH + 'tfidf/'
 
-POS_TWEETS_FILE = DATASETS_PATH + 'train_pos_small.txt'
-NEG_TWEETS_FILE = DATASETS_PATH + 'train_neg_small.txt'
+POS_TWEETS_FILE = DATASETS_PATH + 'train_pos.txt'
+NEG_TWEETS_FILE = DATASETS_PATH + 'train_neg.txt'
 TEST_TWEETS_FILE = DATASETS_PATH + 'test_data.txt'
 PRED_SUBMISSION_FILE = SUBMISSIONS_PATH + 'pred_submission.csv'
 #remove TRAIN_PREPROC_CACHING_PATH before starting with a new dataset
@@ -23,12 +23,12 @@ MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE = GLOVE_DATA_PATH + 'glove_python_embeddings
 MERGED_EMBEDDINGS_FILE = GLOVE_DATA_PATH + 'merged_embeddings.txt'
 FASTTEXT_TRAIN_FILE = FASTTEXT_DATA_PATH + 'fasttext_train.txt'
 FASTTEXT_MODEL = FASTTEXT_DATA_PATH + 'fasttext_model'
+TF_SAVE_PATH = DATA_PATH + 'models/'
 TFIDF_TRAIN_FILE = TFIDF_DATA_PATH + 'train_reptweets.pkl'
 VOCAB_CUT_FILE = GLOVE_DATA_PATH + 'vocab_cut.txt'
 VOCAB_FILE = GLOVE_DATA_PATH + 'vocab.pkl'
 COOC_FILE = GLOVE_DATA_PATH + 'cooc.pkl'
 
-TF_SAVE_PATH = 'models/'
 
 DOC2VEC_MODEL_PATH = DOC2VEC_PATH+'paragraph_vector.d2v'
 
@@ -44,7 +44,7 @@ WORD_FREQUENCIES = METADATA_PATH + 'words-by-frequency.txt'
 # However, if you want to play with the parameters, go to the corresponding dictionary
 # of each algorithm and set it.
 
-algorithm = 'SVM' #{SVM, LR, NN, CNN, RF, FT}
+algorithm = 'CNN' #{SVM, LR, NN, CNN, RF, FT}
 
 SVM = {
     'params' : {
@@ -279,23 +279,30 @@ NN = {
 
 CNN = {
        'params' : {
-                   'embedding_size': 200, 
-                   'n_filters':128, 
-                   'filter_sizes':[2, 3, 4, 5, 6], 
-                   'n_classes':2, 
-                   'dropout_prob':0.5,
-                   'optimizer':'Adam',  #{Adam, RMSProp}
-                   'lambda':1e-4,
-                   'moment':0.9, 
-                   'eval_every':20, 
-                   'checkpoint_every':500, 
-                   'learn_embedding':False, 
-                   'max_num_words':40, 
-                   'batch_size':128, 
-                   'epochs':10, 
-                   'shuffle_every_epoch':True, 
-                   'save_from_file':False, 
-                   'checkpoint_dir':'models/1481848311/checkpoints'
+                    'embedding_size':200,
+                    'n_filters':128,
+                    'filter_sizes':[2, 3, 4, 5, 6],
+                    'n_layers':1,
+                    'n_hidden':128,
+                    'n_classes':2,
+                    'dropout_prob':0.5,
+                    'optimizer':'Adam',  #{Adam, RMSProp}
+                    'lambda':5e-4,
+                    'lambda_decay_period':500,
+                    'lambda_decay_rate':0.97,
+                    'moment':0.9,
+                    'eval_every':20,
+                    'checkpoint_every':1000,
+                    'n_checkpoints_to_keep':1,
+                    'max_num_words':40,
+                    'batch_size':1024,
+                    'n_epochs':10,
+                    'shuffle_every_epoch':True,
+                    'train':True,
+                    'train_from':'from_scratch', #{from_checkpoint, from_scratch}
+                    'save_from_file':False,
+                    'checkpoint_dir': TF_SAVE_PATH + '/1481913588/checkpoints',
+                    'n_valid':1000
                   },
         'options' : {
                     'ml_algorithm' : 'CNN',
@@ -317,27 +324,7 @@ CNN = {
                                                 'furl': False
 
                                               },
-                    'feature_extraction' : 'WE', # {WE, DOC2VEC} later will change to set
-                    'WE' : {
-                              'build_we_method' : 'pretrained', # {'baseline', 'pretrained', 'glove_python', 'merge'}
-                              'tweet2vec_method' : 'we_mean', # {we_mean, we_tfidf}
-                              'we_features' : 200,
-                              'n_epochs':10, 
-                              'learning_rate' : 0.05,
-                              'window_size' : 5
-                            },
-                    'DOC2VEC' : {
-                                  'method' : 'dm_doc2vec', # {dm_doc2vec, dbow_doc2vec}
-                                  'we_features' : 200,
-                                  'epochs' : 20,
-                                  'window_size' : 5
-                                },
-                    'cv' : (False,5),
-                    'scale': False,
                     'warnings' : False,
-                    'PCA': (False, 100),
-                    'poly': (False,2),
-                    'model_selection': False,
                     'clear' : False,
                     'clear_params' : {
                                       'preproc' : False,
