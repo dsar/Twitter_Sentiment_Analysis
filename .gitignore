@@ -1,3 +1,12 @@
+# Paper
+report/*.bbl
+report/*.synctex.gz
+report/*.bbl
+report/*.out
+report/*.blg
+report/*.aux
+report/tmp/
+
 # Other
 data/fasttext/
 data/word2vec/

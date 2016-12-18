@@ -7,13 +7,19 @@ In order to run the project you will need the following dependencies installed:
 ### Libraries
 
 * [Anaconda3] - Download and install Anaconda with python3
+* [Scikit-Learn] - Download scikit-learn library with conda
+
+    ```sh
+    $ conda install scikit-learn
+    ```
+
 * [Gensim] - Install Gensim library 
 
     ```sh
     $ conda install gensim
     ```
     
-* [NLTK] - Download all the corpora of NLTK
+* [NLTK] - Download all packages of NLTK
 
     ```sh
     $ python
@@ -21,7 +27,7 @@ In order to run the project you will need the following dependencies installed:
     $ >>> nltk.download()
     ```
 
-    and then download all the corpora from the GUI
+    and then download all packages from the GUI
 
 * [GloVe] - Install Glove python implementation
 
@@ -46,11 +52,11 @@ In order to run the project you will need the following dependencies installed:
     ```
 
 ### Files
-* Pretrained Glove Word Embeddings
+* Stanford Pretrained Glove Word Embeddings
 
     Download [Glove Pretrained Word Embeddings](http://nlp.stanford.edu/data/glove.twitter.27B.zip).
     Then, unzip the downloaded file and move the extracted files in `data/glove/` directory.
-    The default Data is the 200d (cp glove.twitter.27B.200d.txt into `data/glove/` directory).
+    The default Data is the 200d (cp **glove.twitter.27B.200d.txt** into `data/glove/` directory).
 
 * Training Data
 
@@ -69,25 +75,33 @@ In order to run the project you will need the following dependencies installed:
     - at least **16** GB of RAM
     - a **Graphics Card** (optional - needed for faster training in CNN solution)
 
-## Kaggle
+## Kaggle Submission
 
 See the [Public Leaderboard](https://inclass.kaggle.com/c/epfml-text/leaderboard) in Kaggle.
 
+Our Team's name is **gLove is in the air...**:heart:
+
 ## Demo
 
-Go to `src/ directory` and set Algorithms variable in `options.py` file.
+Go to `src/` directory and set **Algorithms** variable in `options.py` file.
 
 In case you want to parametrise the model's parameters, just set the corresponding
 dictionary in `options.py`
 
-Then just start main.py file
+*For more details, check the important parameters in each algorithm in the aforementioned file.*
+
+Then just start `main.py` file
 
 ```sh
-$ python src/main.py
+$ cd src/
+$ python main.py
 ```
 
-When the program terminates you will get all the predictions of the test file
+When the program terminates, you will get all the predictions of the test file
 in `data/submissions/` directory
+
+*By enabling the `cv` option to true in the `options.py` file (in the corresponding algorithm) you can get
+a good approximation of the kaggle-score directly from Cross Validation (Caustion: it might take a while for the full datasets)*
     
 ### Contributors
 
@@ -97,6 +111,7 @@ in `data/submissions/` directory
 
 
    [Anaconda3]: <https://www.continuum.io/downloads>
+   [Scikit-Learn]: <http://scikit-learn.org/stable/install.html>
    [Gensim]: <https://radimrehurek.com/gensim/>
    [NLTK]: <http://www.nltk.org/>
    [GloVe]: <https://github.com/maciejkula/glove-python>
