@@ -50,7 +50,7 @@ In order to run the project you will need the following dependencies installed:
 
     Download [Glove Pretrained Word Embeddings](http://nlp.stanford.edu/data/glove.twitter.27B.zip).
     Then, unzip the downloaded file and move the extracted files in `data/glove/` directory.
-    The default Data is the 200d.
+    The default Data is the 200d (cp glove.twitter.27B.200d.txt into `data/glove/` directory).
 
 * Training Data
 
