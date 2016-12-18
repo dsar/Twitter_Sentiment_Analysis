@@ -204,16 +204,16 @@ if algorithm['options']['ml_algorithm'] == 'FT':
 	pred = fast_text(tweets, test_tweets)
 	pred = np.array(pred)
 
-	# In case cv is enabled, Cross Validation is performed
-	if 'cv' in algorithm['options']:
-		if algorithm['options']['cv'][0]:
-			print('Cross Validation...')
-			avg_test_accuracy, cv = cross_validation(clf, 
-													tweets.shape[0],
-													train_reptweets,
-													tweets['sentiment'], 
-													n_folds=algorithm['options']['cv'][1])
-			print('Avg CV score: ',avg_test_accuracy)
+# In case cv is enabled, Cross Validation is performed
+if 'cv' in algorithm['options']:
+	if algorithm['options']['cv'][0]:
+		print('Cross Validation...')
+		avg_test_accuracy, cv = cross_validation(clf, 
+												tweets.shape[0],
+												train_reptweets,
+												tweets['sentiment'], 
+												n_folds=algorithm['options']['cv'][1])
+		print('Avg CV score: ',avg_test_accuracy)
 
 # Train selected model
 if algorithm['options']['ml_algorithm'] not in ['FT','CNN']:
