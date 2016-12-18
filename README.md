@@ -79,11 +79,11 @@ In order to run the project you will need the following dependencies installed:
 
 See the [Public Leaderboard](https://inclass.kaggle.com/c/epfml-text/leaderboard) in Kaggle.
 
-Our Team's name is **<?>**
+Our Team's name is **\~\~\~gLove is in the Air\~\~\~**
 
 ## Demo
 
-Go to `src/ directory` and set Algorithms variable in `options.py` file.
+Go to `src/` directory and set **Algorithms** variable in `options.py` file.
 
 In case you want to parametrise the model's parameters, just set the corresponding
 dictionary in `options.py`
@@ -93,7 +93,8 @@ dictionary in `options.py`
 Then just start `main.py` file
 
 ```sh
-$ python src/main.py
+$ cd src/
+$ python main.py
 ```
 
 When the program terminates, you will get all the predictions of the test file
