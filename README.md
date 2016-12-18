@@ -78,6 +78,7 @@ In order to run the project you will need the following dependencies installed:
 ## Kaggle Submission
 
 See the [Public Leaderboard](https://inclass.kaggle.com/c/epfml-text/leaderboard) in Kaggle.
+
 Our Team's name is **<?>**
 
 ## Demo
