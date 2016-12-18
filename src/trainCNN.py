@@ -11,8 +11,17 @@ from split_hashtag import split_hashtag_to_words
 from options import *
     
 def glove_per_word(tweets, words, opts):
-    # function that outputs a matrix by [max_num_words]x[embedding dimension]
-    # each row corresponds to the embedding of word
+    """
+    DESCRIPTION: 
+        outputs a matrix which corresponds to the embeddings of each word in each tweet
+    INPUT:
+        tweets: a Dataframe which contains a set of tweets with a keyword 'tweet', tweets['tweet']
+        words: dictionary for embeddings
+        opts: a dictionary 
+    OUTPUT:
+        embeddings: a matrix by [# of input tweets]x[max # words in a tweet]x[embedding dimension] 
+        each row of which corresponds to the embedding of a word in a tweet
+    """
     embeddings = np.zeros((tweets.shape[0], opts['max_num_words'], opts['embedding_size'], 1))
     for i, tweet in enumerate(tweets['tweet']):
         try:
@@ -51,6 +60,14 @@ def glove_per_word(tweets, words, opts):
 
 
 def batch_iter(train_indices, batch_size, shuffle=True):
+	"""
+	DESCRIPTION: 
+		batch iterator
+	INPUT:
+		train_indices: an array of numbers
+		batch_size: a constant
+		shuffle: optional flag
+	"""
 	n_ind = len(train_indices)
 	if shuffle:
 		shuffled_indices = np.random.permutation(train_indices)
@@ -64,6 +81,20 @@ def batch_iter(train_indices, batch_size, shuffle=True):
             
 
 def prepare_data(tweets, labels, cnn_params):
+    """
+    DESCRIPTION:
+        shuffles the data, choses a validation dataset and obtains the 
+        dictionary for word embeddings
+    INPUT:
+        tweets: a Dataframe which contains a set of tweets with a keyword 'tweet', tweets['tweet']
+        labels: nx2 label matrix where each row corresponds to the the label of data to the class of
+        corresponding col, n is the number of tweets 
+        cnn_params: a dictionary
+    OUTPUT:
+        train_ind: shuffled indices for training dataset
+        x_valid: an array of size [# of valid. tweets]x[max # words in a tweet]x[embedding dimension]
+        y_valid: an label array of size [# of valid. tweets]x2
+    """
     n_data = tweets['tweet'].shape[0]
     
     shuffled_indices = np.random.permutation(np.arange(n_data))
@@ -79,6 +110,17 @@ def prepare_data(tweets, labels, cnn_params):
     
 
 def trainCNN(tweets, labels, cnn_params):
+    """
+    DESCRIPTION:
+        trains a CNN, an instance of tweetCNN object, for tweet embeddings from sctratch
+    INPUT:
+        tweets: a Dataframe which contains a set of tweets with a keyword 'tweet', tweets['tweet']
+        labels:  nx2 label matrix where each row corresponds to the the label of data to the class of
+        corresponding col, n is the number of tweets 
+        cnn_params: a dictionary
+    OUTPUT: 
+        path: a file name (with path) that indicates the last saved checkpoint for tweetCNN instance        
+    """
     
     train_ind, x_valid, y_valid, words = prepare_data(tweets,  labels, cnn_params)
     
@@ -163,7 +205,18 @@ def trainCNN(tweets, labels, cnn_params):
     return path
 
 def trainCNN_fromcheckpoint(tweets, labels, cnn_params):
-    
+    """
+    DESCRIPTION:
+        continues to train a CNN, an instance of tweetCNN object, for tweet embeddings from a checkpoint,
+        i.e., restores a previous tensorflow graph and uses same parameters
+    INPUT:
+        tweets: a Dataframe which contains a set of tweets with a keyword 'tweet', tweets['tweet']
+        labels:  nx2 label matrix where each row corresponds to the the label of data to the class of
+        corresponding col, n is the number of tweets 
+        cnn_params: a dictionary
+    OUTPUT: 
+        path: a file name (with path) that indicates the last saved checkpoint for tweetCNN instance        
+    """
     train_ind, x_valid, y_valid,  words = prepare_data(tweets,  labels, cnn_params)
     
     graph = tf.Graph()
@@ -253,3 +306,4 @@ def trainCNN_fromcheckpoint(tweets, labels, cnn_params):
                         
 
     return path
+
