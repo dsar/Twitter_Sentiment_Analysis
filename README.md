@@ -49,18 +49,18 @@ In order to run the project you will need the following dependencies installed:
 * Pretrained Glove Word Embeddings
 
     Download [Glove Pretrained Word Embeddings](http://nlp.stanford.edu/data/glove.twitter.27B.zip).
-    Then, unzip the downloaded file and add the extracted files in `data/glove/` directory.
+    Then, unzip the downloaded file and move the extracted files in `data/glove/` directory.
     The default Data is the 200d.
 
 * Training Data
 
     Download the positive [Positive & Negative tweet files](https://inclass.kaggle.com/c/epfml-text/download/twitter-datasets.zip) in order to train the models
-    and add them in `data/datasets/` directory.
+    and move them in `data/datasets/` directory.
 
 * Testing Data
 
-    Download the [Testing tweets file](https://inclass.kaggle.com/c/epfml-text/download/test_data.txt) in order to test the models in kaggle
-    and add it in `data/datasets/` directory.
+    Download the [Testing tweet file](https://inclass.kaggle.com/c/epfml-text/download/test_data.txt) in order to test the models in kaggle
+    and move it in `data/datasets/` directory.
 
 
 ## Hardware Requirements
