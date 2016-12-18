@@ -7,6 +7,12 @@ In order to run the project you will need the following dependencies installed:
 ### Libraries
 
 * [Anaconda3] - Download and install Anaconda with python3
+* [Scikit-Learn] - Download scikit-learn library with conda
+
+    ```sh
+    $ conda install scikit-learn
+    ```
+
 * [Gensim] - Install Gensim library 
 
     ```sh
@@ -97,6 +103,7 @@ in `data/submissions/` directory
 
 
    [Anaconda3]: <https://www.continuum.io/downloads>
+   [Scikit-Learn]: <http://scikit-learn.org/stable/install.html>
    [Gensim]: <https://radimrehurek.com/gensim/>
    [NLTK]: <http://www.nltk.org/>
    [GloVe]: <https://github.com/maciejkula/glove-python>
