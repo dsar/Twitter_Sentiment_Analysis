@@ -79,7 +79,7 @@ In order to run the project you will need the following dependencies installed:
 
 See the [Public Leaderboard](https://inclass.kaggle.com/c/epfml-text/leaderboard) in Kaggle.
 
-Our Team's name is **\~\~\~gLove is in the Air\~\~\~**
+Our Team's name is **gLove is in the Air...**:heart:
 
 ## Demo
 
