@@ -87,6 +87,7 @@ Go to `src/ directory` and set Algorithms variable in `options.py` file.
 
 In case you want to parametrise the model's parameters, just set the corresponding
 dictionary in `options.py`
+
 *For more details, check the important parameters in each algorithm in the aforementioned file.*
 
 Then just start `main.py` file
@@ -97,6 +98,7 @@ $ python src/main.py
 
 When the program terminates, you will get all the predictions of the test file
 in `data/submissions/` directory
+
 *By enabling the `cv` option to true in the `options.py` file (in the corresponding algorithm) you can get
 a good approximation of the kaggle-score directly from Cross Validation (Caustion: it might take a while for the full datasets)*
     
