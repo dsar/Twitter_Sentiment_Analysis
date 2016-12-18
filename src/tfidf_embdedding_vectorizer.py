@@ -9,6 +9,20 @@ from split_hashtag import split_hashtag_to_words
 
 
 def tfidf_embdedding_vectorizer(tweets, test_tweets):
+    """
+    DESCRIPTION: 
+            Given the calculated word embedings (of some dimension d) of the training and test set, 
+            this function returns the tweet embeddings of the same d dimension by just averaging the
+            vectors of each word in the same tweet and multipliying the corresponding word embedding
+            with it's tfidf value.
+            This is done for tweets and test_tweets pandas Dataframes.
+    INPUT: 
+            tweets: Dataframe of a set of tweets as a python strings
+            test_tweets: Dataframe of a set of test tweets as a python strings
+    OUTPUT: 
+            we_tweets: tweet embeddings of d dimension
+            we_test_tweets: test tweet embeddings of d dimension
+    """
     words = get_embeddings_dictionary(tweets)
     print('building train tfidf')
     algorithm['options']['TFIDF']['tokenizer'] = None
@@ -22,6 +36,18 @@ def tfidf_embdedding_vectorizer(tweets, test_tweets):
     return we_tweets, we_test_tweets
     
 def average_vectors(tweets, words, tfidf, X):
+    """
+    DESCRIPTION: 
+            Given a pandas Dataframe of tweets and the trained word embedings (of some dimension d)
+            this function returns the tweet embeddings of the same d dimension by just averaging the
+            vectors of each word in the same tweet and multipliying the corresponding word embedding
+            with it's tfidf value. 
+    INPUT: 
+            tweets: Dataframe of a set of tweets as a python strings
+            words: python dictionary (word, vector of embeddings of the corresponding word)
+    OUTPUT: 
+            we_tweets: tweet embeddings of d dimension
+    """
     we_tweets = np.zeros((tweets.shape[0], len(next(iter(words.values())))))
     for i, tweet in enumerate(tweets['tweet']):
         try:

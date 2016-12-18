@@ -7,6 +7,15 @@ from options import *
 ## Functions for word embeddings
 
 def load_glove_embeddings_from_txt_file(filename):
+    """
+    DESCRIPTION: 
+            Loads a word embedding file and returns a python dictionary of the form
+            (word, [vector of embeddings]) in memory
+    INPUT: 
+            filename: name of the word embedding file to be loaded
+    OUTPUT: 
+            words: python dictionary of the form (word, [vector of embeddings])
+    """
     print('Loading', filename ,'embeddings file')
 
     if not os.path.exists(filename):
@@ -22,6 +31,27 @@ def load_glove_embeddings_from_txt_file(filename):
     return words
 
 def get_embeddings_dictionary(tweets=None):
+    """
+    DESCRIPTION: 
+            Loads a word embedding dictionary depending on the selected option in options.py file.
+            The options are the following:
+                {baseline, glove_python, pretrained, merge}
+            baseline: The baseline option builds word embeddings from the training data
+                      by the given code on the project's description. This implementation is
+                      poor and slow and cannot give us very good results.
+            glove_python: This method applies the SGD glove algorithm (proposed by Stanford)
+                          and performs really fast and returns a very strong word embedding matrix
+                          that is capable of giving us very high accurancy
+            pretrained: This method just loads the pretrained embeddings from Stanford
+            merge: The last method loads the pretrained word embeddings from Stanford and builds
+                    also the word embeddings matrix based on our training dataset by using the 
+                    glove_python method. Then all the missing words from the pretrained word
+                    embeddings are filled by the glove_python word embeddings.
+    INPUT: 
+            tweets: tweets Dataframe that contains the tweets from the training dataset
+    OUTPUT: 
+            words: python dictionary of the form (word, [vector of embeddings])
+    """
     if algorithm['options']['ml_algorithm'] == 'CNN':
         return load_glove_embeddings_from_txt_file(PRETRAINED_EMBEDDINGS_FILE)
     if tweets is None:
@@ -53,12 +83,29 @@ def get_embeddings_dictionary(tweets=None):
     return words
 
 def build_merge_embeddings():
+    """
+    DESCRIPTION: 
+            Loads the pretrained word embeddings from Stanford and builds
+            also the word embeddings matrix based on our training dataset by using the 
+            glove_python method. Then all the missing words from the pretrained word
+            embeddings are filled by the glove_python word embeddings.
+    OUTPUT: 
+            glove_words: merged python dictionary of the form (word, [vector of embeddings])
+    """
 	print('Build merged Embeddings')	
 	os.system('join -i -a1 -a2 ' +PRETRAINED_EMBEDDINGS_FILE + ' ' + MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE +' 2>/dev/null | cut -d \' \' -f1-'+str(algorithm['options']['WE']['we_features'])+" > "+ MERGED_EMBEDDINGS_FILE)
 	glove_words = load_glove_embeddings_from_txt_file(MERGED_EMBEDDINGS_FILE)
 	return glove_words
 
 def call_init():
+    """
+    DESCRIPTION: 
+            Builds the baseline word embeddings.
+            Calls all the required files given in the project's description
+            in order to build the baseline word embeddings.
+    OUTPUT: 
+            words: python dictionary of the form (word, [vector of embeddings])
+    """
 	words = load_glove_embeddings_from_txt_file(MY_EMBEDDINGS_TXT_FILE)
 	if words != None:
 		return words
@@ -69,11 +116,25 @@ def call_init():
 
 def build_python_glove_representation(tweets):
     """
-    tweets Series (column)
+    DESCRIPTION: 
+            Converts initial tweet representation (pandas Dataframe) 
+            on the required representation for glove_python algorithm. 
+    OUTPUT: 
+            A list of lists that contains all the training tweets
     """
     return tweets.apply(lambda tweet: tweet.split()).tolist()
 
 def build_glove_embeddings(corpus):
+    """
+    DESCRIPTION: 
+             Applies the Glove python SGD algorithm given by glove_python library and build the
+             word embeddings from our training set.
+    INPUT:
+            corpus: a list of lists where each sub-list represent a tweet. The outer list represents
+                    the whole training dataset.
+    OUTPUT: 
+            words: python dictionary of the form (word, [vector of embeddings])
+    """
     words = load_glove_embeddings_from_txt_file(MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE)
     if words != None:
         return words
@@ -93,6 +154,14 @@ def build_glove_embeddings(corpus):
     return words
 
 def store_embeddings_to_txt_file(dict, filename):
+    """
+    DESCRIPTION: 
+             Stores a python dictionary of the form (word, [vector of embeddings]) (which represents
+             the word embeddings matrix of our model) to a txt file. 
+    INPUT:
+            dict: python dictionary of the form (word, [vector of embeddings])
+            filename: name of the file to write the word embeddings dictionary
+    """
 	with open(filename, "w") as f:
 		for k, v in dict.items():
 			line = k + str(v) + '\n'

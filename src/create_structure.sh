@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+# This file creates the initial structure
+# of our project
 mkdir ../data/preproc 2> /dev/null
 mkdir ../data/word2vec 2> /dev/null
 mkdir ../data/doc2vec 2> /dev/null

@@ -31,7 +31,7 @@ os.system('./create_structure.sh')
 
 # Clear cache
 if algorithm['options']['clear']:
-	clear_cache(algorithm['options']['clear_params'])
+	clear_cache()
 
 # Load Data
 print('Loading data')

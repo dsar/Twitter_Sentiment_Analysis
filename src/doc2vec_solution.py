@@ -28,6 +28,11 @@ logging.root.setLevel(level=logging.INFO)
 logger.info("running %s" % ' '.join(sys.argv))
 
 class LabeledLineSentence(object):
+    """
+    DESCRIPTION: 
+            Class which represents a sentence (Tweet) as (text,sentiment)
+            in order to be used as a representation in Doc2Vec Model.
+    """
 
     def __init__(self, sources):
         self.sources = sources
@@ -61,6 +66,18 @@ class LabeledLineSentence(object):
         return self.sentences
 
 def doc2vec(tweets, test_tweets):
+    """
+    DESCRIPTION: 
+            Given as an input our train and test datasets, this function builds
+            Document to Vector (DOC2VEC) representation by using the Doc2Vec Gensim
+            library. 
+    INPUT: 
+            tweets: Dataframe of training tweets
+            test_tweets: Dataframe of testing tweets
+    OUTPUT: 
+            train_arrays: final train document embeddings representation
+            test_arrays: final test document embeddings representation
+    """
 
     pos = tweets[tweets['sentiment'] == 1]['tweet']
     pos.to_csv(PREPROC_DATA_PATH+'train_pos.d2v', header=False, index=False, encoding='utf-8')

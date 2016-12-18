@@ -5,6 +5,12 @@ import os
 from options import *
 
 def create_csv_submission(y_pred):
+    """
+    DESCRIPTION: 
+            Creates the final submission file to be uploaded on Kaggle platform
+    INPUT: 
+            y_pred: List of sentiment predictions. Contains 1 and -1 values
+    """
     with open(PRED_SUBMISSION_FILE, 'w') as csvfile:
         fieldnames = ['Id', 'Prediction']
         writer = csv.DictWriter(csvfile, delimiter=",", fieldnames=fieldnames)
@@ -14,7 +20,11 @@ def create_csv_submission(y_pred):
             writer.writerow({'Id':int(r1),'Prediction':r2})
             r1 += 1
 
-def clear_cache(clear):
+def clear_cache():
+    """
+    DESCRIPTION: 
+            Clears the selected cached files from options.py file
+    """
 	print('clearing cache files')
 	if algorithm['options']['clear_params']['preproc']:
 		if os.system('rm '+ PREPROC_DATA_PATH+'*') == 0:
@@ -43,6 +53,12 @@ def clear_cache(clear):
 	print('clear cache operation... DONE\n')
 
 def read_file(filename):
+    """
+    DESCRIPTION: 
+            Reads a file and returns it as a list
+    INPUT: 
+            filename: Name of the file to be read
+    """
     data = []
     with open(filename, "r") as ins:
         for line in ins:

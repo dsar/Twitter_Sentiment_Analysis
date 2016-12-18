@@ -1,4 +1,4 @@
-#Paths
+# Paths
 DATA_PATH = '../data/'
 DATASETS_PATH = DATA_PATH + 'datasets/'
 SUBMISSIONS_PATH = DATA_PATH + 'submissions/'
@@ -9,27 +9,30 @@ DOC2VEC_PATH = DATA_PATH + 'doc2vec/'
 W2V_DATA_PATH = DATA_PATH + 'word2vec/'
 FASTTEXT_DATA_PATH = DATA_PATH + 'fasttext/'
 TFIDF_DATA_PATH = DATA_PATH + 'tfidf/'
+TF_SAVE_PATH = DATA_PATH + 'models/'
 
+# Train - Test Files
 POS_TWEETS_FILE = DATASETS_PATH + 'train_pos_full.txt'
 NEG_TWEETS_FILE = DATASETS_PATH + 'train_neg_full.txt'
 TEST_TWEETS_FILE = DATASETS_PATH + 'test_data.txt'
+
+# Embeddings Files
 PRED_SUBMISSION_FILE = SUBMISSIONS_PATH + 'pred_submission.csv'
-#remove TRAIN_PREPROC_CACHING_PATH before starting with a new dataset
-TRAIN_PREPROC_CACHING_PATH = PREPROC_DATA_PATH + 'preproc_train.csv'
-TEST_PREPROC_CACHING_PATH = PREPROC_DATA_PATH + 'preproc_test.csv'
 PRETRAINED_EMBEDDINGS_FILE = GLOVE_DATA_PATH + 'glove.twitter.27B.200d.txt'
 MY_EMBEDDINGS_TXT_FILE = GLOVE_DATA_PATH + 'baseline_embeddings.txt'
 MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE = GLOVE_DATA_PATH + 'glove_python_embeddings.txt'
 MERGED_EMBEDDINGS_FILE = GLOVE_DATA_PATH + 'merged_embeddings.txt'
 FASTTEXT_TRAIN_FILE = FASTTEXT_DATA_PATH + 'fasttext_train.txt'
+
+# Caching paths
+##remove TRAIN_PREPROC_CACHING_PATH before starting with a new dataset
+TRAIN_PREPROC_CACHING_PATH = PREPROC_DATA_PATH + 'preproc_train.csv'
+TEST_PREPROC_CACHING_PATH = PREPROC_DATA_PATH + 'preproc_test.csv'
 FASTTEXT_MODEL = FASTTEXT_DATA_PATH + 'fasttext_model'
-TF_SAVE_PATH = DATA_PATH + 'models/'
 TFIDF_TRAIN_FILE = TFIDF_DATA_PATH + 'train_reptweets.pkl'
 VOCAB_CUT_FILE = GLOVE_DATA_PATH + 'vocab_cut.txt'
 VOCAB_FILE = GLOVE_DATA_PATH + 'vocab.pkl'
 COOC_FILE = GLOVE_DATA_PATH + 'cooc.pkl'
-
-
 DOC2VEC_MODEL_PATH = DOC2VEC_PATH+'paragraph_vector.d2v'
 
 #Sentiment Lexicon
@@ -41,11 +44,51 @@ WORD_FREQUENCIES = METADATA_PATH + 'words-by-frequency.txt'
 
 # After performing Model Selection we have found the optimal parameters that
 # give us the reported scores. The only option that need to be set is the algorithm.
-# However, if you want to play with the parameters, go to the corresponding dictionary
-# of each algorithm and set it.
+# However, if you want to play more with the parameters, go to the corresponding dictionary
+# of each algorithm and set it the way you want before running.
 
+# Important Parameters
+# =====================
+# cv: 
+#     Set cv (True/False,k) where the first boolean value is used to enable/disable the cross-validation
+#     and the second integer parameter is used to specify the k-fold parameter (default is 5).      
+# model_selection:
+#     Set model_selection parameter in each algorithm to specify whether you want to perform
+#     model selection on an algorithm or not. In case you set this parameter to True, you get the best
+#     set the parameters after pefrorming the model selection and the program terminates. Then you need
+#     change this parameter to False, set the corresponding dictionary with the best parameters
+#     and finaly run the program again in order train your model with the best parameters.  
+# clear:
+#     Every time that you want change something on the tweet preprocessing phase or on the word embeddings     
+#     construction, you should enable this parameter in order to remove the cached files, construct and load the
+#     new ones.
+# feature_extraction:
+#     By this parameter, you specify whether you want to apply a WE, DOC2VEC or TFIDF method. After setting,
+#     the aforementioned parameter, you should also go to the corresponding sub-dictionary and set the
+#     corresponding parameters there.
+# preprocess:
+#     This boolean parameter, specifies whether you want to preprocess tweets or not.
+
+# Important Parameters for CNN
+# ============================
+# CNN works slightly different from the other algorithms so below the most important parameters
+# are explained in order to use this algorithm.
+# train:
+#     Boolean variable to decide whether you want to train or evaluate you algorithm. First set it to True and train
+#     your model and then set it to False and evaluate it by creating a predictions file.
+# train_from:
+#     The possible options of this variable are {from_checkpoint, from_scratch}. CNNs take too long to be train,
+#     and as a result you can continue training your model from a saved checkpoint. from_scratch option, simply
+#     starts from scratch.
+# checkpoint_dir:
+#     This variable contains the checkpoint's directory that we are interested in. Every time that a new model is
+#     trained, a new path is created and has to be set in this variable.
+
+# Select the algorithm to be executed and then go below and chane the parameters
+# of the corresponding dictionary
 algorithm = 'FT' #{SVM, LR, NN, CNN, RF, FT}
 
+# Options for the SVM algorithm
 SVM = {
     'params' : {
                 'loss' : 'squared_hinge',
@@ -279,6 +322,9 @@ NN = {
 
 CNN = {
        'params' : {
+                    'train':True,
+                    'checkpoint_dir': TF_SAVE_PATH + '/1481913588/checkpoints',
+                    'train_from':'from_scratch', #{from_checkpoint, from_scratch}
                     'embedding_size':200,
                     'n_filters':128,
                     'filter_sizes':[2, 3, 4, 5, 6],
@@ -298,10 +344,7 @@ CNN = {
                     'batch_size':1024,
                     'n_epochs':10,
                     'shuffle_every_epoch':True,
-                    'train':True,
-                    'train_from':'from_scratch', #{from_checkpoint, from_scratch}
                     'save_from_file':False,
-                    'checkpoint_dir': TF_SAVE_PATH + '/1481913588/checkpoints',
                     'n_valid':1000
                   },
         'options' : {
@@ -462,6 +505,7 @@ FT = {
                   }
 }
 
+# Final Initialization of the algorithm
 if algorithm == 'SVM':
   algorithm = SVM
 elif algorithm == 'LR':
@@ -474,6 +518,14 @@ elif algorithm == 'FT':
   algorithm = FT
 
 def print_dict_settings(dict_, msg='settings\n'):
+    """
+    DESCRIPTION: 
+            Prints a dictionary (which probably contains settings & options) in to a
+            user friendly format.
+    INPUT: 
+            dict_: the dictionary that contains the parameters
+            msg: a user friendly message
+    """
     print(msg)
     for key, value in dict_.items():
         print('\t',key,':\t',value)

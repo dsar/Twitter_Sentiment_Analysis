@@ -6,6 +6,10 @@ from sklearn.metrics import accuracy_score
 from preprocessing import *
 
 def init_tfidf_vectorizer():
+  """
+  DESCRIPTION: 
+          Initializes the tfidf vectorizer by taking the parameters from options.py
+  """
   print_dict_settings(algorithm['options']['TFIDF'], msg='tf-idf Vectorizer settings\n')
   
   if algorithm['options']['TFIDF']['number_of_stopwords'] != None:
@@ -25,6 +29,17 @@ def init_tfidf_vectorizer():
   )
 
 def load_vectorizer(tweets, test_tweets):
+  """
+  DESCRIPTION: 
+        If there exists a cached tfidf file then it is loaded and returned. Otherwisem a new vectorizer is fittied
+        by the gived data.
+  INPUT: 
+        tweets: Dataframe of a set of tweets
+        test_tweets: Dataframe of a set of test_tweets
+  OUTPUT: 
+        train_reptweets: TFIDF representation of train tweets (dimensions: |train tweets| x |vocabulary|)  
+        test_reptweets: TFIDF representation of test tweets (dimensions: |train tweets| x |vocabulary|)
+  """
   import os.path
   if(os.path.exists('../data/train_reptweets.pkl') and os.path.exists('../data/test_reptweets.pkl')):
     f = open(TFIDF_TRAIN_FILE,'rb')
