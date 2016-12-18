@@ -23,7 +23,7 @@ In order to run the project you will need the following dependencies installed:
 
     and then download all the corpora from the GUI
 
-* [glove_python] - Install Glove python implementation
+* [GloVe] - Install Glove python implementation
 
     ```sh
     $ pip install glove_python
@@ -39,7 +39,7 @@ In order to run the project you will need the following dependencies installed:
     ```sh
     $ pip install fasttext
     ```
-* [tensorflow] - Install tensorflow library
+* [Tensorflow] - Install tensorflow library
 
     ```sh
     $ pip install tensorflow
@@ -99,7 +99,7 @@ in `data/submissions/` directory
    [Anaconda3]: <https://www.continuum.io/downloads>
    [Gensim]: <https://radimrehurek.com/gensim/>
    [NLTK]: <http://www.nltk.org/>
-   [glove_python]: <https://github.com/maciejkula/glove-python>
+   [GloVe]: <https://github.com/maciejkula/glove-python>
    [FastText]: <https://pypi.python.org/pypi/fasttext>
-   [tensorflow]: <https://www.tensorflow.org/get_started/os_setup>
+   [Tensorflow]: <https://www.tensorflow.org/get_started/os_setup>
    
