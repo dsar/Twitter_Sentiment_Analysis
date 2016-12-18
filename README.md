@@ -74,6 +74,7 @@ In order to run the project you will need the following dependencies installed:
 - A Computer with:
     - at least **16** GB of RAM
     - a **Graphics Card** (optional - needed for faster training in CNN solution)
+    - a **Unix-based** Operating System (e.g Linux, OSX). Tested & Developed on Ubuntu
 
 ## Kaggle Submission
 
