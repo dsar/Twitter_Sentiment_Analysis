@@ -5,7 +5,17 @@ from build_embeddings import get_embeddings_dictionary
 from options import *
 from split_hashtag import split_hashtag_to_words
 
-def baseline(tweets, test_tweets):
+def we_mean(tweets, test_tweets):
+    """
+    DESCRIPTION: 
+            
+    INPUT: 
+            tweets: Dataframe of a set of tweets as a python strings
+            test_tweets: Dataframe of a set of test tweets as a python strings
+    OUTPUT: 
+            we_tweets: 
+            we_test_tweets:
+    """
     words = get_embeddings_dictionary(tweets)
     print('\nBuilding tweets Embeddings')
     we_tweets = average_vectors(tweets, words)
