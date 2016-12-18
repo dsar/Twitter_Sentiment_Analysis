@@ -6,6 +6,16 @@ from trainCNN import glove_per_word
 from build_embeddings import get_embeddings_dictionary
 
 def evalCNN(test_tweets, path, cnn_params):
+    """
+    DESCRIPTION:
+        generates the predictions of a test datatset using a trained CNN
+    INPUT:
+        test_tweets: a Dataframe which contains a set of tweets with a keyword 'tweet', tweets['tweet']
+        path: a file name (with path) that indicates the last saved checkpoint for tweetCNN instance 
+        cnn_params: a dictionary
+    OUTPUT: 
+        an array of size [# of tweets in test dataset]x1, where the values {-1,1} indicates the classes      
+    """    
     
     print('getting dictionary for embeddings...')
     words = get_embeddings_dictionary()        
@@ -33,3 +43,4 @@ def evalCNN(test_tweets, path, cnn_params):
             test_predictions[test_predictions==0] = -1
             
     return test_predictions
+

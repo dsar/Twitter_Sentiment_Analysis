@@ -1,6 +1,12 @@
 import tensorflow as tf
 
 class tweetCNN(object):
+    """
+    DESCRIPTION: 
+        creates a class which generates a tensorflow graph for classification of text data with 
+        convolutional neural networks
+        Initialization is achieved via a dictionary (opts)
+    """
     def __init__(self, opts):
                             
         self.embedding_size = opts['embedding_size']
@@ -71,3 +77,4 @@ class tweetCNN(object):
         with tf.name_scope('accuracy'):
             correct_prediction = tf.equal(self.y_pred, tf.argmax(self.y, 1))
             self.accuracy = tf.reduce_mean(tf.cast(correct_prediction, 'float'), name='accuracy')
+
