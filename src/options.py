@@ -10,8 +10,8 @@ W2V_DATA_PATH = DATA_PATH + 'word2vec/'
 FASTTEXT_DATA_PATH = DATA_PATH + 'fasttext/'
 TFIDF_DATA_PATH = DATA_PATH + 'tfidf/'
 
-POS_TWEETS_FILE = DATASETS_PATH + 'train_pos.txt'
-NEG_TWEETS_FILE = DATASETS_PATH + 'train_neg.txt'
+POS_TWEETS_FILE = DATASETS_PATH + 'train_pos_full.txt'
+NEG_TWEETS_FILE = DATASETS_PATH + 'train_neg_full.txt'
 TEST_TWEETS_FILE = DATASETS_PATH + 'test_data.txt'
 PRED_SUBMISSION_FILE = SUBMISSIONS_PATH + 'pred_submission.csv'
 #remove TRAIN_PREPROC_CACHING_PATH before starting with a new dataset
@@ -44,7 +44,7 @@ WORD_FREQUENCIES = METADATA_PATH + 'words-by-frequency.txt'
 # However, if you want to play with the parameters, go to the corresponding dictionary
 # of each algorithm and set it.
 
-algorithm = 'CNN' #{SVM, LR, NN, CNN, RF, FT}
+algorithm = 'FT' #{SVM, LR, NN, CNN, RF, FT}
 
 SVM = {
     'params' : {
@@ -420,7 +420,7 @@ RF = {
 FT = {
     'params' : {
                 'we_features' : 200,
-                'epochs':10, 
+                'epochs':50, 
                 'learning_rate' : 0.05,
                 'window_size' : 5
               },
