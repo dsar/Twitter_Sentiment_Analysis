@@ -1,0 +1,126 @@
+\documentclass{sig-alternate}
+
+\usepackage{silence}
+\WarningFilter{caption}{Unsupported document class}
+\setlength{\paperheight}{11in}
+\setlength{\paperwidth}{8.5in}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}     
+\usepackage{subfig}
+\usepackage{url}
+\usepackage[hidelinks, pdfpagelabels=false]{hyperref}
+\usepackage{balance}
+
+\interfootnotelinepenalty=10000
+
+
+
+\begin{document}
+	
+	% Copyright
+	\setcopyright{acmcopyright}
+	%\setcopyright{acmlicensed}
+	%\setcopyright{rightsretained}
+	%\setcopyright{usgov}
+	%\setcopyright{usgovmixed}
+	%\setcopyright{cagov}
+	%\setcopyright{cagovmixed}
+	
+	
+	% DOI
+	\doi{}
+	
+	% ISBN
+	\isbn{}
+	
+	%Conference
+	\conferenceinfo{WWW '17.}{3-7 April, 2017. Perth, WA, Australia.}
+	
+	\acmPrice{}
+	
+	%
+	% --- Author Metadata here ---
+	\CopyrightYear{2017} % Allows default copyright year (20XX) to be over-ridden - IF NEED BE.
+	%\crdata{0-12345-67-8/90/01}  % Allows default copyright data (0-89791-88-6/97/05) to be over-ridden - IF NEED BE.
+	% --- End of Author Metadata ---
+
+\title{deepschema.org: an Ontology for Typing Entities in the Web of Data}
+
+\numberofauthors{3}
+\author{
+	% 1st. author
+	\alignauthor
+	Panayiotis Smeros\\
+	\affaddr{EPFL, Switzerland}\\
+	\email{Panayiotis.Smeros@epfl.ch}
+	% 2nd. author
+	\alignauthor
+	Amit Gupta\\
+	\affaddr{EPFL, Switzerland}\\
+	\email{Amit.Gupta@epfl.ch}
+	% 3rd. author
+	\alignauthor 
+	Michele Catasta\\
+	\affaddr{EPFL, Switzerland}\\
+	\email{Michele.Catasta@epfl.ch}
+}
+
+\maketitle
+
+\sloppy
+
+\input{abstract}
+
+\begin{CCSXML}
+	<ccs2012>
+	<concept>
+	<concept_id>10002951.10002952.10003219</concept_id>
+	<concept_desc>Information systems~Information integration</concept_desc>
+	<concept_significance>300</concept_significance>
+	</concept>
+	<concept>
+	<concept_id>10002951.10003260.10003277.10003279</concept_id>
+	<concept_desc>Information systems~Data extraction and integration</concept_desc>
+	<concept_significance>300</concept_significance>
+	</concept>
+	<concept>
+	<concept_id>10002951.10003260.10003261</concept_id>
+	<concept_desc>Information systems~Web searching and information discovery</concept_desc>
+	<concept_significance>100</concept_significance>
+	</concept>
+	</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[300]{Information systems~Information integration}
+\ccsdesc[300]{Information systems~Data extraction and integration}
+\ccsdesc[100]{Information systems~Web searching and information discovery}	
+\printccsdesc
+	
+
+\keywords{Ontology, Wikidata, schema.org, Data Integration, Entity Typing}
+
+
+\input{introduction}
+
+\input{relatedWork}
+
+\input{wikidata}
+
+\input{integration}
+
+\input{implementation}
+
+\input{evaluation}
+
+\input{conclusions}
+
+% bibliography
+%\clearpage
+%\balance
+\bibliographystyle{abbrv}
+\bibliography{references}
+
+
+% That's all folks!
+\end{document}
