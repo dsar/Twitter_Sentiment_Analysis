@@ -52,7 +52,7 @@ In order to run the project you will need the following dependencies installed:
     ```
 
 ### Files
-* Pretrained Glove Word Embeddings
+* Stanford Pretrained Glove Word Embeddings
 
     Download [Glove Pretrained Word Embeddings](http://nlp.stanford.edu/data/glove.twitter.27B.zip).
     Then, unzip the downloaded file and move the extracted files in `data/glove/` directory.
