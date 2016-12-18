@@ -11,7 +11,7 @@ if algorithm['options']['warnings'] == False:
 	pd.options.mode.chained_assignment = None
 from utils import *
 from preprocessing import tweets_preprocessing, remove_tweet_id
-from baseline import baseline
+from we_mean import we_mean
 from cross_validation import cross_validation
 from vectorizer import load_vectorizer
 from tfidf_embdedding_vectorizer import tfidf_embdedding_vectorizer
@@ -29,7 +29,7 @@ from trainCNN import trainCNN, trainCNN_fromcheckpoint
 # Project Stucture initialization
 os.system('./create_structure.sh')
 
-#clear cache
+# Clear cache
 if algorithm['options']['clear']:
 	clear_cache(algorithm['options']['clear_params'])
 
@@ -45,13 +45,13 @@ tweets = pd.concat([pos_tweets, neg_tweets], axis=0)
 test_tweets = pd.DataFrame(read_file(TEST_TWEETS_FILE), columns=['tweet'])
 test_tweets['tweet'] = test_tweets.apply(lambda tweet: remove_tweet_id(tweet['tweet']), axis=1)
 
-#Data Shape
+# Data Shape
 print('\tpositive tweets shape: ',pos_tweets.shape)
 print('\tnegative tweets shape: ',neg_tweets.shape)
 print('\tfinal tweets shape: ',tweets.shape)
 print('\ttest data shape:', test_tweets.shape)
 
-#Tweets Preprocessing
+# Tweets Preprocessing
 if algorithm['options']['preprocess'][0]:
 	tweets = tweets_preprocessing(tweets,train=True, params=algorithm['options']['preprocessing_params'])
 	test_tweets = tweets_preprocessing(test_tweets,train=False, params=algorithm['options']['preprocessing_params'])
@@ -64,7 +64,7 @@ if 'feature_extraction' in algorithm['options'] and 'WE' in algorithm['options']
 
 		if algorithm['options']['WE']['tweet2vec_method'] == 'we_mean':
 			print('\tUsing WE mean')
-			train_reptweets, test_reptweets = baseline(tweets, test_tweets)
+			train_reptweets, test_reptweets = we_mean(tweets, test_tweets)
 		elif algorithm['options']['WE']['tweet2vec_method'] == 'we_tfidf':
 			print('\tUsing WE tfidf')
 			train_reptweets, test_reptweets = tfidf_embdedding_vectorizer(tweets, test_tweets)
@@ -104,7 +104,7 @@ if 'feature_extraction' in algorithm['options'] and 'WE' in algorithm['options']
 
 if 'model_selection' in algorithm['options']:
 	if algorithm['options']['model_selection']:
-		# param init
+		# Parameters Initialization
 		if algorithm['options']['ml_algorithm'] == 'SVM':
 			print('SVM params init')
 			listOLists = [['hinge','squared_hinge'],[0.1,0.5,0.8,1,2]]
@@ -126,7 +126,7 @@ if 'model_selection' in algorithm['options']:
 		max_avg_score = 0
 		for tuple_ in c:
 			print('tuple: ',tuple_)
-			# Apply ML algorithm
+			# Apply Machine Learning Algorithm with cross validation to perform model selection
 			if algorithm['options']['ml_algorithm'] == 'SVM':
 				print('Initializing SVM')
 				clf = svm.LinearSVC(max_iter=10000,intercept_scaling=tuple_[1],loss=tuple_[0])
@@ -156,13 +156,15 @@ if 'model_selection' in algorithm['options']:
 				max_tuple = tuple_
 				max_avg_score = avg_test_accuracy
 
+		# best score of selected machine learning algorithm
 		print('max_avg_score', max_avg_score)
+		# best parameters for selected machine learning algorithm
 		print('max_tuple', max_tuple)
 
 
-	## best parameters hardcoded
+	## best parameters (hardcoded)
 	else:
-		# Apply ML algorithm
+		# Initialize parameters of selected Machine Learning Algorithm
 		if algorithm['options']['ml_algorithm'] == 'RF':
 			print('\nInitializing Random Forest')
 			clf = RandomForestClassifier(n_estimators=algorithm['options']['params']['n_estimators'],\
@@ -202,8 +204,8 @@ if algorithm['options']['ml_algorithm'] == 'FT':
 	pred = fast_text(tweets, test_tweets)
 	pred = np.array(pred)
 
+	# In case cv is enabled, Cross Validation is performed
 	if 'cv' in algorithm['options']:
-		# Cross Validation
 		if algorithm['options']['cv'][0]:
 			print('Cross Validation...')
 			avg_test_accuracy, cv = cross_validation(clf, 
@@ -213,8 +215,8 @@ if algorithm['options']['ml_algorithm'] == 'FT':
 													n_folds=algorithm['options']['cv'][1])
 			print('Avg CV score: ',avg_test_accuracy)
 
+# Train selected model
 if algorithm['options']['ml_algorithm'] not in ['FT','CNN']:
-	# Train model
 	print('Training model')
 	clf.fit(train_reptweets, tweets['sentiment'])
 	print('Predicting')
