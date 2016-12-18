@@ -13,7 +13,7 @@ In order to run the project you will need the following dependencies installed:
     $ conda install gensim
     ```
     
-* [NLTK] - Download all the corpora of NLTK
+* [NLTK] - Download all packages of NLTK
 
     ```sh
     $ python
@@ -21,7 +21,7 @@ In order to run the project you will need the following dependencies installed:
     $ >>> nltk.download()
     ```
 
-    and then download all the corpora from the GUI
+    and then download all packages from the GUI
 
 * [GloVe] - Install Glove python implementation
 
