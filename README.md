@@ -1,5 +1,13 @@
 # Twitter Sentiment Analysis
 
+Sentiment analysis (also known as opinion mining) refers to the use of natural language processing, text analysis and computational linguistics to identify and extract subjective information in source materials. Sentiment analysis is widely applied to reviews and social media for a variety of applications, ranging from marketing to customer service.
+
+In our case, our task is to predict if a tweet message used to contain a positive :) or negative :( smiley, by considering only the remaining text.
+
+## Project Specification
+
+See [Project Specification](https://github.com/epfml/ML_course/tree/master/projects/project2/project_text_classification) at EPFL [/epfml/ML_course](https://github.com/epfml/ML_course) github page.
+
 ## Dependencies
 
 In order to run the project you will need the following dependencies installed:
@@ -119,3 +127,5 @@ a good approximation of the kaggle-score directly from Cross Validation (Caustio
    [FastText]: <https://pypi.python.org/pypi/fasttext>
    [Tensorflow]: <https://www.tensorflow.org/get_started/os_setup>
    
+
+License: [MIT](https://opensource.org/licenses/MIT)
