@@ -84,7 +84,7 @@ WORD_FREQUENCIES = METADATA_PATH + 'words-by-frequency.txt'
 #     This variable contains the checkpoint's directory that we are interested in. Every time that a new model is
 #     trained, a new path is created and has to be set in this variable.
 
-# Select the algorithm to be executed and then go below and chane the parameters
+# Select the algorithm to be executed and then go below and change the parameters
 # of the corresponding dictionary
 algorithm = 'FT' #{SVM, LR, NN, CNN, RF, FT}
 
