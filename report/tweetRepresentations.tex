@@ -1,2 +1,58 @@
 \section{Representations of Tweets}
 \label{sec:tweetRepresentations}
+
+In this section we present all the numerical representations that we chose for our input tweets.
+These representations try to capture the semantic meaning of the tweets 
+while having a constant size, which is independent of the words used in each tweet.
+Thus, letting $N$ be the number of input tweets, we create an $N \times D$ matrix
+with each line representing a different tweet with $D$ features.
+
+Below we present the most usable word and text representations that we introduced
+and used in our classification problem.
+
+ 
+ 
+ 
+ \subsection{Bag of Words Representation}
+ Bag of Words \cite{harris1954distributional} is a very natural numerical representation of a text.
+ Given that we have a vocabulary $V$ with finite size, we create
+ an array of size $|V|$ with $1s$ in the position of the words belonging in this text and $0s$ everywhere else.
+ Thus, in our case, we would have an $N \times |V|$ matrix representing our input tweets.
+ 
+ The problem with this representations is that $|V|$ can be arbitrary big especially if we do not handle appropriately
+ slang and words with spelling mistakes.
+ One way to solve it, is using the preprocessing methods that we proposed in Section~\ref{sec:preprocessing}. 
+ Another problem of this representation is that it does not comprise any semantic information about the significance of each word in a tweet. 
+ 
+  \subsection{TF-IDF Representation}
+  
+ The significance of the words in tweets is captured by the more sophisticated representation which uses the Term Frequency - Inverse Document Frequency (TF-IDF).
+ TF-IDF \cite{sparck1972statistical} works by determining the relative frequency of a word in a specific document compared to the inverse proportion of that word over the entire document corpus.
+ Words that are common in a single or a small group of documents tend to have higher TF-IDF numbers than common words such as articles and prepositions. 
+ 
+ This metric can be used as a weight to the respective Bag of Words representation that we have discussed above.
+ Thus, we have again an $N \times |V|$ matrix representing our input tweets,
+ that contains $0s$ and $TF-IDFs$ instead of $0s$ and $1s$.
+ 
+ 
+   \subsection{N-grams Extension}
+ 
+ In both of the above representations the $N \times |V|$ matrix
+ can become even bigger if we add sequences of contiguous words in our vocabulary.
+ These sequences are called \textit{n-grams} with $n$ being the maximum number of words in a sequence.  
+ For example, for bigrams, in the worst case the size of the vocabulary becomes $|V| + {|V| \choose 2}$.
+ As we will see in the experimental evaluation we tested representations with up to 8-grams. 
+ 
+ 
+ 
+\subsection{Word Embeddings Representation}
+
+\subsubsection{Baseline Build Method}
+
+\subsubsection{Glove Python Method}
+
+\subsubsection{Pretrained Embeddings}
+
+\subsubsection{Hybrid Method}
+
+\subsection{From Word Embeddings to Tweet Embeddings}
