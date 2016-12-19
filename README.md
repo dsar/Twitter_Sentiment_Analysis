@@ -88,11 +88,11 @@ In order to run the project you will need the following dependencies installed:
 
 See the [Public Leaderboard](https://inclass.kaggle.com/c/epfml-text/leaderboard) in Kaggle.
 
-Our Team's name is **gLove is in the air...**:heart:
+Our Team's name is **gLove is in the air...**♩ ♪ ♫ ♬:heart:
 
 ## Demo
 
-Go to `src/` directory and set **Algorithms** variable in `options.py` file.
+Go to `src/` directory and set `algorithms` variable in `options.py` file.
 
 In case you want to parametrise the model's parameters, just set the corresponding
 dictionary in `options.py`
