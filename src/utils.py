@@ -21,10 +21,10 @@ def create_csv_submission(y_pred):
             r1 += 1
 
 def clear_cache():
-    """
-    DESCRIPTION: 
-            Clears the selected cached files from options.py file
-    """
+	"""
+	DESCRIPTION: 
+	    Clears the selected cached files from options.py file
+	"""
 	print('clearing cache files')
 	if algorithm['options']['clear_params']['preproc']:
 		if os.system('rm '+ PREPROC_DATA_PATH+'*') == 0:

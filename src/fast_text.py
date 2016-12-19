@@ -6,7 +6,7 @@ from options import *
 import fasttext
 
 def fast_text(tweets, test_tweets):
-        """
+    """
     DESCRIPTION: 
             Applies FastText Algorithm
     INPUT: 

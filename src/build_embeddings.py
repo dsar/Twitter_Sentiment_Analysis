@@ -83,29 +83,29 @@ def get_embeddings_dictionary(tweets=None):
     return words
 
 def build_merge_embeddings():
-    """
-    DESCRIPTION: 
-            Loads the pretrained word embeddings from Stanford and builds
-            also the word embeddings matrix based on our training dataset by using the 
-            glove_python method. Then all the missing words from the pretrained word
-            embeddings are filled by the glove_python word embeddings.
-    OUTPUT: 
-            glove_words: merged python dictionary of the form (word, [vector of embeddings])
-    """
+	"""
+	DESCRIPTION: 
+	    Loads the pretrained word embeddings from Stanford and builds
+	    also the word embeddings matrix based on our training dataset by using the 
+	    glove_python method. Then all the missing words from the pretrained word
+	    embeddings are filled by the glove_python word embeddings.
+	OUTPUT: 
+	    glove_words: merged python dictionary of the form (word, [vector of embeddings])
+	"""
 	print('Build merged Embeddings')	
 	os.system('join -i -a1 -a2 ' +PRETRAINED_EMBEDDINGS_FILE + ' ' + MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE +' 2>/dev/null | cut -d \' \' -f1-'+str(algorithm['options']['WE']['we_features'])+" > "+ MERGED_EMBEDDINGS_FILE)
 	glove_words = load_glove_embeddings_from_txt_file(MERGED_EMBEDDINGS_FILE)
 	return glove_words
 
 def call_init():
-    """
-    DESCRIPTION: 
-            Builds the baseline word embeddings.
-            Calls all the required files given in the project's description
-            in order to build the baseline word embeddings.
-    OUTPUT: 
-            words: python dictionary of the form (word, [vector of embeddings])
-    """
+	"""
+	DESCRIPTION: 
+	    Builds the baseline word embeddings.
+	    Calls all the required files given in the project's description
+	    in order to build the baseline word embeddings.
+	OUTPUT: 
+	    words: python dictionary of the form (word, [vector of embeddings])
+	"""
 	words = load_glove_embeddings_from_txt_file(MY_EMBEDDINGS_TXT_FILE)
 	if words != None:
 		return words
@@ -154,14 +154,14 @@ def build_glove_embeddings(corpus):
     return words
 
 def store_embeddings_to_txt_file(dict, filename):
-    """
-    DESCRIPTION: 
-             Stores a python dictionary of the form (word, [vector of embeddings]) (which represents
-             the word embeddings matrix of our model) to a txt file. 
-    INPUT:
-            dict: python dictionary of the form (word, [vector of embeddings])
-            filename: name of the file to write the word embeddings dictionary
-    """
+	"""
+	DESCRIPTION: 
+	     Stores a python dictionary of the form (word, [vector of embeddings]) (which represents
+	     the word embeddings matrix of our model) to a txt file. 
+	INPUT:
+	    dict: python dictionary of the form (word, [vector of embeddings])
+	    filename: name of the file to write the word embeddings dictionary
+	"""
 	with open(filename, "w") as f:
 		for k, v in dict.items():
 			line = k + str(v) + '\n'
