@@ -164,6 +164,7 @@ SVM = {
                 }
 }
 
+# Options for the Logistic Regression algorithm
 LR = {
     'params' :  {
                 'C' : 1e5,
@@ -239,6 +240,7 @@ LR = {
                 }
 }
 
+# Options for the Neural Networks algorithm
 NN = {
     'params' : {  
                   'hidden_layers' : 1,
@@ -320,6 +322,7 @@ NN = {
                 }
 }
 
+# Options for the Convolutional Neural Networks algorithm
 CNN = {
        'params' : {
                     'train':True,
@@ -386,6 +389,7 @@ CNN = {
 
 }
 
+# Options for the Random Forest algorithm
 RF = {
     'params' : {
                   'n_estimators' : 100,
@@ -460,6 +464,7 @@ RF = {
                 }
 }
 
+# Options for the FastText algorithm
 FT = {
     'params' : {
                 'we_features' : 200,
