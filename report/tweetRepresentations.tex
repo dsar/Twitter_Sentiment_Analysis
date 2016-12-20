@@ -83,3 +83,16 @@ The GloVe vectors were trained for more than a day in a very powerful server, wh
 
 
 \subsection{From Word Embeddings to Tweet Embeddings}
+With the aforementioned methods we were able to construct vector representations for all the words in the vocabulary used by the tweets ($|V| \times D$ matrix).
+Since all the tweets contain a subset of the words of the vocabulary, we had to aggregate multiple rows of this matrix, in order to create our tweets representation ($N \times D$ matrix).
+
+We tested various ways of aggregation (concatenation, summation and averaging), with the last one to be the most accurate.
+
+
+\subsection{Paragraph Embeddings}
+One method that constructs directly embeddings for paragraphs (in our case tweets) is proposed by \cite{le2014distributed}.
+The advantage of this method is that it takes into account the order of the words in a tweet by permuting them multiple times.
+This captures the semantic meaning of the phrases in a tweet.
+There are two model representations described in this paper: Distributed bag of words (DBoW) and Distributed Memory (DM) which we both included in our experiments.
+We observed that DBoW model has less memory requirements and is more efficient.
+Furthermore, both of these methods can be fitted with pretrained word embeddings, however no significant increase of the accuracy was measured.
