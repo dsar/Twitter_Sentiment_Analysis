@@ -70,14 +70,14 @@ def get_embeddings_dictionary(tweets=None):
             return words
         print('Merged embeddings file not found')
         if not os.path.exists(MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE):
-        	build_glove_embeddings(build_python_glove_representation(tweets['tweet']))
+            build_glove_embeddings(build_python_glove_representation(tweets['tweet']))
         else:
-        	print(MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE,'exists!')
+            print(MY_GLOVE_PYTHON_EMBEDDINGS_TXT_FILE,'exists!')
         if os.path.exists(PRETRAINED_EMBEDDINGS_FILE):
-        	print(PRETRAINED_EMBEDDINGS_FILE,'exists!')
+            print(PRETRAINED_EMBEDDINGS_FILE,'exists!')
         else:
-        	print(PRETRAINED_EMBEDDINGS_FILE,'does not exist. Please download Stanford pretrained embeddings file.')
-        	exit()
+            print(PRETRAINED_EMBEDDINGS_FILE,'does not exist. Please download Stanford pretrained embeddings file.')
+            exit()
         # glove_words = load_glove_embeddings_from_txt_file(PRETRAINED_EMBEDDINGS_FILE)
         words = build_merge_embeddings()
     return words

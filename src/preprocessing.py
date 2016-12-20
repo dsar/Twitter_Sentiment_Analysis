@@ -308,7 +308,7 @@ def topk_most_important_features(vectorizer, clf, class_labels=['pos','neg'],k=1
     feature_names = vectorizer.get_feature_names()
     topk = np.argsort(clf.coef_[0])[-k:]
     for j in topk:
-    	important_features.append(feature_names[j])	
+        important_features.append(feature_names[j])	
     return important_features[::-1]
 
 def show_most_informative_features(vectorizer, clf, n=20):
