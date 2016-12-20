@@ -46,13 +46,40 @@ and used in our classification problem.
  
  
 \subsection{Word Embeddings Representation}
+Word Embeddings \cite{DBLP:journals/corr/MikolovSCCD13} is a recently proposed representation that maps words to high dimensional vectors of real numbers. 
+This representation tries to capture the multiple contexts in which a word can appear in a text.
+Hence, it guarantees that words that appear in similar context, will have vectors that are very close each other.
+The advantage of Word Embeddings comparing to the previous representations is that 
+they have fixed size for each word which is independent of the size of the used vocabulary.
 
-\subsubsection{Baseline Build Method}
+Thus, in our problem, we can create for all the words in our vocabulary a $|V| \times D$ matrix representation,
+where $D$ is the dimension of our vectors.
+In order to construct this matrix we implemented the methods presented bellow.
 
-\subsubsection{Glove Python Method}
 
-\subsubsection{Pretrained Embeddings}
+\subsubsection{GloVe Training Methods}
+\textit{GloVe} \cite{pennington2014glove} has an open-source implementation of its training methods.
+We experimented with both the given implementation and the \textit{glove-python}\footnote{\url{http://github.com/maciejkula/glove-python}} 
+that uses \textit{SGD} for training the vectors.
+As we confirmed with the experimental evaluation, the vectors trained with \textit{glove-python} were 
+more accurate than the ones trained with the given implementation.  
+
+
+\subsubsection{Pretrained GloVe Embeddings}
+We also employed a pretrained set of Word Embeddings published by GloVe\footnote{\url{http://nlp.stanford.edu/projects/glove/}}.
+These vectors were trained with $2$ billions tweets containing $1.2$ millions words.
+The train set of these vectors was an order of magnitude bigger than the one we were given
+(both the positive and the negative train sets contain $2.5$ millions tweets).
+Thus, these vectors are very well trained, capturing accurately the meaning on each word.
+Also, since the corpus that was used for the training was Twitter, they cover a high percentage of  
+the words used in our given train set.
 
 \subsubsection{Hybrid Method}
+Since not $100\%$ of the words of our train set were found in the pretrained Word Embeddings, we decided to train our own vectors for these words and append them to the pretrained ones.
+However, the union of the vectors gave us actually worse accuracy than just the pretrained ones.
+One explanation is that the two sets of vectors were unequally trained. 
+The GloVe vectors were trained for more than a day in a very powerful server, while ours in a common PC for a couple of hours.
+
+
 
 \subsection{From Word Embeddings to Tweet Embeddings}
