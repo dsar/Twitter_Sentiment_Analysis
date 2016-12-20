@@ -78,7 +78,7 @@ def batch_iter(train_indices, batch_size, shuffle=True):
 		end_index = min((batch_num + 1) * batch_size, n_ind)
 		if start_index != end_index:
 			yield shuffled_indices[start_index:end_index]
-            
+
 
 def prepare_data(tweets, labels, cnn_params):
     """
