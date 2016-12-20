@@ -206,7 +206,7 @@ if algorithm['options']['ml_algorithm'] == 'CNN':
 		algorithm['params']['save_from_file'] = True
 	pred = evalCNN(test_tweets, path, algorithm['params'])
 if algorithm['options']['ml_algorithm'] == 'FT':
-	print('\nInitializing FastText')
+	print('\Running FastText')
 	pred = fast_text(tweets, test_tweets)
 	pred = np.array(pred)
 
