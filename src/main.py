@@ -22,6 +22,7 @@ from sklearn import svm, linear_model, preprocessing, decomposition
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 from sklearn.neural_network import MLPClassifier 
+from sklearn.naive_bayes import MultinomialNB
 
 from evalCNN import evalCNN
 from trainCNN import trainCNN, trainCNN_fromcheckpoint
@@ -57,7 +58,7 @@ if algorithm['options']['preprocess'][0]:
 	test_tweets = tweets_preprocessing(test_tweets,train=False, params=algorithm['options']['preprocessing_params'])
 
 # Feature extraction
-if 'feature_extraction' in algorithm['options'] and 'WE' in algorithm['options']:
+if 'feature_extraction' in algorithm['options']:
 	if algorithm['options']['feature_extraction'] == 'WE':
 		print_dict_settings(algorithm['options']['WE'], msg='\nWord Embeddings Parameters:')
 		print('Feature extraction using WE\n')
@@ -79,7 +80,7 @@ if 'feature_extraction' in algorithm['options'] and 'WE' in algorithm['options']
 
 		# Apply PCA
 		if algorithm['options']['PCA'][0]:
-			print('Appling PCA with '+str(algorithm['options']['PCA'][1])+' number of components')
+			print('\nApplying PCA with '+str(algorithm['options']['PCA'][1])+' number of components')
 			pca = decomposition.PCA(n_components=algorithm['options']['PCA'][1])
 			train_reptweets = pca.fit_transform(train_reptweets)
 			pca = decomposition.PCA(n_components=algorithm['options']['PCA'][1])
@@ -87,14 +88,14 @@ if 'feature_extraction' in algorithm['options'] and 'WE' in algorithm['options']
 
 		#Polynomial expansion
 		if algorithm['options']['poly'][0]:
-			print('Polynomial expansion with '+str(algorithm['options']['poly'][1])+' base')
+			print('\nPolynomial expansion with '+str(algorithm['options']['poly'][1])+' base')
 			poly = PolynomialFeatures(algorithm['options']['poly'][1])
 			train_reptweets = poly.fit_transform(train_reptweets)
 			poly = PolynomialFeatures(algorithm['options']['poly'][1])
 			test_reptweets = poly.fit_transform(test_reptweets)
 
 	elif algorithm['options']['feature_extraction'] == 'TFIDF':
-		print('Feature extraction using TF-IDF')
+		print('\nFeature extraction using TF-IDF\n')
 		train_reptweets, test_reptweets = load_vectorizer(tweets, test_tweets)
 	elif (algorithm['options']['feature_extraction'] == 'DOC2VEC'):
 		print('\tUsing doc2vec')
@@ -170,6 +171,11 @@ if 'model_selection' in algorithm['options']:
 			clf = RandomForestClassifier(n_estimators=algorithm['options']['params']['n_estimators'],\
 										 max_depth=algorithm['options']['params']['max_depth'],\
 										 n_jobs=-1,random_state=4)
+		if algorithm['options']['ml_algorithm'] == 'NB':
+			print('\nInitializing Naive Bayes')
+			clf = MultinomialNB(alpha=algorithm['params']['alpha'],\
+								fit_prior=algorithm['params']['fit_prior'],\
+								class_prior=algorithm['params']['class_prior'])
 		elif algorithm['options']['ml_algorithm'] == 'SVM':
 			print('\nInitializing SVM')
 			clf = svm.LinearSVC(max_iter=algorithm['params']['max_iter'],\

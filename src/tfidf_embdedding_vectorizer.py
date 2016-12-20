@@ -27,12 +27,13 @@ def tfidf_embdedding_vectorizer(tweets, test_tweets):
     print('building train tfidf')
     algorithm['options']['TFIDF']['tokenizer'] = None
     tfidf = init_tfidf_vectorizer()
-    X = tfidf.fit_transform(tweets['tweet'].append(test_tweets['tweet']))
+    X = tfidf.fit_transform(tweets['tweet'])
     
     print('train tweets: building (TF-IDF-weighted) WEs')
-    we_tweets = average_vectors(tweets, words, tfidf, X[:tweets.shape[0]])
+    we_tweets = average_vectors(tweets, words, tfidf, X)
     print('test tweets: building (TF-IDF-weighted) WEs')
-    we_test_tweets = average_vectors(test_tweets, words, tfidf, X[tweets.shape[0]:])
+    X = tfidf.fit_transform(test_tweets['tweet'])
+    we_test_tweets = average_vectors(test_tweets, words, tfidf, X)
     return we_tweets, we_test_tweets
     
 def average_vectors(tweets, words, tfidf, X):

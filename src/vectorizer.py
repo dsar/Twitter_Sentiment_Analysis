@@ -41,9 +41,11 @@ def load_vectorizer(tweets, test_tweets):
         test_reptweets: TFIDF representation of test tweets (dimensions: |train tweets| x |vocabulary|)
   """
   import os.path
-  if(os.path.exists('../data/train_reptweets.pkl') and os.path.exists('../data/test_reptweets.pkl')):
+  if(os.path.exists(TFIDF_TRAIN_FILE) and os.path.exists(TFIDF_TRAIN_FILE)):
     f = open(TFIDF_TRAIN_FILE,'rb')
     train_reptweets = pickle.load(f)
+    f = open(TFIDF_TEST_FILE,'rb')
+    test_reptweets = pickle.load(f)
   else:
     tfidf = init_tfidf_vectorizer()
     train_reptweets = tfidf.fit_transform(tweets['tweet'])
@@ -51,6 +53,10 @@ def load_vectorizer(tweets, test_tweets):
       f = open(TFIDF_TRAIN_FILE,'wb')
       pickle.dump(train_reptweets, f)
     test_reptweets = tfidf.transform(test_tweets['tweet'])
+    if algorithm['options']['TFIDF']['cache_tfidf']:
+      f = open(TFIDF_TEST_FILE,'wb')
+      pickle.dump(test_reptweets, f)
+
   return train_reptweets, test_reptweets
 
 def init_count_vectorizer():

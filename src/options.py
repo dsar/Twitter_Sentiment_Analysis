@@ -30,6 +30,7 @@ TRAIN_PREPROC_CACHING_PATH = PREPROC_DATA_PATH + 'preproc_train.csv'
 TEST_PREPROC_CACHING_PATH = PREPROC_DATA_PATH + 'preproc_test.csv'
 FASTTEXT_MODEL = FASTTEXT_DATA_PATH + 'fasttext_model'
 TFIDF_TRAIN_FILE = TFIDF_DATA_PATH + 'train_reptweets.pkl'
+TFIDF_TEST_FILE = TFIDF_DATA_PATH + 'test_reptweets.pkl'
 VOCAB_CUT_FILE = GLOVE_DATA_PATH + 'vocab_cut.txt'
 VOCAB_FILE = GLOVE_DATA_PATH + 'vocab.pkl'
 COOC_FILE = GLOVE_DATA_PATH + 'cooc.pkl'
@@ -86,7 +87,7 @@ WORD_FREQUENCIES = METADATA_PATH + 'words-by-frequency.txt'
 
 # Select the algorithm to be executed and then go below and change the parameters
 # of the corresponding dictionary
-algorithm = 'FT' #{SVM, LR, NN, CNN, RF, FT}
+algorithm = 'SVM' #{SVM, LR, NN, CNN, FT, RF, NB}
 
 # Options for the SVM algorithm
 SVM = {
@@ -147,11 +148,71 @@ SVM = {
                     'PCA': (False, 100),
                     'poly': (False,2),
                     'model_selection': False,
+                    'clear' : True,
+                    'clear_params' : { #In case an update is needed, the corresponding file must be deleted first by enabling the options below.
+                                      'preproc' : True,
+
+                                      'tfidf' : True,
+                                      'd2v' : False,
+
+                                      'baseline_embeddings' : False,
+                                      'my_glove_python_embeddings' : False,
+                                      'merged': False,
+                                      'init_files' : True,
+
+                                      'pred' : False
+                                      }
+                }
+}
+
+# Options for the Naive Bayes algorithm
+NB = {
+    'params' : {
+                'alpha' : 1.0,
+                'fit_prior': True,
+                'class_prior' : None
+                },
+    'options' : {
+                    'ml_algorithm' : 'NB',
+                    'preprocess' : (True,'save'), #({True,False},{'save', None})
+                    'preprocessing_params' : { # Check the documentation of preprocessing.py functions 
+                                                # group1
+                                                'frepeated_chars': True,
+                                                'fexpand_not': True,
+                                                'transform_emojis': True,
+                                                'fhashtag': True,
+                                                'fdigits': True,
+                                                'sentiment_words': True,
+                                                # group2
+                                                'fsmall_words': False,
+                                                'fstopwords' : False,
+                                                'fduplicates': False,
+                                                'fpunctuation': False,
+                                                'fuser': False,
+                                                'furl': False
+                                              },
+                    'feature_extraction' : 'TFIDF', # {TFIDF} 
+                    'TFIDF' : {
+                                'cache_tfidf': True,
+
+                                'min_df' : 1,
+                                'max_df' : 1.0,
+                                'sublinear_tf' : True,
+                                'use_idf' : True,
+                                'number_of_stopwords' : None, # None or Int
+                                'tokenizer' : True, # None or anything else (e.g. True) for lemmatization
+                                'ngram_range' : (1,1), # (1,2) for bigrams, (1,3) for trigrams and so on
+                                'max_features' : None # None or Int
+                              },
+                    'cv' : (False,5),
+                    'scale': False,
+                    'warnings' : False,
+                    'model_selection': False,
                     'clear' : False,
                     'clear_params' : { #In case an update is needed, the corresponding file must be deleted first by enabling the options below.
-                                      'preproc' : False,
+                                      'preproc' : True,
 
-                                      'tfidf' : False,
+                                      'tfidf' : True,
                                       'd2v' : False,
 
                                       'baseline_embeddings' : False,
@@ -521,6 +582,9 @@ elif algorithm == 'CNN':
   algorithm = CNN
 elif algorithm == 'FT':
   algorithm = FT
+elif algorithm == 'NB':
+  algorithm = NB
+
 
 def print_dict_settings(dict_, msg='settings\n'):
     """
