@@ -64,7 +64,10 @@ def filter_url(tweets):
 def expand_not(tweets):
     """
     DESCRIPTION: 
-            expand not
+            In informal speech, which is widely used in social media, it is common to use contractions of words 
+	    (e.g., don't instead of do not).
+	    This may result in misinterpreting the meaning of a phrase especially in the case of negations.
+            This function expands these contractions and other similar ones (e.g it's --> it is etc...).
     INPUT: 
             tweets: Series of a set of tweets as a python strings
     OUTPUT: 
