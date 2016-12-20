@@ -62,6 +62,11 @@ def get_embeddings_dictionary(tweets=None):
         new_tweets_representation = build_python_glove_representation(tweets['tweet'])
         words = build_glove_embeddings(new_tweets_representation)
     elif algorithm['options']['WE']['build_we_method'] == 'pretrained':
+        if os.path.exists(PRETRAINED_EMBEDDINGS_FILE):
+            print(PRETRAINED_EMBEDDINGS_FILE,'exists!')
+        else:
+            print(PRETRAINED_EMBEDDINGS_FILE,'does not exist. Please download Stanford pretrained embeddings file.')
+            exit()
         words = load_glove_embeddings_from_txt_file(PRETRAINED_EMBEDDINGS_FILE)
     elif algorithm['options']['WE']['build_we_method'] == 'merge':
         # my_words = call_init()
