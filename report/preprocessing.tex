@@ -1,56 +1,67 @@
-\section{Preprocessing Techniques}
+\section{Preprocessing Steps}
 \label{sec:preprocessing}
-In this section we describe the techniques that we use in order to process the raw tweets.
-After applying these techniques we were able to emphasize writing styles and words that denote sentiment (e.g., emojis, repeating the last character of a word, etc.)
+In this section, we describe the techniques that we use in order to process the raw tweets.
+After applying these techniques, we were able to emphasize writing styles and words that denote sentiment (e.g., emojis, repeating the last character of a word, etc.)
 as well as handling most of the spelling errors and slang words usage (e.g., with lemmatization and stemming).
 
 Most of the implemented methods were inspired from the respective methods of \textit{GloVe} \cite{pennington2014glove} and are summarized as follows:
 
-\subsection{Contractions Expansion}
+\noindent
+\paragraph{\textbf{Contractions Expansion}}
+{\setlength{\parindent}{0cm}
 In informal speech, which is widely used in social media, it is common to use contractions of words (e.g., \textit{don't} instead of \textit{do not}).
 This may result in misinterpreting the meaning of a phrase especially in the case of negations.
-For this reason we implemented a method that expands these contractions.
+For this reason, we implemented a method that expands these contractions.}
 
-\subsection{Emojis Transformation}
-Emojis are widely used in social media and they can alone give a good estimate of a post's sentiment.
-In order to handle the different writing styles of emojis (e.g., :), :-) and (: are all smile faces) we transform all of them into the word that describes better the sentiment that they denote.
-Thus we have smile, lol, neutral and sad faces as well as hearts.
+\paragraph{\textbf{Emojis Transformation}}
+{\setlength{\parindent}{0cm}
+Emojis are widely used in tweets and they can alone give a good estimate of a post's sentiment.
+In order to handle the different writing styles of emojis (e.g., ':)', ':-)' and '(:' are all smile faces), we transform all of them into some words that describe better the sentiment that they denote.
+Thus after emoji transformation, we have smile, lol, neutral and sad faces as well as hearts.}
 
-\subsection{Emphasize Repeated Punctuation}
+\paragraph{\textbf{Emphasize Repeated Punctuation}}
+{\setlength{\parindent}{0cm}
+Some punctuation marks, like exclamation point (!), give important clues about the sentiment especially when they are repeated within a tweet. 
+We implemented a method in which we emphasize that repetition.}
 
-Some punctuation marks like exclamation point (!) denote sentiment especially when they are repeated within a tweet. 
-We implemented a method in which we emphasize that repetition.
+\paragraph{\textbf{Emphasize Repeated Last Characters}}
+{\setlength{\parindent}{0cm}
+Similar to the punctuation marks, the repetition of the last character of a word can also be a good indicator of the sentiment (e.g., \textit{I am happyyyy}). We introduce a method that corrects the spelling of such words (e.g., converts \textit{happyyyy} to \textit{happy}) and adds a special tag to indicate the repetition.}
 
-\subsection{Emphasize Repeated Last Characters}
-
-Similarly to the punctuation marks, the repetition of the last character of a word reveals sentiment (e.g., \textit{I am happyyyy}). We introduce a method that corrects the spelling of such words (e.g., converts \textit{happyyyy} to \textit{happy}) and adds a special tag to indicate the repetition.
-
-\subsection{Filter Numerical Expressions}
+\paragraph{\textbf{Filter Numerical Expressions}}
+{\setlength{\parindent}{0cm}
 Since numbers in general do not hold any special sentiment semantics,  
-we replace all the numerical expressions with tags that stand for the existence of such expressions. 
+we replace all the numerical expressions with tags that stand for the existence of such expressions.}
 
-\subsection{Split Hashtags}
+\paragraph{\textbf{Split Hashtags}}
+{\setlength{\parindent}{0cm}
 Hashtags are one or more words concatenated with the symbol \#.
 Some of the tokens of the hashtags may hide useful information for the sentiment of a post (e.g., \#lovemyjob).
 Splitting a hashtag into tokens is a difficult problem \cite{Khaitan:2009:DCS:1645953.1645982} since we may have multiple, ambiguous splits (e.g., \#homestore can be split into either \textit{home store} or \textit{homes tore}). 
 Having typos and using slang words makes it even more difficult.
-In order to solve this problem we used a dictionary with the most frequently used English words in descending order (according to Zipf's law) and tried to guess the correct split.
+In order to solve this problem we used a dictionary with the most frequently used English words in descending order (according to Zipf's law) and tried to guess the correct split.}
 
 
-\subsection{Emphasize Sentiment Words}
-Similarly to emojis, some English words denote clearly an emotion (e.g., \textit{anxiety} or \textit{happiness}). In order to emphasize the existence of such words
-we were advised by a lexicon with positive and negative words \cite{hu2004mining}. 
+\paragraph{\textbf{Emphasize Sentiment Words}}
+{\setlength{\parindent}{0cm}
+Similar to emojis, some English words denote clearly an emotion (e.g., \textit{anxiety} or \textit{happiness}). 
+In order to emphasize the existence of such words, we were advised by a lexicon with positive and negative words \cite{hu2004mining}.}
 
 
-\subsection{Part-Of-Speech Tagging}
-Part-Of-Speech tagging helps us understanding the structure of an input text in order to discover its most important words.
-Since posts in social media are informal, without following many grammatical rules, 
-in most of the cases this method did not help.
+\paragraph{\textbf{Part-Of-Speech Tagging}}
+{\setlength{\parindent}{0cm}
+Part-Of-Speech tagging helps us to understand the structure of an input text in order to discover its most important words.
+Since posts in social media are informal,i.e., without obeying many grammatical rules, in most of the cases this method did not help.}
 
-\subsection{Lemmatization and Stemming}
-In order to homogenize verbs being in different tenses we implemented a method that applies lemmatization and stemming techniques to the words of the input tweets.
+\paragraph{\textbf{Lemmatization and Stemming}}
+{\setlength{\parindent}{0cm}
+In order to homogenize verbs being in different tenses, we implemented a method that applies lemmatization and stemming techniques to the words of the input tweets.}
 
-\subsection{Stop-words Filtering}
+\paragraph{\textbf{Stop-words Filtering}}
+{\setlength{\parindent}{0cm}
 Stop-words are very common English words that can be found in almost every tweet and thus do not imply any sentiment (e.g., the articles \textit{The}, \textit{A} etc.).
-We implemented a method that removes them from tweets. We have also considered <user> and <url> tags as stopwords, since they appear in a very high frequency in the corpus but this did not increase our accurancy. The single-character elimination did also not increased the accurancy.
+We implemented a method that removes the stop-words from tweets.}
+
+In addition to all these methods above, we have also experimented to use <user> and <url> tags as stopwords, since they appear in a very high frequency in the corpus, but we didn't observe any performance improvement for most of the algorithms.
+The single-character elimination did also not increased the accuracy.
 

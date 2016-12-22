@@ -1,5 +1,12 @@
 \section{Introduction}
+Sentiment analysis, which is a common application of Natural Language Processing (NLP) methodologies, aims to obtain a sentiment score by quantifying qualitative data.
+Although a sub-task of binary classification can be attacked by simply using a dictionary of good and bad words, which represent +1 and -1 scores, respectively, and summing the scores of all words in a sentence/document for the final decision, disentangling the structure and relations of the words with each other may be quite challenging.
+Despite this difficulty, many companies, such as \textit{Google} and \textit{Facebook} and lots of research groups have an increasing interest on NLP tasks due to their applicability to daily life.
 
+In this project, our task is to decide whether a tweet message, which can be composed of at most 140 characters, contains a positive or negative smiley.
+Although it may appear to be a standard binary text classification problem at first glance, it is slightly different and can be more difficult regarding the corpus, emojis that can be used within the message or hashtags, which are tweet tags that can be composed of multiple words used without a space between and '\#'  before.
 
+In this report, you may find the brief explanation of possible preprocessing steps, text representation options and test results for a variety of classification algorithms, which is followed by a comparison and conclusion.
+Among them, our best algorithm, which is a convolutional neural network, achieved $87.54\%$ correct predictions for the test data on Kaggle website.
 
 \label{sec:Introduction}

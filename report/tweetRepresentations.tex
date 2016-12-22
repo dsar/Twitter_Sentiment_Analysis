@@ -1,98 +1,70 @@
 \section{Representations of Tweets}
 \label{sec:tweetRepresentations}
 
-In this section we present all the numerical representations that we chose for our input tweets.
+In this section, we present all the algorithms that we investigated for converting our input tweets to numerical representations.
 These representations try to capture the semantic meaning of the tweets 
 while having a constant size, which is independent of the words used in each tweet.
 Thus, letting $N$ be the number of input tweets, we create an $N \times D$ matrix
 with each line representing a different tweet with $D$ features.
 
-Below we present the most usable word and text representations that we introduced
-and used in our classification problem.
 
- 
- 
- 
- \subsection{Bag of Words Representation}
- Bag of Words \cite{harris1954distributional} is a very natural numerical representation of a text.
- Given that we have a vocabulary $V$ with finite size, we create
- an array of size $|V|$ with $1s$ in the position of the words belonging in this text and $0s$ everywhere else.
- Thus, in our case, we would have an $N \times |V|$ matrix representing our input tweets.
- 
- The problem with this representations is that $|V|$ can be arbitrary big especially if we do not handle appropriately
- slang and words with spelling mistakes.
- One way to solve it, is using the preprocessing methods that we proposed in Section~\ref{sec:preprocessing}. 
- Another problem of this representation is that it does not comprise any semantic information about the significance of each word in a tweet. 
- 
-  \subsection{TF-IDF Representation}
-  
- The significance of the words in tweets is captured by the more sophisticated representation which uses the Term Frequency - Inverse Document Frequency (TF-IDF).
- TF-IDF \cite{sparck1972statistical} works by determining the relative frequency of a word in a specific document compared to the inverse proportion of that word over the entire document corpus.
- Words that are common in a single or a small group of documents tend to have higher TF-IDF numbers than common words such as articles and prepositions. 
- 
- This metric can be used as a weight to the respective Bag of Words representation that we have discussed above.
- Thus, we have again an $N \times |V|$ matrix representing our input tweets,
- that contains $0s$ and $TF-IDFs$ instead of $0s$ and $1s$.
- 
- 
-   \subsection{N-grams Extension}
- 
- In both of the above representations the $N \times |V|$ matrix
- can become even bigger if we add sequences of contiguous words in our vocabulary.
- These sequences are called \textit{n-grams} with $n$ being the maximum number of words in a sequence.  
- For example, for bigrams, in the worst case the size of the vocabulary becomes $|V| + {|V| \choose 2}$.
- As we will see in the experimental evaluation we tested representations with up to 8-grams. 
- 
- 
- 
+\subsection{Bag of Words Representation}
+Bag of Words \cite{harris1954distributional} is a very common and straightforward numerical representation of text data.
+Given that we have a vocabulary $V$ with finite size, we create
+an array of size $|V|$ with $1s$ in the position of the words belonging in this text and $0s$ everywhere else.
+Thus, in our case, we would have an $N \times |V|$ matrix representing our input tweets.
+
+The problem with this representations is that $|V|$ can be arbitrary big especially if we do not handle appropriately slang and words with spelling mistakes, which can actually be solved by using the preprocessing methods that we proposed in Section~\ref{sec:preprocessing}. 
+Another problem of this representation is that it does not comprise any semantic information about the significance of each word in a tweet. 
+
+
+\subsection{TF-IDF Representation}
+The significance of the words in tweets is captured by a more sophisticated representation, which uses the Term Frequency - Inverse Document Frequency (TF-IDF).
+TF-IDF \cite{sparck1972statistical} works by determining the relative frequency of a word in a specific document compared to the inverse proportion of that word over the entire document corpus.
+Words that are common in a single or small group of documents tend to have higher TF-IDF numbers than common words such as articles and prepositions. 
+
+As can be used as a standalone representation, this metric can also be used to weight the Bag of Words representation, in which case the $1s$ in $N \times |V|$  representation matrix are replaced by $TF-IDFs$.
+
+
+\subsection{N-grams Extension}
+In both of the above representations the $N \times |V|$ matrix
+can become even bigger if we add sequences of contiguous words in our vocabulary.
+These sequences are called \textit{n-grams} with $n$ being the maximum number of words in a sequence.  
+For example, for bigrams, in the worst case the size of the vocabulary becomes $|V| + {|V| \choose 2}$.
+As we will see in the experimental evaluation we tested representations with up to 8-grams. 
+
+
 \subsection{Word Embeddings Representation}
-Word Embeddings \cite{DBLP:journals/corr/MikolovSCCD13} is a recently proposed representation that maps words to high dimensional vectors of real numbers. 
+Word Embeddings (WE) \cite{DBLP:journals/corr/MikolovSCCD13} is a recently proposed representation that maps words to high dimensional vectors of real numbers. 
 This representation tries to capture the multiple contexts in which a word can appear in a text.
-Hence, it guarantees that words that appear in similar context, will have vectors that are very close each other.
-The advantage of Word Embeddings comparing to the previous representations is that 
-they have fixed size for each word which is independent of the size of the used vocabulary.
+Hence, it guarantees that words that appear in similar context will have vectors that are very close each other.
 
-Thus, in our problem, we can create for all the words in our vocabulary a $|V| \times D$ matrix representation,
-where $D$ is the dimension of our vectors.
-In order to construct this matrix we implemented the methods presented bellow.
-
+The advantage of WE compared to the other aforementioned  representations is that each word is represented by a fixed-size vector regardless of the used vocabulary.
+In tweet classification problem, given a of size $|V|$, tweets can be represented by a $|V| \times D$ matrix, where $D$ is the dimension of our vectors.
+Depending on the vocabulary, we have different options for WE methods, which are listed below.
 
 \subsubsection{GloVe Training Methods}
-\textit{GloVe} \cite{pennington2014glove} has an open-source implementation of its training methods.
-We experimented with both the given implementation and the \textit{glove-python}\footnote{\url{http://github.com/maciejkula/glove-python}} 
-that uses \textit{SGD} for training the vectors.
-As we confirmed with the experimental evaluation, the vectors trained with \textit{glove-python} were 
-more accurate than the ones trained with the given implementation.  
+\textit{GloVe} \cite{pennington2014glove} has an open-source implementation of related training methods.
+As a first option, we used the given training tweet dataset to obtain the representation matrix using both the open-source implementation and \textit{glove-python}\footnote{\url{http://github.com/maciejkula/glove-python}}, which is the python implementation of the original algorithm that uses \textit{SGD} for training.
 
-
-\subsubsection{Pretrained GloVe Embeddings}
-We also employed a pretrained set of Word Embeddings published by GloVe\footnote{\url{http://nlp.stanford.edu/projects/glove/}}.
+\subsubsection{Pre-trained GloVe Embeddings}
+As another option, we also employed the pre-trained set of Word Embeddings for tweets, published by GloVe\footnote{\url{http://nlp.stanford.edu/projects/glove/}}.
 These vectors were trained with $2$ billions tweets containing $1.2$ millions words.
-The train set of these vectors was an order of magnitude bigger than the one we were given
-(both the positive and the negative train sets contain $2.5$ millions tweets).
-Thus, these vectors are very well trained, capturing accurately the meaning on each word.
-Also, since the corpus that was used for the training was Twitter, they cover a high percentage of  
-the words used in our given train set.
+Regarding the one order of magnitude difference in terms of the amount of training data, their corpus is observed to cover a high percentage of the words used in our given train set.
 
 \subsubsection{Hybrid Method}
-Since not $100\%$ of the words of our train set were found in the pretrained Word Embeddings, we decided to train our own vectors for these words and append them to the pretrained ones.
-However, the union of the vectors gave us actually worse accuracy than just the pretrained ones.
-One explanation is that the two sets of vectors were unequally trained. 
-The GloVe vectors were trained for more than a day in a very powerful server, while ours in a common PC for a couple of hours.
-
+Since not all of the words in our training dataset were found in the pre-trained Word Embeddings, we decided to train our own vectors for these remaining words and append them to the pre-trained ones.
 
 
 \subsection{From Word Embeddings to Tweet Embeddings}
-With the aforementioned methods we were able to construct vector representations for all the words in the vocabulary used by the tweets ($|V| \times D$ matrix).
-Since all the tweets contain a subset of the words of the vocabulary, we had to aggregate multiple rows of this matrix, in order to create our tweets representation ($N \times D$ matrix).
+All aforementioned representation methods enable us to construct vector representations for all the words in the vocabulary used by the tweets ($|V| \times D$ matrix).
+Since tweets contain a subset of the words within the vocabulary, it's necessary to aggregate multiple rows of this matrix, in order to create representation for tweets ($N \times D$ matrix).
 
-We tested various ways of aggregation (concatenation, summation and averaging), with the last one to be the most accurate.
+After the investigation with various ways of aggregation (concatenation, summation and averaging), mean of WEs of all the words in a tweet is found to be the most expressive one for our classification algorithms.
 
 
 \subsection{Paragraph Embeddings}
-One method that constructs directly embeddings for paragraphs (in our case tweets) is proposed by \cite{le2014distributed}.
-The advantage of this method is that it takes into account the order of the words in a tweet by permuting them multiple times.
-This captures the semantic meaning of the phrases in a tweet.
-There are two model representations described in this paper: Distributed bag of words (DBoW) and Distributed Memory (DM) which we both included in our experiments.
-We observed that DBoW model has less memory requirements and is more efficient.
-Furthermore, both of these methods can be fitted with pretrained word embeddings, however no significant increase of the accuracy was measured.
+One method that constructs directly embeddings for paragraphs (tweets, in our case) is proposed by \cite{le2014distributed}.
+The advantage of this method is the fact that the order of the words in a tweet is also taken into account, by permuting them multiple times, which is claimed to reveal the semantic meaning of the phrases in a paragraph/tweet.
+There are two model representations described in this paper: Distributed bag of words (DBoW) and Distributed Memory (DM) both of which are included in our experiments.
+We observed that DBoW model is more efficient and requires less memory.
