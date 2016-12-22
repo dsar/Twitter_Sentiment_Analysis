@@ -77,7 +77,7 @@ In order to run the project you will need the following dependencies installed:
     Then, unzip the downloaded file and move the extracted files in `data/glove/` directory.
     The default Data is the 200d (cp **glove.twitter.27B.200d.txt** into `data/glove/` directory).    
 
-* Preprocessing Files *(Optional)*
+* Preprocessed Tweet Files *(Optional)*
 
     In case you want to avoid preprocessing execution time, you can download the [preprocessed train tweets](https://dl.dropboxusercontent.com/u/61311008/preproc/preproc_train.csv) of the full dataset. After downloading the above file, just place it in `data/preproc` directory. Also, before runing any algorithm, make sure that the `preprocess` parameter is enabled and that you have enabled the only default preprocess parameters (In any other case, the test set is going to be processed by a different way which is something unwanted). If the preprocessed file is in the right place, it is going to be loaded. Finally, in case you want to test the algorithm for different datasets, do not forget to remove the preprocessed file (Normally done by enabling the `clear` and `preproc` parameters in the corresponding algorithm). 
     
