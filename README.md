@@ -58,6 +58,7 @@ In order to run the project you will need the following dependencies installed:
     ```sh
     $ pip install tensorflow
     ```
+    (Recommended version **tensorflow 0.12.0**)
 
 ### Files
 * Stanford Pretrained Glove Word Embeddings
