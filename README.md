@@ -113,7 +113,7 @@ in `data/submissions/` directory
 *By enabling the `cv` option to true in the `options.py` file (in the corresponding algorithm) you can get
 a good approximation of the kaggle-score directly from Cross Validation (this might take a while for the full datasets)*
 
-### Reproduce Best Score
+### Reproduce Our Best Kaggle Score
 
 In `data/models/BEST` directory, we have stored a checkpoint of our best CNN trained model.
 
