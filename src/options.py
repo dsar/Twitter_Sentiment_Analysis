@@ -12,8 +12,8 @@ TFIDF_DATA_PATH = DATA_PATH + 'tfidf/'
 TF_SAVE_PATH = DATA_PATH + 'models/'
 
 # Train - Test Files
-POS_TWEETS_FILE = DATASETS_PATH + 'train_pos.txt'
-NEG_TWEETS_FILE = DATASETS_PATH + 'train_neg.txt'
+POS_TWEETS_FILE = DATASETS_PATH + 'train_pos_full.txt'
+NEG_TWEETS_FILE = DATASETS_PATH + 'train_neg_full.txt'
 TEST_TWEETS_FILE = DATASETS_PATH + 'test_data.txt'
 
 # Embeddings Files
@@ -148,7 +148,7 @@ SVM = {
                     'PCA': (False, 100),
                     'poly': (False,2),
                     'model_selection': False,
-                    'clear' : True,
+                    'clear' : False,
                     'clear_params' : { #In case an update is needed, the corresponding file must be deleted first by enabling the options below.
                                       'preproc' : True,
 
@@ -335,7 +335,7 @@ NN = {
                                               },
                     'feature_extraction' : 'WE', # {WE,DOC2VEC} later will change to set
                     'WE' : {
-                              'build_we_method' : 'glove_python', # {'baseline', 'pretrained', 'glove_python', 'merge'}
+                              'build_we_method' : 'pretrained', # {'baseline', 'pretrained', 'glove_python', 'merge'}
                               'tweet2vec_method' : 'we_mean', # {we_mean, we_tfidf}
                               'we_features' : 200,
                               'epochs' : 50,
