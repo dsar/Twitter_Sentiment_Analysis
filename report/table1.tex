@@ -1,0 +1,20 @@
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+	\centering
+	\caption{Fully connected NN configurations}
+	\label{table:nn}	
+	\resizebox{\columnwidth}{!}{%
+	\begin{tabular}{c
+			>{\columncolor[HTML]{EFEFEF}}c c
+			>{\columncolor[HTML]{EFEFEF}}c c}
+		\hline
+		& \textbf{\# of hidden layers} & \textbf{\begin{tabular}[c]{@{}c@{}}\#of neurons\\ layer 1\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}\#of neurons\\ layer 2\end{tabular}} & \textbf{Batch size} \\ \hline
+		\textbf{NN1} & 1                            & 16                                                                      & -                                                                       & 256                 \\ \hline
+		\textbf{NN2} & 1                            & 32                                                                      & -                                                                       & 200                 \\ \hline
+		\textbf{NN3} & 1                            & 64                                                                      & -                                                                       & 128                 \\ \hline
+		\textbf{NN4} & 2                            & 16                                                                      & 4                                                                       & 128                 \\ \hline
+	\end{tabular}
+}
+\end{table}

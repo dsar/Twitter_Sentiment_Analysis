@@ -1,0 +1,18 @@
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+
+\begin{table}[]
+\centering
+\caption{Classification performance ($\%$) with and without preprocessing }
+\label{table:preprocess}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccc}
+\hline
+\rowcolor[HTML]{EFEFEF} 
+\multicolumn{1}{c}{\cellcolor[HTML]{EFEFEF}\textbf{Algorithm}} & \textbf{w/o preprocessing} & \textbf{w/ preprocessing} & \textbf{Improvement} \\ \hline
+\cellcolor[HTML]{EFEFEF}\textbf{4-grams}                       & 85.28                      & 87.20                     & \textbf{1.92}        \\ \hline
+\cellcolor[HTML]{EFEFEF}\textbf{FastText, D=200}               & 80.36                      & 83.04                     & \textbf{2.68}        \\ \hline
+\end{tabular}
+}
+\end{table}
