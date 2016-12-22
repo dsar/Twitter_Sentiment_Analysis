@@ -9,16 +9,24 @@ Afterwards, GloVe embeddings are experimented with all four different options, \
 In order to understand the performance of SVM classifier in this configuration, we also tested NN classifier for the same data representations.
 For this purpose, we first intended to find the best possible NN configuration for the resources we have, since more powerful architectures require more computational and memory resources.
 Both single hidden layer and two hidden layers architectures with different number of neurons are trained.
-Table \ref{table:NN} gives the architectures and corresponding abbreviations, which are used in Figure \ref{fig:perf1} to give a clear picture of performances for different GloVe embeddings and SVM-NN classifiers.
+Table \ref{table:nn} gives the architectures and corresponding abbreviations, which are used in Figure \ref{fig:perf1} to give a clear picture of performances for different GloVe embeddings and SVM-NN classifiers.
 
 \input{table1}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=\columnwidth]{CNN_text.pdf}
+	\includegraphics[width=0.8\columnwidth]{glove_NN_SVM.png}
 	\caption{Performance of SVM/NN classifiers using GloVe representations obtained by a variety of dictionaries}
 	\label{fig:perf1}
 \end{figure}
+
+As can be seen from the performance chart, NN outperformed SVM for all cases.
+In addition, the best performance is obtained with the largest single layer NN architecture, i.e. NN3, which was the biggest that our resources enabled us.
+Second hidden layer, i.e., more nonlinearity never achieved better.
+Regarding the GloVe dictionaries, pre-trained vocabulary always lead to better results compared to trained ones, which is expected due to the amount of data used for the pre-trained vocabulary.
+However, merging the new words contributes to performance by $1\%$ for both NN an SVM classifiers.
+Only interesting thing to notice is the fact that utilization of TFIDF constants as weighting coefficients for GloVe representations does not improve the classification performance.
+In fact, we obtained $81.50\%$ classification accuracy with weighted representations of \textit{pretrained} vocabulary and NN3 classifier, whereas the raw representations achieved $82.14\%$.
 
 Furthermore, we investigated the performance of n-grams representation for different window sizes, where it is applied to preprocessed tweets and SVM is utilized as the classifier.
 Results are summarized in Figure \ref{fig:perf_ngrams}.
@@ -49,11 +57,11 @@ results presented in Table \ref{table:preprocess} clearly indicates that propose
 \input{table2}
 
 The last but not the least, we trained several CNN architectures, where we altered the capacity of the network in order see the limits of the algorithm regarding the training data.
-Best performance is achieved when we use a single hidden layer with 128 neurons, where 128 convolutional filters of 2,3,4,5,6 neighborhoods are used.
+Best performance is achieved when we use a single hidden layer with 128 neurons, where 128 convolutional filters of \{2,3,4,5,6\} neighborhoods are used.
 Regarding the computational necessities, instead of cross-validation, we kept randomly chosen 10K samples of training dataset for the validation for all training attempts.
 Figure \ref{fig:cnn_train} illustrates the evolution of accuracy during the training.
 Roughly speaking, after 18K steps, we suspected model to overfit due to the divergence of accuracy values for training and validation dataset, but as can be seen on the second figure, when we kept training with another randomly chosen validation data due to non-constant seeds, validation performance was better than the training.
-The main reason behind this difference is believed to be related to the fact that second validation set had been used for the training at the first stage.
+The main reason behind this difference is related to the fact that second validation set had been used for the training at the first stage.
 Since we didn't have enough time for a training from scratch, we stopped the training at around 30K global steps, which gave us $87.54\%$ test error, which had been $87.48\%$ after 18K global steps.
 
 \begin{figure}[h!]
@@ -74,4 +82,5 @@ Since we didn't have enough time for a training from scratch, we stopped the tra
 	\label{fig:cnn_train}
 \end{figure}
 
-When we increased or decreased the capacity of networks by increasing/decreasing the number of filters per different sizes as well as the number of different sizes, or adding another hidden layer before soft-max classifier, 
+When we increased or decreased the capacity of networks by increasing/decreasing the number of filters per neighborhood sizes as well as the number neighborhoods, or adding another hidden layer before soft-max classifier, performance always got worse.
+If we increased the capacity, decay in the performance is related to overfitting and if we decrease the capacity, deterioration can be due to insufficient representational power.
