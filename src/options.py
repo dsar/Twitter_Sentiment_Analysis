@@ -12,8 +12,8 @@ TFIDF_DATA_PATH = DATA_PATH + 'tfidf/'
 TF_SAVE_PATH = DATA_PATH + 'models/'
 
 # Train - Test Files
-POS_TWEETS_FILE = DATASETS_PATH + 'train_pos_full.txt'
-NEG_TWEETS_FILE = DATASETS_PATH + 'train_neg_full.txt'
+POS_TWEETS_FILE = DATASETS_PATH + 'train_pos.txt'
+NEG_TWEETS_FILE = DATASETS_PATH + 'train_neg.txt'
 TEST_TWEETS_FILE = DATASETS_PATH + 'test_data.txt'
 
 # Embeddings Files
@@ -87,7 +87,7 @@ WORD_FREQUENCIES = METADATA_PATH + 'words-by-frequency.txt'
 
 # Select the algorithm to be executed and then go below and change the parameters
 # of the corresponding dictionary
-algorithm = 'SVM' #{SVM, LR, NN, CNN, FT, RF, NB}
+algorithm = 'CNN' #{SVM, LR, NN, CNN, FT, RF, NB}
 
 # Options for the SVM algorithm
 SVM = {
@@ -386,8 +386,8 @@ NN = {
 # Options for the Convolutional Neural Networks algorithm
 CNN = {
        'params' : {
-                    'train':True,
-                    'checkpoint_dir': TF_SAVE_PATH + '/1481913588/checkpoints',
+                    'train':False,
+                    'checkpoint_dir': TF_SAVE_PATH + '/BEST/checkpoints',
                     'train_from':'from_scratch', #{from_checkpoint, from_scratch}
                     'embedding_size':200,
                     'n_filters':128,

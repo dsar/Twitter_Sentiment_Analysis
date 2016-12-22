@@ -27,7 +27,6 @@ data/datasets/train_neg_full.txt
 data/datasets/train_pos_full.txt
 data/submissions/
 data/tfidf/
-data/models/
 plots/
 notes.txt
 .ipynb_checkpoints
