@@ -14,7 +14,7 @@ Given that we have a vocabulary $V$ with finite size, we create
 an array of size $|V|$ with $1s$ in the position of the words belonging in this text and $0s$ everywhere else.
 Thus, in our case, we would have an $N \times |V|$ matrix representing our input tweets.
 
-The problem with this representations is that $|V|$ can be arbitrary big especially if we do not handle appropriately slang and words with spelling mistakes, which can actually be solved by using the preprocessing methods that we proposed in Section~\ref{sec:preprocessing}. 
+The problem with this representation is that $|V|$ can be arbitrary big especially if we do not handle appropriately slang and words with spelling mistakes, which can actually be solved by using the preprocessing methods that we proposed in Section~\ref{sec:preprocessing}. 
 Another problem of this representation is that it does not comprise any semantic information about the significance of each word in a tweet. 
 
 
@@ -45,7 +45,7 @@ Depending on the vocabulary, we have different options for WE methods, which are
 
 \subsubsection{GloVe Training Methods}
 \textit{GloVe} \cite{pennington2014glove} has an open-source implementation of related training methods.
-As a first option, we used the given training tweet dataset to obtain the representation matrix using both the open-source implementation and \textit{glove-python}\footnote{\url{http://github.com/maciejkula/glove-python}}, which is the python implementation of the original algorithm that uses \textit{SGD} for training.
+As a first option, we used the given training tweet dataset to obtain the representation matrix using both the given implementation and \textit{glove-python}\footnote{\url{http://github.com/maciejkula/glove-python}}, which is the python implementation of the original algorithm that uses \textit{SGD} for training.
 
 \subsubsection{Pre-trained GloVe Embeddings}
 As another option, we also employed the pre-trained set of Word Embeddings for tweets, published by GloVe\footnote{\url{http://nlp.stanford.edu/projects/glove/}}.
@@ -60,7 +60,7 @@ Since not all of the words in our training dataset were found in the pre-trained
 All aforementioned representation methods enable us to construct vector representations for all the words in the vocabulary used by the tweets ($|V| \times D$ matrix).
 Since tweets contain a subset of the words within the vocabulary, it's necessary to aggregate multiple rows of this matrix, in order to create representation for tweets ($N \times D$ matrix).
 
-After the investigation with various ways of aggregation (concatenation, summation and averaging), mean of WEs of all the words in a tweet is found to be the most expressive one for our classification algorithms.
+After investigating with various ways of aggregation (concatenation, summation and averaging), mean of WEs of all the words in a tweet is found to be the most expressive one for our classification algorithms.
 
 
 \subsection{Paragraph Embeddings}
