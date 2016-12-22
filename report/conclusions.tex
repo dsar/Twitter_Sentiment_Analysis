@@ -1,2 +1,27 @@
 \section{Conclusions}
 \label{sec:conclusions}
+
+In this report we described possible preprocessing steps, text representation options and test results for a variety of classification algorithms, which was followed by a concrete comparison.
+
+As you see in Table~\ref{overall}
+two of our approaches achieved top-$3$ scores in Kaggle's competition,
+with the one employing a convolutional neural network to reach the
+$87.54\%$ of correct predictions.
+
+
+
+
+
+
+\begin{table}[h]
+\centering
+\caption{Best Performance of Classifiers}
+\label{overall}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{ccccccc}
+\hline
+                                                                               & \textbf{LR - WE (pre)} & \textbf{NB - TFIDF} & \textbf{NN - WE (pre)} & \textbf{FT (D=200)} & \textbf{SVM - TFIDF(4-grams)} & \textbf{CNN - WE} \\ \hline
+\textbf{\begin{tabular}[c]{@{}c@{}}Classification\\ Accuracy (\%)\end{tabular}} & 79.50                  & 78.18               & 83.16                  & 83.04               & 87.20                         & 87.54             \\ \hline
+\end{tabular}%
+}
+\end{table}

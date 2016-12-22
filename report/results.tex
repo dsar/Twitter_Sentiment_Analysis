@@ -2,10 +2,10 @@
 \label{sec:results}
 Among the exhaustive amount of tests conducted with most of the possible combinations of tweet representation and classification methodologies, we will present the results that helped us to better understand each algorithm.
 
-As the baseline, we obtained the mean vector of GloVe embeddings of raw data, i.e., without any preprocessing, using the function provided with the project announcement, and trained SVM classifier on top as explained before.
-In order to observe the effect of our preprocessing approach, we applied the same training procedure to tweets after preprocessing.
-Afterwards, GloVe embeddings are experimented with all four different options, \textit{baseline} as obtained with the provided method, \textit{pretrained} as provided by \cite{pennington2014glove}, \textit{trained} as trained with python glove method and \textit{merged} as the "\textit{trained}" learned representations of absent words are concatenated to the pre-trained data.
+ 
 
+
+First, Word embeddings were experimented with all four different options, \textit{baseline}, \textit{trained}, \textit{pretrained} and \textit{merged} as they are described in Section~\ref{sec:tweetRepresentations}.
 In order to understand the performance of SVM classifier in this configuration, we also tested NN classifier for the same data representations.
 For this purpose, we first intended to find the best possible NN configuration for the resources we have, since more powerful architectures require more computational and memory resources.
 Both single hidden layer and two hidden layers architectures with different number of neurons are trained.
@@ -13,7 +13,7 @@ Table \ref{table:nn} gives the architectures and corresponding abbreviations, wh
 
 \input{table1}
 
-\begin{figure}[h!]
+\begin{figure}[t]
 	\centering
 	\includegraphics[width=0.8\columnwidth]{glove_NN_SVM.png}
 	\caption{Performance of SVM/NN classifiers using GloVe representations obtained by a variety of dictionaries}
@@ -23,13 +23,14 @@ Table \ref{table:nn} gives the architectures and corresponding abbreviations, wh
 As can be seen from the performance chart, NN outperformed SVM for all cases.
 In addition, the best performance is obtained with the largest single layer NN architecture, i.e. NN3, which was the biggest that our resources enabled us.
 Second hidden layer, i.e., more nonlinearity never achieved better.
-Regarding the GloVe dictionaries, pre-trained vocabulary always lead to better results compared to trained ones, which is expected due to the amount of data used for the pre-trained vocabulary.
+Regarding the \textit{GloVe} dictionaries, pre-trained vocabulary always lead to better results compared to trained ones, which is expected due to the amount of data used for the pre-trained vocabulary.
 However, merging the new words contributes to performance by $1\%$ for both NN an SVM classifiers.
-Only interesting thing to notice is the fact that utilization of TFIDF constants as weighting coefficients for GloVe representations does not improve the classification performance.
+Only interesting thing to notice is the fact that utilization of TF-IDF constants as weighting coefficients for \textit{GloVe} representations does not improve the classification performance.
 In fact, we obtained $81.50\%$ classification accuracy with weighted representations of \textit{pretrained} vocabulary and NN3 classifier, whereas the raw representations achieved $82.14\%$.
 
-Furthermore, we investigated the performance of n-grams representation for different window sizes, where it is applied to preprocessed tweets and SVM is utilized as the classifier.
-Results are summarized in Figure \ref{fig:perf_ngrams}.
+Furthermore, we investigated the performance of \textit{n-grams} representation for different window sizes, where it is applied to preprocessed tweets and SVM is utilized as the classifier.
+Results are summarized in Figure \ref{fig:perf_ngrams}
+with 4-grams to seem to be the best representation.
 
 \begin{figure}[h!]
 	\centering
@@ -50,6 +51,7 @@ Results are summarized in Figure \ref{fig:perf_ngrams}.
 
 As another test, FastText algorithm is experimented for different dimensions of representations, results of which is given in Figure \ref{fig:perf_ft}.
 For all different dimensions, preprocessed dataset is utilized and the classifier is trained with a learning rate $0.05$ by 50 epochs.
+Dimension of $200$ seems to give the best accuracy.
 
 In order to further observe the contribution of preprocessing step, we also chose the best-performing n-gram and FastText configurations to apply them to raw data.
 results presented in Table \ref{table:preprocess} clearly indicates that proposed preprocessing step adds around $2\%$ to the classification performance.
@@ -84,3 +86,6 @@ Since we didn't have enough time for a training from scratch, we stopped the tra
 
 When we increased or decreased the capacity of networks by increasing/decreasing the number of filters per neighborhood sizes as well as the number neighborhoods, or adding another hidden layer before soft-max classifier, performance always got worse.
 If we increased the capacity, decay in the performance is related to overfitting and if we decrease the capacity, deterioration can be due to insufficient representational power.
+
+
+

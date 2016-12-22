@@ -5,19 +5,19 @@ For this purpose, we employed several algorithms such as Logistic Regression (LR
 After preliminary performance investigation of classification algorithms, we decided to continue our experiments with the three promising ones, which are explained below.
 %On the other hand, RF, which is really fast to compute, enabled us to evaluate the classification performance quickly for the first experiments.
 
-\subsection{Support Vector Machines}
+\paragraph{\textbf{Support Vector Machines}}
 SVMs are very strong classification algorithms, even in high dimensional spaces, and the aim is to separate samples from different classes with a clear margin.
 They can be applied as both linear binary classifiers and non-linear complements after kernel trick.
 In our framework, we used the linear SVM classifier implementation provided by \textit{scikit}\footnote{\url{http://scikit-learn.org/}}, which is a well-known, open-source machine learning library in Python.
 After some experimentation, penalty parameter is used as $1$ for 10K iterations for all training.
 
 
-\subsection{Neural Networks}
+\paragraph{\textbf{Neural Networks}}
 NNs, as nonlinear function approximators trained via backpropagation, are configurable structures with number of layers, number of neurons per layers and nonlinearity options.
 For our binary classification problem, we experimented with several network structures, some of which are presented in Section \ref{sec:results}.
 Training is achieved using lbfgs algorithm, which is more memory friendly compared to SGD counterparts, with a constant learning rate of $10^{-5}$ for at most 1000 iteration, during which early stopping was possible when the cost function is noticed not to improve any more than $10^{-6}$.
 
-\subsection{Convolutional Neural Networks}
+\paragraph{\textbf{Convolutional Neural Networks}}
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=0.8\columnwidth]{CNN_text.pdf}

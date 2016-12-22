@@ -8,7 +8,7 @@ Thus, letting $N$ be the number of input tweets, we create an $N \times D$ matri
 with each line representing a different tweet with $D$ features.
 
 
-\subsection{Bag of Words Representation}
+\paragraph{\textbf{Bag of Words Representation}}
 Bag of Words \cite{harris1954distributional} is a very common and straightforward numerical representation of text data.
 Given that we have a vocabulary $V$ with finite size, we create
 an array of size $|V|$ with $1s$ in the position of the words belonging in this text and $0s$ everywhere else.
@@ -18,7 +18,7 @@ The problem with this representation is that $|V|$ can be arbitrary big especial
 Another problem of this representation is that it does not comprise any semantic information about the significance of each word in a tweet. 
 
 
-\subsection{TF-IDF Representation}
+\paragraph{\textbf{TF-IDF Representation}}
 The significance of the words in tweets is captured by a more sophisticated representation, which uses the Term Frequency - Inverse Document Frequency (TF-IDF).
 TF-IDF \cite{sparck1972statistical} works by determining the relative frequency of a word in a specific document compared to the inverse proportion of that word over the entire document corpus.
 Words that are common in a single or small group of documents tend to have higher TF-IDF numbers than common words such as articles and prepositions. 
@@ -26,7 +26,7 @@ Words that are common in a single or small group of documents tend to have highe
 As can be used as a standalone representation, this metric can also be used to weight the Bag of Words representation, in which case the $1s$ in $N \times |V|$  representation matrix are replaced by $TF-IDFs$.
 
 
-\subsection{N-grams Extension}
+\paragraph{\textbf{N-grams Extension}}
 In both of the above representations the $N \times |V|$ matrix
 can become even bigger if we add sequences of contiguous words in our vocabulary.
 These sequences are called \textit{n-grams} with $n$ being the maximum number of words in a sequence.  
@@ -34,7 +34,7 @@ For example, for bigrams, in the worst case the size of the vocabulary becomes $
 As we will see in the experimental evaluation we tested representations with up to 8-grams. 
 
 
-\subsection{Word Embeddings Representation}
+\paragraph{\textbf{Word Embeddings Representation}}
 Word Embeddings (WE) \cite{DBLP:journals/corr/MikolovSCCD13} is a recently proposed representation that maps words to high dimensional vectors of real numbers. 
 This representation tries to capture the multiple contexts in which a word can appear in a text.
 Hence, it guarantees that words that appear in similar context will have vectors that are very close each other.
@@ -56,14 +56,14 @@ Regarding the one order of magnitude difference in terms of the amount of traini
 Since not all of the words in our training dataset were found in the pre-trained Word Embeddings, we decided to train our own vectors for these remaining words and append them to the pre-trained ones.
 
 
-\subsection{From Word Embeddings to Tweet Embeddings}
+\paragraph{\textbf{From Word Embeddings to Tweet Embeddings}}
 All aforementioned representation methods enable us to construct vector representations for all the words in the vocabulary used by the tweets ($|V| \times D$ matrix).
 Since tweets contain a subset of the words within the vocabulary, it's necessary to aggregate multiple rows of this matrix, in order to create representation for tweets ($N \times D$ matrix).
 
 After investigating with various ways of aggregation (concatenation, summation and averaging), mean of WEs of all the words in a tweet is found to be the most expressive one for our classification algorithms.
 
 
-\subsection{Paragraph Embeddings}
+\paragraph{\textbf{Paragraph Embeddings}}
 One method that constructs directly embeddings for paragraphs (tweets, in our case) is proposed by \cite{le2014distributed}.
 The advantage of this method is the fact that the order of the words in a tweet is also taken into account, by permuting them multiple times, which is claimed to reveal the semantic meaning of the phrases in a paragraph/tweet.
 There are two model representations described in this paper: Distributed bag of words (DBoW) and Distributed Memory (DM) both of which are included in our experiments.
