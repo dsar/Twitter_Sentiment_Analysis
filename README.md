@@ -79,7 +79,11 @@ In order to run the project you will need the following dependencies installed:
     
 * Preprocessing Files *(Optional)*
 
-    In case you want to avoid preprocessing execution time, you can download the [preprocessed train tweets](https://dl.dropboxusercontent.com/u/61311008/preproc/preproc_train.csv) of the full dataset. After downloading the above file, just place it in `data/preproc` directory. Also, before runing any algorithm, make sure that the `preprocess` parameter is enabled. If the preprocessed file is in the right place, it is going to be loaded. Finally, in case you want to test the algorithm for different datasets, do not forget to remove the preprocessed file (Normally done by enabling the `clear` and `preproc` parameters in the corresponding algorithm). 
+    In case you want to avoid preprocessing execution time, you can download the [preprocessed train tweets](https://dl.dropboxusercontent.com/u/61311008/preproc/preproc_train.csv) of the full dataset. After downloading the above file, just place it in `data/preproc` directory. Also, before runing any algorithm, make sure that the `preprocess` parameter is enabled and that you have enabled the only default preprocess parameters (In any other case, the test set is going to be processed by a different way which is something unwanted). If the preprocessed file is in the right place, it is going to be loaded. Finally, in case you want to test the algorithm for different datasets, do not forget to remove the preprocessed file (Normally done by enabling the `clear` and `preproc` parameters in the corresponding algorithm). 
+    
+* Word Embeddings *(Optional)*
+    
+    In case you want to avoid training from scratch the whole word embeddings matrix, you can download the [glove_python](https://www.dropbox.com/sh/p7ea74wtc2ovuvn/AABPOJ3ryds4Jm1x2iHQ7j3aa/glove_python_embeddings.txt?dl=0), the [hybrid](https://www.dropbox.com/sh/p7ea74wtc2ovuvn/AABhb7tQqtqDNNcFfLu8xSCia/merged_embeddings.txt?dl=0) and [baseline](https://www.dropbox.com/sh/p7ea74wtc2ovuvn/AADYLaCh4CSW-AvSS6fay9TNa/baseline_embeddings.txt?dl=0) word embeddings (created by our default parameters). After downloading one of the aforementioned files, place it in `data/glove` directory. When the corresponding method is chosen from the `options.py` file, if the required embeddings file exists, it is just loaded and the training phase is skipped. In any other case the files are going to reproduced from scratch (this might take a while).
 
 
 ## Hardware Requirements
