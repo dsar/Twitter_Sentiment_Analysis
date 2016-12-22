@@ -61,14 +61,14 @@ In order to run the project you will need the following dependencies installed:
     (Recommended version **tensorflow 0.12.0**)
 
 ### Files
-* Training Data
+* Train Data
 
     Download the positive [Positive & Negative tweet files](https://inclass.kaggle.com/c/epfml-text/download/twitter-datasets.zip) in order to train the models
     and move them in `data/datasets/` directory.
 
-* Testing Data
+* Test Data
 
-    Download the [Testing tweet file](https://inclass.kaggle.com/c/epfml-text/download/test_data.txt) in order to test the models in kaggle
+    Download the [Test tweet file](https://inclass.kaggle.com/c/epfml-text/download/test_data.txt) in order to test the models in kaggle
     and move it in `data/datasets/` directory.
 
 * Stanford Pretrained Glove Word Embeddings
