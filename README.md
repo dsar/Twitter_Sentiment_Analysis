@@ -112,7 +112,18 @@ in `data/submissions/` directory
 
 *By enabling the `cv` option to true in the `options.py` file (in the corresponding algorithm) you can get
 a good approximation of the kaggle-score directly from Cross Validation (this might take a while for the full datasets)*
-    
+
+### Reproduce Best Score
+
+In `data/models/BEST` directory, we have stored a checkpoint of our best CNN trained model.
+
+* Set `algorithm` to `CNN`
+* and on `CNN` dictionary:
+    * set `train` to `False`
+    * and make sure `checkpoint_dir` is set to `TF_SAVE_PATH + '/BEST/checkpoints'`
+
+Finally, just follow the Demo procedure
+
 ### Contributors
 
 - Beril Besbinar
