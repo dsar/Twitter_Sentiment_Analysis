@@ -8,8 +8,8 @@ After preliminary performance investigation of classification algorithms, we dec
 \subsection{Support Vector Machines}
 SVMs are very strong classification algorithms, even in high dimensional spaces, and the aim is to separate samples from different classes with a clear margin.
 They can be applied as both linear binary classifiers and non-linear complements after kernel trick.
-In our framework, we used the nonlinear SVM classifier implementation provided by \textit{scikit}\footnote{\url{http://scikit-learn.org/}}, which is a well-known, open-source machine learning library in Python.
-After some experimentation, kernel function is chosen to be Radial Basis Function (RBF) and penalty parameter is used as $1$ for 10K iterations.
+In our framework, we used the linear SVM classifier implementation provided by \textit{scikit}\footnote{\url{http://scikit-learn.org/}}, which is a well-known, open-source machine learning library in Python.
+After some experimentation, penalty parameter is used as $1$ for 10K iterations for all training.
 
 
 \subsection{Neural Networks}
@@ -32,4 +32,5 @@ Notice that all these matrices are zero-padded in the absence of words.
 As we may see in Figure~\ref{fig:cnn}, the main idea behind is to apply a bunch of filters with different window sizes (depicted by different colors). Afterwards we convolve, decrease the number of data by \textit{max-pooling} and apply \textit{soft max} layer as the classifier.
 Although we experimented with different training strategies, the results to be presented in Section \ref{sec:results} are trained with minibatches of size 1024, Adam optimizer with a exponentially decaying learning rate every 1000 epoch, which is initialized as $5 \times 10^{-4}$. 
 $n_{max}$ is chosen to be 40 for all the experiments.
+A dropout layer with a keep probability of $50\%$ is used for training in order to avoid overfitting the statistics of training dataset..
 Our CNN implementation relies on \textit{Tensorflow}\footnote{\url{https://www.tensorflow.org/}}, which is developed by Google and an open source software library for numerical computation using data flow graphs.
